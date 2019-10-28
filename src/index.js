@@ -9,6 +9,13 @@ const addComponent = function () {
         wwLib.wwObject.register({
             /* wwManager:start */
             cmsOptions: {
+                displayName: {
+                    en: 'Form Dropdown',
+                    fr: 'Sélécteur de Formulaire'
+                },
+                wwObjectHover: {
+                    pointerEvents: true
+                },
                 wwObjectMenu: {
                     items: [
                         {

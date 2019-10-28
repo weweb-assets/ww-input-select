@@ -1,14 +1,8 @@
 <template>
     <div class="elem-dropdown">
-        <select
-            :name="wwObject.content.data.config.name" 
-            :required="wwObject.content.data.config.required" 
-            :multiple="wwObject.content.data.config.multiple" 
-            :style="style">
-            <option value="" selected disabled>{{wwLang.getText(wwObject.content.data.config.placeholder)}}</option>
-            <option class="option" v-for="option in wwObject.content.data.config.options" :key="option.value" :value="option.value">
-                {{wwLang.getText(option.name)}}
-            </option>
+        <select :name="wwObject.content.data.config.name" :required="wwObject.content.data.config.required" :multiple="wwObject.content.data.config.multiple" :style="style">
+            <option value selected disabled>{{wwLang.getText(wwObject.content.data.config.placeholder)}}</option>
+            <option class="option" v-for="option in wwObject.content.data.config.options" :key="option.value" :value="option.value">{{wwLang.getText(option.name)}}</option>
         </select>
     </div>
 </template>
@@ -217,7 +211,7 @@ export default {
         }
         /* wwManager:end */
     },
-    created() {
+    mounted() {
         this.wwObject.content.data = this.wwObject.content.data || {}
         this.wwObject.content.data.config = this.wwObject.content.data.config || {}
         this.wwObject.content.data.style = this.wwObject.content.data.style || {}

@@ -5,25 +5,28 @@
                 <wwManagerInput class="input" color="orange" v-model="result.dropdownConfig.name" label="Name"></wwManagerInput>
             </div>
             <div class="elem">
-               <div class="title">Required</div>
+                <div class="title">Required</div>
                 <wwManagerRadio class="radio" v-model="result.dropdownConfig.required"></wwManagerRadio>
             </div>
             <div class="elem">
-               <div class="title">Multiple</div>
+                <div class="title">Multiple</div>
                 <wwManagerRadio class="radio" v-model="result.dropdownConfig.multiple"></wwManagerRadio>
             </div>
             <div class="elem">
                 <div class="title">Placeholder</div>
-                <wwManagerInput v-for="lang in langs" :key="lang" class="input" color="blue" v-model="result.dropdownConfig.placeholder[lang]" :label="lang"></wwManagerInput>
+                <wwManagerInput v-for="lang in langs" :key="lang" class="input" color="blue" v-model="result.dropdownConfig.placeholder[lang]" :label="'Placeholder - ' + lang.toUpperCase()"></wwManagerInput>
             </div>
-            <div class="elem">
+            <div class="elem options">
                 <div class="title">Options</div>
-                <div class="option" v-for="(option, index) in result.dropdownConfig.options" :key="index">
-                    <wwManagerInput class="input" :color="{ 'green': option.value.length, 'red': !option.value.length }" v-model="option.value" label="Value"></wwManagerInput>
-                    <wwManagerInput v-for="lang in langs" :key="lang" class="input" color="blue" v-model="option.name[lang]" :label="lang"></wwManagerInput>
-                    <wwManagerButton class="close" center color="red" @click="removeOption(index)">Remove Option</wwManagerButton>
+                <div class="options">
+                    <div class="option" v-for="(option, index) in result.dropdownConfig.options" :key="index">
+                        <div class="option-title">Option {{index+1}} :</div>
+                        <wwManagerInput class="input" :color="{ 'green': option.value.length, 'red': !option.value.length }" v-model="option.value" label="Value"></wwManagerInput>
+                        <wwManagerInput v-for="lang in langs" :key="lang" class="input" color="blue" v-model="option.name[lang]" :label="'Options - ' + lang.toUpperCase()"></wwManagerInput>
+                        <wwManagerButton class="remove" center color="red" @click="removeOption(index)">Remove Option</wwManagerButton>
+                    </div>
                 </div>
-                <wwManagerButton class="input" center color="orange" @click="addOption">Add option</wwManagerButton>
+                <wwManagerButton class="input add-option" center color="orange" @click="addOption">Add option</wwManagerButton>
             </div>
         </div>
     </div>
@@ -88,16 +91,23 @@ export default {
     .content {
         display: flex;
         padding: 20px;
-        flex-wrap: wrap;
+        flex-direction: column;
         overflow: auto;
         width: 100%;
-        justify-content: center;
+        align-items: center;
         font-family: "Monserrat", sans-serif;
         .elem {
-            margin: 10px 33%;
-            width: 33%;
+            margin: 10px 0;
+            width: 90%;
+
+            @media (min-width: 992px) {
+                width: 40%;
+            }
             .input {
                 width: 100%;
+            }
+            .input + .input {
+                margin-top: 5px;
             }
             .select {
                 width: 33%;
@@ -105,8 +115,41 @@ export default {
             .option {
                 margin-bottom: 20px;
             }
+
+            &.options {
+                width: 90%;
+
+                .add-option {
+                    width: 200px;
+                }
+
+                .options {
+                    width: 100%;
+                    display: flex;
+                    margin-top: 20px;
+                    flex-wrap: wrap;
+
+                    .option {
+                        width: 100%;
+                        padding: 10px;
+                        @media (min-width: 992px) {
+                            width: 50%;
+                        }
+
+                        .option-title {
+                            font-size: 18px;
+                            margin-bottom: 10px;
+                        }
+
+                        .remove {
+                            width: 200px;
+                            margin-top: 20px;
+                        }
+                    }
+                }
+            }
         }
-        
+
         .title {
             color: #e02a4d;
             font-family: "Monserrat", sans-serif;
