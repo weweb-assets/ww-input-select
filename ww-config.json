@@ -1,0 +1,71 @@
+{
+	"componentPath": "./src/wwObject.vue",
+	"content": {
+		"type": "ww-form-dropdown",
+		"data": {
+			"config": {
+				"name": "name",
+				"required": true,
+				"multiple": false,
+				"placeholder": {
+					"en": "Name",
+					"fr": "Nom"
+				},
+				"options": [
+					{
+						"value": "option",
+						"name": {
+							"en": "option en",
+							"fr": "option fr"
+						}
+					},
+					{
+						"value": "option2",
+						"name": {
+							"en": "option2 en",
+							"fr": "option2 fr"
+						}
+					}
+				]
+			},
+			"style": {
+				"fontSize": 1,
+				"color": "black",
+				"backgroundColor": "white",
+				"borderRadius": 5,
+				"borderWidth": 2,
+				"borderColor": "grey",
+				"borderStyle": "solid",
+				"padding": 15
+			}
+		}
+	},
+	"upsales": {
+		"wwAnalytics": {
+			"click": true
+		}
+	},
+	"cmsOptions": {
+		"displayName": {
+			"en": "Form Dropdown",
+			"fr": "Sélécteur de Formulaire"
+		},
+		"wwObjectHover": {
+			"pointerEvents": true
+		},
+		"wwObjectMenu": {
+			"items": [
+				{
+					"name": "OPTIONS",
+					"text": {
+						"en": "Options...",
+						"fr": "Options..."
+					},
+					"main": true,
+					"icon": "wwi wwi-edit-other",
+					"action": "options"
+				}
+			]
+		}
+	}
+}
