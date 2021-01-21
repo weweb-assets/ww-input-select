@@ -5,14 +5,27 @@
             "fr": "Sélécteur de Formulaire",
             "en": "Form Dropdown"
         },
-        "editElementMenu": {
-            "items": [
-                {
-                    "label": { "en": "Options", "fr": "Options" },
-                    "icon": "config",
-                    "action": "setOptions"
+        "styleOptions": {
+            "color": {
+                "path": "globalStyle.color",
+                "label": { "en": "Color", "fr": "Couleur" },
+                "type": "Color"
+            },
+            "fontSize": {
+                "path": "globalStyle.fontSize",
+                "type": "Length",
+                "label": {
+                    "en": "Font size",
+                    "fr": "Taille du texte"
+                },
+                "options": {
+                    "unitChoices": [
+                        { "value": "px", "label": "px", "min": 10, "max": 50 },
+                        { "value": "em", "label": "em", "min": 1, "max": 50 },
+                        { "value": "rem", "label": "rem", "min": 1, "max": 50 }
+                    ]
                 }
-            ]
+            }
         }
     }
 }
