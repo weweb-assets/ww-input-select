@@ -125,7 +125,7 @@ export default {
     computed: {
         isEditing() {
             /* wwEditor:start */
-            return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
+            return this.wwEditorState.isSelected;
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
