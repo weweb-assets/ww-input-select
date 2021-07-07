@@ -17,11 +17,10 @@
 
 <script>
 export default {
-    name: '__COMPONENT_NAME__',
     props: {
-        content: Object,
+        content: { type: Object, required: true },
         /* wwEditor:start */
-        wwEditorState: Object,
+        wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
     },
     wwDefaultContent: {
