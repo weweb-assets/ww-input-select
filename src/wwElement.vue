@@ -71,7 +71,7 @@ export default {
                 },
                 ...(function () {
                     const placeholders = {};
-                    for (const lang of wwLib.$store.getters['websiteData/getPage'].langs) {
+                    for (const lang of wwLib.wwWebsiteData.getCurrentPage().langs) {
                         placeholders[`placeholder_${lang}`] = {
                             path: `globalSettings.placeholder.${lang}`,
                             label: { en: `placeholder (${lang})`, fr: 'fr' },
@@ -98,7 +98,7 @@ export default {
                             },
                             ...(function () {
                                 const options = [];
-                                for (const lang of wwLib.$store.getters['websiteData/getPage'].langs) {
+                                for (const lang of wwLib.wwWebsiteData.getCurrentPage().langs) {
                                     options.push({
                                         path: `name.${lang}`,
                                         type: 'Text',
