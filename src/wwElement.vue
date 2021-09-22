@@ -7,9 +7,9 @@
         :multiple="content.multiple"
         :style="style"
     >
-        <option value selected disabled>{{ content.placeholder }}</option>
+        <option value selected disabled>{{ wwLang.getText(content.placeholder) }}</option>
         <option v-for="option in content.options" :key="option.value" :value="option.value">
-            {{ option.name }}
+            {{ wwLang.getText(option.name) }}
         </option>
     </select>
 </template>
@@ -21,11 +21,6 @@ export default {
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
-    },
-    data() {
-        return {
-            wwLang: wwLib.wwLang,
-        };
     },
     computed: {
         isEditing() {
