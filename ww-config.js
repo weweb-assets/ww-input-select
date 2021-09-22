@@ -39,7 +39,7 @@ export default {
             section: 'settings',
             defaultValue: false,
         },
-        placeholders: {
+        placeholder: {
             label: { en: 'Placeholder', fr: 'Placeholder' },
             type: 'Text',
             section: 'settings',
