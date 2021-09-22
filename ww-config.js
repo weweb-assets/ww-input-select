@@ -43,7 +43,7 @@ export default {
             label: { en: 'Placeholder', fr: 'Placeholder' },
             type: 'Text',
             section: 'settings',
-            options: { placeholder: 'firstname' },
+            options: { placeholder: 'Type text' },
             multiLang: true,
             defaultValue: { en: 'Select' },
         },
