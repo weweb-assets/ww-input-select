@@ -44,7 +44,7 @@ export default {
             type: 'Text',
             section: 'settings',
             options: { placeholder: 'firstname' },
-            multilang: true,
+            multiLang: true,
             defaultValue: { en: 'Select' },
         },
         options: {
@@ -54,7 +54,7 @@ export default {
             options: {
                 options: [
                     { path: 'value', type: 'Text', options: { placeholder: 'Value' } },
-                    { path: 'name', type: 'Text', options: { placeholder: 'Value' }, multilang: true },
+                    { path: 'name', type: 'Text', options: { placeholder: 'Value' }, multiLang: true },
                 ],
             },
             defaultValue: [
