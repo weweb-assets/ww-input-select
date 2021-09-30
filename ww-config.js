@@ -52,12 +52,26 @@ export default {
                     },
                     options: {
                         label: { en: 'Options', fr: 'Options' },
-                        type: 'List',
+                        type: 'Array',
                         options: {
-                            options: [
-                                { path: 'value', type: 'Text', options: { placeholder: 'Value' } },
-                                { path: 'name', type: 'Text', options: { placeholder: 'Value' }, multiLang: true },
-                            ],
+                            item: {
+                                type: 'Object',
+                                options: {
+                                    item: {
+                                        value: {
+                                            label: { en: 'Value' },
+                                            type: 'Text',
+                                            options: { placeholder: 'Value' },
+                                        },
+                                        name: {
+                                            label: { en: 'Name' },
+                                            type: 'Text',
+                                            options: { placeholder: 'Value' },
+                                            multiLang: true,
+                                        },
+                                    },
+                                },
+                            },
                         },
                     },
                 },
