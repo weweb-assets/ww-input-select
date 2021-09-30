@@ -1,66 +1,77 @@
 export default {
     editor: {
-        label: { fr: 'Sélecteur de Formulaire', en: 'Form Dropdown' },
+        label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
     },
     properties: {
-        color: {
-            label: { en: 'Color', fr: 'Couleur' },
-            type: 'Color',
-            defaultValue: 'black',
-        },
-        fontSize: {
-            label: { en: 'Font size', fr: 'Taille du texte' },
-            type: 'Length',
+        globalStyle: {
+            type: 'Object',
             options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 10, max: 50 },
-                    { value: 'em', label: 'em', min: 1, max: 50 },
-                    { value: 'rem', label: 'rem', min: 1, max: 50 },
-                ],
+                item: {
+                    color: {
+                        label: { en: 'Color', fr: 'Couleur' },
+                        type: 'Color',
+                    },
+                    fontSize: {
+                        label: { en: 'Font size', fr: 'Taille du texte' },
+                        type: 'Length',
+                        options: {
+                            unitChoices: [
+                                { value: 'px', label: 'px', min: 10, max: 50 },
+                                { value: 'em', label: 'em', min: 1, max: 50 },
+                                { value: 'rem', label: 'rem', min: 1, max: 50 },
+                            ],
+                        },
+                    },
+                },
             },
-            defaultValue: '15px',
+            defaultValue: { color: 'black', fontSize: '15px' },
         },
-        name: {
-            label: { en: 'Name', fr: 'fr' },
-            type: 'Text',
-            section: 'settings',
-            options: { placeholder: 'Name' },
-            defaultValue: '',
-        },
-        required: {
-            label: { en: 'Required', fr: 'Requis' },
-            type: 'OnOff',
-            section: 'settings',
-            defaultValue: true,
-        },
-        multiple: {
-            label: { en: 'Multiple', fr: 'Multiple' },
-            type: 'OnOff',
-            section: 'settings',
-            defaultValue: false,
-        },
-        placeholder: {
-            label: { en: 'Placeholder', fr: 'Placeholder' },
-            type: 'Text',
-            section: 'settings',
-            options: { placeholder: 'Type text' },
-            multiLang: true,
-            defaultValue: { en: 'Select' },
-        },
-        options: {
-            label: { en: 'Options', fr: 'fr' },
-            type: 'List',
+        globalSettings: {
+            type: 'Object',
             section: 'settings',
             options: {
+                item: {
+                    name: {
+                        label: { en: 'Name', fr: 'Name' },
+                        type: 'Text',
+                        options: { placeholder: 'Name' },
+                    },
+                    required: {
+                        label: { en: 'Required', fr: 'Requis' },
+                        type: 'OnOff',
+                    },
+                    multiple: {
+                        label: { en: 'Multiple', fr: 'Multiple' },
+                        type: 'OnOff',
+                    },
+                    placeholder: {
+                        label: { en: 'Placeholder', fr: 'Placeholder' },
+                        type: 'Text',
+                        options: { placeholder: 'Type text' },
+                        multiLang: true,
+                    },
+                    options: {
+                        label: { en: 'Options', fr: 'Options' },
+                        type: 'List',
+                        options: {
+                            options: [
+                                { path: 'value', type: 'Text', options: { placeholder: 'Value' } },
+                                { path: 'name', type: 'Text', options: { placeholder: 'Value' }, multiLang: true },
+                            ],
+                        },
+                    },
+                },
+            },
+            defaultValue: {
+                name: '',
+                required: true,
+                multiple: false,
+                placeholder: { en: 'Select' },
                 options: [
-                    { path: 'value', type: 'Text', options: { placeholder: 'Value' } },
-                    { path: 'name', type: 'Text', options: { placeholder: 'Value' }, multiLang: true },
+                    { value: 'option', name: { en: 'option - 1', fr: 'option - 1' } },
+                    { value: 'option2', name: { en: 'option - 2', fr: 'option - 2' } },
                 ],
             },
-            defaultValue: [
-                { value: 'option', name: { en: 'option - 1', fr: 'option - 1' } },
-                { value: 'option2', name: { en: 'option - 2', fr: 'option - 2' } },
-            ],
         },
     },
 };

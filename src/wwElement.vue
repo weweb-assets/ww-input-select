@@ -2,13 +2,13 @@
     <select
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
-        :name="content.name"
-        :required="content.required"
-        :multiple="content.multiple"
+        :name="content.globalSettings.name"
+        :required="content.globalSettings.required"
+        :multiple="content.globalSettings.multiple"
         :style="style"
     >
-        <option value selected disabled>{{ wwLang.getText(content.placeholder) }}</option>
-        <option v-for="option in content.options" :key="option.value" :value="option.value">
+        <option value selected disabled>{{ wwLang.getText(content.globalSettings.placeholder) }}</option>
+        <option v-for="option in content.globalSettings.options" :key="option.value" :value="option.value">
             {{ wwLang.getText(option.name) }}
         </option>
     </select>
@@ -32,8 +32,8 @@ export default {
         },
         style() {
             return {
-                color: this.content.color,
-                fontSize: `${this.content.fontSize}`,
+                color: this.content.globalStyle.color,
+                fontSize: `${this.content.globalStyle.fontSize}`,
             };
         },
     },
