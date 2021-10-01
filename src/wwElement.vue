@@ -1,4 +1,4 @@
-<template>
+<template v-if="content.globalSettings">
     <select
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
