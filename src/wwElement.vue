@@ -68,6 +68,9 @@ export default {
             this.value = newValue;
         },
     },
+    mounted() {
+        if (this.content.initialValue && !this.content.globalSettings.variable) this.value = this.content.initialValue;
+    },
 };
 </script>
 
