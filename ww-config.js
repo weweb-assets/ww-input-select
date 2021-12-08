@@ -47,11 +47,17 @@ export default {
                         label: {
                             en: 'Initial value',
                         },
-                        type: 'Text',
+                        type: 'TextSelect',
+                        options: content => {
+                            return {
+                                options: content.globalSettings.options.map(option => ({
+                                    value: option.value,
+                                    label: option.name,
+                                })),
+                            };
+                        },
                         section: 'settings',
-                        bindable: true,
                         hidden: content => content.globalSettings.variable,
-                        defaultValue: '',
                     },
                     name: {
                         label: { en: 'Name', fr: 'Name' },
