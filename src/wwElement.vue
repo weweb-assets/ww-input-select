@@ -1,5 +1,6 @@
 <template v-if="content.globalSettings">
     <select
+        v-model="internalValue"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="content.globalSettings.name"
@@ -15,12 +16,27 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+
 export default {
     props: {
         content: { type: Object, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
+        uid: { type: String, required: true },
+    },
+    emits: ['trigger-event'],
+    setup(props) {
+        const internalVariableId = computed(() => props.content.globalSettings.variable);
+        const variableId = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '', internalVariableId);
+
+        return { variableId };
+    },
+    data() {
+        return {
+            internalValue: '',
+        };
     },
     computed: {
         isEditing() {
@@ -30,11 +46,26 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
+        value: {
+            get() {
+                if (this.variableId) return wwLib.wwVariable.getValue(this.variableId);
+                return this.internalValue;
+            },
+            set(value) {
+                this.$emit('trigger-event', { name: 'change', event: { value } });
+                if (this.variableId) wwLib.wwVariable.updateValue(this.variableId, value);
+            },
+        },
         style() {
             return {
                 color: this.content.globalStyle.color,
                 fontSize: `${this.content.globalStyle.fontSize}`,
             };
+        },
+    },
+    watch: {
+        internalValue(newValue) {
+            this.value = newValue;
         },
     },
 };
