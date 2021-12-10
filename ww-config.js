@@ -56,7 +56,7 @@ export default {
                             };
                         },
                         section: 'settings',
-                        hidden: content => content.globalSettings.variable,
+                        hidden: content => content.globalSettings.variableId,
                     },
                     name: {
                         label: { en: 'Name', fr: 'Name' },
