@@ -1,6 +1,6 @@
 <template v-if="content.globalSettings">
     <select
-        v-model="internalValue"
+        v-model="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="content.globalSettings.name"
