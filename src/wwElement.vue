@@ -66,11 +66,21 @@ export default {
     },
     watch: {
         'content.initialValue'(value) {
-            if (this.content.initialValue && !this.content.globalSettings.variable) this.value = value;
+            if (
+                this.content.initialValue &&
+                this.content.initialValue !== undefined &&
+                !this.content.globalSettings.variableId
+            )
+                this.value = value;
         },
     },
     mounted() {
-        if (this.content.initialValue && !this.content.globalSettings.variable) this.value = this.content.initialValue;
+        if (
+            this.content.initialValue &&
+            this.content.initialValue !== undefined &&
+            !this.content.globalSettings.variableId
+        )
+            this.value = this.content.initialValue;
     },
 };
 </script>
