@@ -31,7 +31,7 @@ export default {
             section: 'settings',
             options: {
                 item: {
-                    variable: {
+                    variableId: {
                         label: {
                             en: 'Associated variable',
                         },
@@ -40,7 +40,6 @@ export default {
                             types: ['String', 'Number', 'Query'],
                         },
                         section: 'settings',
-                        bindable: true,
                         defaultValue: null,
                     },
                     initialValue: {

@@ -28,7 +28,7 @@ export default {
     },
     emits: ['trigger-event'],
     setup(props) {
-        const internalVariableId = computed(() => props.content.globalSettings.variable);
+        const internalVariableId = computed(() => props.content.globalSettings.variableId);
         const variableId = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '', internalVariableId);
 
         return { variableId };
@@ -53,6 +53,7 @@ export default {
             },
             set(value) {
                 this.$emit('trigger-event', { name: 'change', event: { value } });
+                this.internalValue = value;
                 if (this.variableId) wwLib.wwVariable.updateValue(this.variableId, value);
             },
         },
@@ -64,8 +65,8 @@ export default {
         },
     },
     watch: {
-        internalValue(newValue) {
-            this.value = newValue;
+        'content.initialValue'(value) {
+            if (this.content.initialValue && !this.content.globalSettings.variable) this.value = value;
         },
     },
     mounted() {
