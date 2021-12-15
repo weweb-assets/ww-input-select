@@ -2,6 +2,7 @@ export default {
     editor: {
         label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
     },
+    triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: '' } }],
     properties: {
         globalStyle: {
             type: 'Object',
