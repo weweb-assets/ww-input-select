@@ -2,6 +2,7 @@ export default {
     editor: {
         label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
     },
+    triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: '' } }],
     properties: {
         globalStyle: {
             type: 'Object',
@@ -31,6 +32,33 @@ export default {
             section: 'settings',
             options: {
                 item: {
+                    variableId: {
+                        label: {
+                            en: 'Associated variable',
+                        },
+                        type: 'Variable',
+                        options: {
+                            types: ['String', 'Number', 'Query'],
+                        },
+                        section: 'settings',
+                        defaultValue: null,
+                    },
+                    initialValue: {
+                        label: {
+                            en: 'Initial value',
+                        },
+                        type: 'TextSelect',
+                        options: content => {
+                            return {
+                                options: content.globalSettings.options.map(option => ({
+                                    value: option.value,
+                                    label: option.name,
+                                })),
+                            };
+                        },
+                        section: 'settings',
+                        hidden: content => content.globalSettings.variableId,
+                    },
                     name: {
                         label: { en: 'Name', fr: 'Name' },
                         type: 'Text',
