@@ -132,7 +132,9 @@ export default {
             if (this.content.options && typeof this.content.options[0] !== 'object') {
                 this.value = event.target.value;
             } else {
-                if (this.options && this.options.length && this.content.displayField) {
+                if ('value_ww' in this.content.options[0]) {
+                    this.value = this.options[event.target.selectedIndex - 1]['value_ww'];
+                } else if (this.options && this.options.length && this.content.displayField) {
                     this.value =
                         this.options[event.target.selectedIndex - 1][
                             this.content.valueField && this.content.valueField !== 'none'
