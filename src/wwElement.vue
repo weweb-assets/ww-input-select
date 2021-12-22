@@ -76,6 +76,7 @@ export default {
             } else if ((data && !Array.isArray(data)) || typeof data !== 'object') {
                 return [{}];
             }
+            console.log('test !');
             return data.filter(item => !!item);
         },
         style() {
@@ -88,6 +89,7 @@ export default {
     watch: {
         'content.options'(data) {
             if (data && data[0]) {
+                if (typeof data[0] !== 'object') return;
                 this.$emit('update:content:effect', { itemsProperties: Object.keys(data[0]) });
                 setTimeout(() => {
                     if (this.content.itemsProperties && this.content.itemsProperties[0]) {
@@ -105,8 +107,8 @@ export default {
             imediate: true,
         },
         'content.initialValue'(value) {
-            if (value !== undefined && !this.content.variableId && this.content.displayField) {
-                this.value = value[this.content.valueField || this.content.displayField];
+            if (value !== undefined && !this.content.variableId) {
+                this.value = value[this.content.valueField || this.content.displayField] || value;
                 this.$el.selectedIndex = this.options.indexOf(value) + 1;
             }
         },
@@ -124,9 +126,6 @@ export default {
             if (this.content.displayField === 'none') return '';
             if (item && item[this.content.displayField]) return item[this.content.displayField];
             return item;
-        },
-        getValueField(value) {
-            return value;
         },
         handleInput(event) {
             if (this.content.options && typeof this.content.options[0] !== 'object') {
