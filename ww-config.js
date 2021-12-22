@@ -21,7 +21,93 @@ export default {
             },
             defaultValue: '15px',
         },
+        isObjectsCollection: {
+            type: 'OnOff',
+            editorOnly: true,
+            hidden: true,
+            defaultValue: true,
+        },
+        options: {
+            label: { en: 'Options', fr: 'Options' },
+            type: 'Array',
+            section: 'settings',
+            options: {
+                item: {
+                    type: 'Object',
+                    options: {
+                        item: {
+                            name: {
+                                label: { en: 'Display Name' },
+                                type: 'Text',
+                                options: { placeholder: 'Value' },
+                                multiLang: true,
+                            },
+                            value_ww: {
+                                label: { en: 'Value' },
+                                type: 'Text',
+                                options: { placeholder: 'Value' },
+                            },
+                        },
+                    },
+                },
+            },
+            defaultValue: [
+                { value_ww: 'option', name: { en: 'option - 1', fr: 'option - 1' } },
+                { value_ww: 'option2', name: { en: 'option - 2', fr: 'option - 2' } },
+            ],
+            bindable: true,
+        },
+        displayField: {
+            hidden: content =>
+                !content.options ||
+                (content.options && typeof content.options[0] === 'object' && 'value_ww' in content.options[0]) ||
+                (content.options && typeof content.options[0] !== 'object'),
+            label: {
+                en: 'Display field',
+                fr: 'Display field',
+            },
+            type: 'TextSelect',
+            options: content => {
+                const data = content.options;
+                const options = content.itemsProperties
+                    .map(item => {
+                        return data && (typeof data[0][item] === 'string' || typeof data[0][item] === 'number')
+                            ? { value: item, label: { en: item } }
+                            : null;
+                    })
+                    .filter(item => !!item);
 
+                return {
+                    options: [{ value: 'none', label: { en: 'Select a property' } }, ...options],
+                };
+            },
+            defaultValue: 'none',
+            section: 'settings',
+        },
+        valueField: {
+            hidden: content =>
+                !content.options ||
+                (content.options && typeof content.options[0] === 'object' && 'value_ww' in content.options[0]) ||
+                (content.options && typeof content.options[0] !== 'object'),
+            label: {
+                en: 'Value field',
+                fr: 'Value field',
+            },
+            type: 'TextSelect',
+            options: content => {
+                const options = content.itemsProperties
+                    .map(item => {
+                        return { value: item, label: { en: item } };
+                    })
+                    .filter(item => !!item);
+
+                return {
+                    options: [{ value: 'none', label: { en: 'Select a property' } }, ...options],
+                };
+            },
+            defaultValue: 'none',
+            section: 'settings',
+        },
         variableId: {
             label: {
                 en: 'Associated variable',
@@ -44,18 +130,13 @@ export default {
             section: 'settings',
             hidden: content => content.variableId,
         },
-        isObjectsCollection: {
-            type: 'OnOff',
-            editorOnly: true,
-            hidden: true,
-            defaultValue: true,
-        },
-        name: {
-            label: { en: 'Name', fr: 'Name' },
+        placeholder: {
+            label: { en: 'Placeholder', fr: 'Placeholder' },
             type: 'Text',
-            options: { placeholder: 'Name' },
+            options: { placeholder: 'Type text' },
+            multiLang: true,
             section: 'settings',
-            defaultValue: '',
+            defaultValue: { en: 'Select' },
         },
         required: {
             label: { en: 'Required', fr: 'Requis' },
@@ -69,67 +150,12 @@ export default {
             section: 'settings',
             defaultValue: false,
         },
-        placeholder: {
-            label: { en: 'Placeholder', fr: 'Placeholder' },
+        name: {
+            label: { en: 'Name', fr: 'Name' },
             type: 'Text',
-            options: { placeholder: 'Type text' },
-            multiLang: true,
+            options: { placeholder: 'Name' },
             section: 'settings',
-            defaultValue: { en: 'Select' },
-        },
-        options: {
-            label: { en: 'Options', fr: 'Options' },
-            type: 'Array',
-            section: 'settings',
-            options: {
-                item: {
-                    type: 'Object',
-                    options: {
-                        item: {
-                            value_ww: {
-                                label: { en: 'Value' },
-                                type: 'Text',
-                                options: { placeholder: 'Value' },
-                            },
-                            name: {
-                                label: { en: 'Name' },
-                                type: 'Text',
-                                options: { placeholder: 'Value' },
-                                multiLang: true,
-                            },
-                        },
-                    },
-                },
-            },
-            defaultValue: [
-                { value_ww: 'option', name: { en: 'option - 1', fr: 'option - 1' } },
-                { value_ww: 'option2', name: { en: 'option - 2', fr: 'option - 2' } },
-            ],
-            bindable: true,
-        },
-        displayBy: {
-            hidden: content => !content.options || (content.options && 'value_ww' in content.options[0]),
-            label: {
-                en: 'Display by',
-                fr: 'Display by',
-            },
-            type: 'TextSelect',
-            options: content => {
-                const data = content.options;
-                const options = content.itemsProperties
-                    .map(item => {
-                        return data && (typeof data[0][item] === 'string' || typeof data[0][item] === 'number')
-                            ? { value: item, label: { en: item } }
-                            : null;
-                    })
-                    .filter(item => !!item);
-
-                return {
-                    options: [{ value: 'none', label: { en: 'Select a property' } }, ...options],
-                };
-            },
-            defaultValue: 'none',
-            section: 'settings',
+            defaultValue: '',
         },
         itemsProperties: {
             hidden: true,

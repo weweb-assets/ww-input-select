@@ -1,12 +1,12 @@
 <template v-if="content">
     <select
-        v-model="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="content.name"
         :required="content.required"
         :multiple="content.multiple"
         :style="style"
+        @input="handleInput"
     >
         <option value selected disabled>{{ wwLang.getText(content.placeholder) }}</option>
         <option v-for="(option, index) in options" :key="index" :value="getLabel(option)">
@@ -89,6 +89,12 @@ export default {
         'content.options'(data) {
             if (data && data[0]) {
                 this.$emit('update:content:effect', { itemsProperties: Object.keys(data[0]) });
+                setTimeout(() => {
+                    if (this.content.itemsProperties && this.content.itemsProperties[0]) {
+                        this.$emit('update:content:effect', { displayField: this.content.itemsProperties[0] });
+                        this.$emit('update:content:effect', { valueField: this.content.itemsProperties[0] });
+                    }
+                }, 200);
             }
         },
         /* wwEditor:start */
@@ -98,22 +104,43 @@ export default {
             },
             imediate: true,
         },
+        'content.initialValue'(value) {
+            if (value !== undefined && !this.content.variableId && this.content.displayField) {
+                this.value = value[this.content.valueField || this.content.displayField];
+                this.$el.selectedIndex = this.options.indexOf(value) + 1;
+            }
+        },
         /* wwEditor:end */
     },
     mounted() {
-        if (this.content.initialValue !== undefined && !this.content.variableId) this.value = this.content.initialValue;
+        if (this.content.initialValue !== undefined && !this.content.variableId) {
+            this.value = this.content.initialValue;
+        }
     },
     methods: {
         getLabel(item) {
             if (typeof item === 'object' && 'value_ww' in item) return wwLib.wwLang.getText(item.name);
             if (!this.isObjectsCollection && !this.isCollectionId) return item;
-            if (this.content.displayBy === 'none') return '';
-            if (item && item[this.content.displayBy]) return item[this.content.displayBy];
+            if (this.content.displayField === 'none') return '';
+            if (item && item[this.content.displayField]) return item[this.content.displayField];
             return item;
         },
-        handleChange(event) {
-            if (!this.options) return;
-            this.value = event.target.value;
+        getValueField(value) {
+            return value;
+        },
+        handleInput(event) {
+            if (this.content.options && typeof this.content.options[0] !== 'object') {
+                this.value = event.target.value;
+            } else {
+                if (this.options && this.options.length && this.content.displayField) {
+                    this.value =
+                        this.options[event.target.selectedIndex - 1][
+                            this.content.valueField && this.content.valueField !== 'none'
+                                ? this.content.valueField
+                                : this.content.displayField
+                        ];
+                }
+            }
         },
     },
 };
