@@ -1,16 +1,18 @@
 <template v-if="content">
     <select
+        v-model="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="content.name"
         :required="content.required"
         :multiple="content.multiple"
         :style="style"
-        @input="handleInput"
     >
-        <option value selected disabled>{{ wwLang.getText(content.placeholder) }}</option>
-        <option v-for="(option, index) in options" :key="index" :value="getLabel(option)">
-            {{ getLabel(option) }}
+        <option value selected disabled>
+            {{ wwLang.getText(content.placeholder) }}
+        </option>
+        <option v-for="(option, index) in options" :key="index" :value="option.value">
+            {{ option.name }}
         </option>
     </select>
 </template>
@@ -57,27 +59,24 @@ export default {
                 if (this.variableId) wwLib.wwVariable.updateValue(this.variableId, value);
             },
         },
-        isCollectionId() {
-            return typeof this.content.collection === 'string';
-        },
-        isObjectsCollection() {
-            if (this.options && this.options[0]) {
-                const itemType = typeof this.options[0];
-                if (itemType === 'object') return true;
-            }
-
-            return false;
-        },
         options() {
             if (!this.content.options) return;
             let data = this.content.options;
             if (data && !Array.isArray(data) && typeof data === 'object') {
-                return new Array(data);
+                data = new Array(data);
             } else if ((data && !Array.isArray(data)) || typeof data !== 'object') {
-                return [{}];
+                return [];
             }
-            console.log('test !');
-            return data.filter(item => !!item);
+
+            return data
+                .filter(item => !!item)
+                .map(item => {
+                    if (typeof item !== 'object') return { name: item, value: item };
+                    return {
+                        name: wwLib.wwLang.getText(item[this.content.displayField || 'name'] || ''),
+                        value: item[this.content.valueField || 'value'],
+                    };
+                });
         },
         style() {
             return {
@@ -87,30 +86,36 @@ export default {
         },
     },
     watch: {
-        'content.options'(data) {
-            if (data && data[0]) {
-                if (typeof data[0] !== 'object') return;
-                this.$emit('update:content:effect', { itemsProperties: Object.keys(data[0]) });
-                setTimeout(() => {
-                    if (this.content.itemsProperties && this.content.itemsProperties[0]) {
-                        this.$emit('update:content:effect', { displayField: this.content.itemsProperties[0] });
-                        this.$emit('update:content:effect', { valueField: this.content.itemsProperties[0] });
-                    }
-                }, 200);
-            }
-        },
         /* wwEditor:start */
-        isObjectsCollection: {
-            handler(value) {
-                this.$emit('update:sidepanel-content', { path: 'isObjectsCollection', value });
+        'content.options': {
+            immediate: true,
+            handler(options) {
+                const objectOptions = (options || []).filter(option => option && typeof option === 'object');
+                if (objectOptions[0]) {
+                    this.$emit('update:sidepanel-content', {
+                        path: 'itemsProperties',
+                        value: Object.keys(objectOptions[0]),
+                    });
+                } else {
+                    this.$emit('update:sidepanel-content', { path: 'itemsProperties', value: [] });
+                }
             },
-            imediate: true,
+        },
+        'wwEditorState.sidepanelContent.itemsProperties'(newProperties, oldProperties) {
+            if (_.isEqual(newProperties, oldProperties)) return;
+            if (this.wwEditorState.boundProps.options && newProperties && newProperties[0]) {
+                this.$emit('update:content:effect', { displayField: newProperties[0], valueField: newProperties[0] });
+            } else {
+                this.$emit('update:content:effect', { displayField: null, valueField: null });
+            }
         },
         'content.initialValue'(value) {
             if (value !== undefined && !this.content.variableId) {
                 this.value = value[this.content.valueField || this.content.displayField] || value;
-                this.$el.selectedIndex = this.options.indexOf(value) + 1;
             }
+        },
+        'wwEditorState.boundProps.options'(isBind) {
+            if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
         },
         /* wwEditor:end */
     },
@@ -118,31 +123,6 @@ export default {
         if (this.content.initialValue !== undefined && !this.content.variableId) {
             this.value = this.content.initialValue;
         }
-    },
-    methods: {
-        getLabel(item) {
-            if (typeof item === 'object' && 'value_ww' in item) return wwLib.wwLang.getText(item.name);
-            if (!this.isObjectsCollection && !this.isCollectionId) return item;
-            if (this.content.displayField === 'none') return '';
-            if (item && item[this.content.displayField]) return item[this.content.displayField];
-            return item;
-        },
-        handleInput(event) {
-            if (this.content.options && typeof this.content.options[0] !== 'object') {
-                this.value = event.target.value;
-            } else {
-                if ('value_ww' in this.content.options[0]) {
-                    this.value = this.options[event.target.selectedIndex - 1]['value_ww'];
-                } else if (this.options && this.options.length && this.content.displayField) {
-                    this.value =
-                        this.options[event.target.selectedIndex - 1][
-                            this.content.valueField && this.content.valueField !== 'none'
-                                ? this.content.valueField
-                                : this.content.displayField
-                        ];
-                }
-            }
-        },
     },
 };
 </script>

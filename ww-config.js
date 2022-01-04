@@ -21,12 +21,6 @@ export default {
             },
             defaultValue: '15px',
         },
-        isObjectsCollection: {
-            type: 'OnOff',
-            editorOnly: true,
-            hidden: true,
-            defaultValue: true,
-        },
         options: {
             label: { en: 'Options', fr: 'Options' },
             type: 'Array',
@@ -42,7 +36,7 @@ export default {
                                 options: { placeholder: 'Value' },
                                 multiLang: true,
                             },
-                            value_ww: {
+                            value: {
                                 label: { en: 'Value' },
                                 type: 'Text',
                                 options: { placeholder: 'Value' },
@@ -52,24 +46,22 @@ export default {
                 },
             },
             defaultValue: [
-                { value_ww: 'option', name: { en: 'option - 1', fr: 'option - 1' } },
-                { value_ww: 'option2', name: { en: 'option - 2', fr: 'option - 2' } },
+                { value: 'option', name: { en: 'option - 1', fr: 'option - 1' } },
+                { value: 'option2', name: { en: 'option - 2', fr: 'option - 2' } },
             ],
             bindable: true,
         },
         displayField: {
-            hidden: content =>
-                !content.options ||
-                (content.options && typeof content.options[0] === 'object' && 'value_ww' in content.options[0]) ||
-                (content.options && typeof content.options[0] !== 'object'),
+            hidden: (content, sidepanelContent, boundProps) =>
+                !boundProps.options || !content.options || (content.options && typeof content.options[0] !== 'object'),
             label: {
                 en: 'Display field',
                 fr: 'Display field',
             },
             type: 'TextSelect',
-            options: content => {
+            options: (content, sidepanelContent) => {
                 const data = content.options;
-                const options = content.itemsProperties
+                const options = sidepanelContent.itemsProperties
                     .map(item => {
                         return data && (typeof data[0][item] === 'string' || typeof data[0][item] === 'number')
                             ? { value: item, label: { en: item } }
@@ -78,34 +70,32 @@ export default {
                     .filter(item => !!item);
 
                 return {
-                    options: [{ value: 'none', label: { en: 'Select a property' } }, ...options],
+                    options: [{ value: null, label: { en: 'Select a property' } }, ...options],
                 };
             },
-            defaultValue: 'none',
+            defaultValue: null,
             section: 'settings',
         },
         valueField: {
-            hidden: content =>
-                !content.options ||
-                (content.options && typeof content.options[0] === 'object' && 'value_ww' in content.options[0]) ||
-                (content.options && typeof content.options[0] !== 'object'),
+            hidden: (content, sidepanelContent, boundProps) =>
+                !boundProps.options || !content.options || (content.options && typeof content.options[0] !== 'object'),
             label: {
                 en: 'Value field',
                 fr: 'Value field',
             },
             type: 'TextSelect',
-            options: content => {
-                const options = content.itemsProperties
+            options: (content, sidepanelContent) => {
+                const options = sidepanelContent.itemsProperties
                     .map(item => {
                         return { value: item, label: { en: item } };
                     })
                     .filter(item => !!item);
 
                 return {
-                    options: [{ value: 'none', label: { en: 'Select a property' } }, ...options],
+                    options: [{ value: null, label: { en: 'Select a property' } }, ...options],
                 };
             },
-            defaultValue: 'none',
+            defaultValue: null,
             section: 'settings',
         },
         variableId: {
@@ -117,7 +107,6 @@ export default {
                 types: ['String', 'Number', 'Query'],
             },
             section: 'settings',
-            bindable: true,
             defaultValue: null,
             hidden: content => !content.variableId,
         },
@@ -137,6 +126,7 @@ export default {
             multiLang: true,
             section: 'settings',
             defaultValue: { en: 'Select' },
+            bindable: true,
         },
         required: {
             label: { en: 'Required', fr: 'Requis' },
@@ -160,6 +150,7 @@ export default {
         itemsProperties: {
             hidden: true,
             defaultValue: [],
+            editorOnly: true,
         },
     },
 };
