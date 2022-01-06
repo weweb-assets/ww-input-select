@@ -1,16 +1,18 @@
-<template v-if="content.globalSettings">
+<template v-if="content">
     <select
         v-model="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
-        :name="content.globalSettings.name"
-        :required="content.globalSettings.required"
-        :multiple="content.globalSettings.multiple"
+        :name="content.name"
+        :required="content.required"
+        :multiple="content.multiple"
         :style="style"
     >
-        <option value selected disabled>{{ wwLang.getText(content.globalSettings.placeholder) }}</option>
-        <option v-for="option in content.globalSettings.options" :key="option.value" :value="option.value">
-            {{ wwLang.getText(option.name) }}
+        <option value selected disabled>
+            {{ wwLang.getText(content.placeholder) }}
+        </option>
+        <option v-for="(option, index) in options" :key="index" :value="option.value">
+            {{ option.name }}
         </option>
     </select>
 </template>
@@ -26,9 +28,9 @@ export default {
         /* wwEditor:end */
         uid: { type: String, required: true },
     },
-    emits: ['trigger-event'],
+    emits: ['trigger-event', 'update:content:effect', 'update:sidepanel-content'],
     setup(props) {
-        const internalVariableId = computed(() => props.content.globalSettings.variableId);
+        const internalVariableId = computed(() => props.content.variableId);
         const variableId = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '', internalVariableId);
 
         return { variableId };
@@ -57,16 +59,70 @@ export default {
                 if (this.variableId) wwLib.wwVariable.updateValue(this.variableId, value);
             },
         },
+        options() {
+            if (!this.content.options) return;
+            let data = this.content.options;
+            if (data && !Array.isArray(data) && typeof data === 'object') {
+                data = new Array(data);
+            } else if ((data && !Array.isArray(data)) || typeof data !== 'object') {
+                return [];
+            }
+
+            return data
+                .filter(item => !!item)
+                .map(item => {
+                    if (typeof item !== 'object') return { name: item, value: item };
+                    return {
+                        name: wwLib.wwLang.getText(item[this.content.displayField || 'name'] || ''),
+                        value: item[this.content.valueField || 'value'],
+                    };
+                });
+        },
         style() {
             return {
-                color: this.content.globalStyle.color,
-                fontSize: `${this.content.globalStyle.fontSize}`,
+                color: this.content.color,
+                fontSize: `${this.content.fontSize}`,
             };
         },
     },
+    watch: {
+        /* wwEditor:start */
+        'content.options': {
+            immediate: true,
+            handler(options) {
+                const objectOptions = (options || []).filter(option => option && typeof option === 'object');
+                if (objectOptions[0]) {
+                    this.$emit('update:sidepanel-content', {
+                        path: 'itemsProperties',
+                        value: Object.keys(objectOptions[0]),
+                    });
+                } else {
+                    this.$emit('update:sidepanel-content', { path: 'itemsProperties', value: [] });
+                }
+            },
+        },
+        'wwEditorState.sidepanelContent.itemsProperties'(newProperties, oldProperties) {
+            if (_.isEqual(newProperties, oldProperties)) return;
+            if (this.wwEditorState.boundProps.options && newProperties && newProperties[0]) {
+                this.$emit('update:content:effect', { displayField: newProperties[0], valueField: newProperties[0] });
+            } else {
+                this.$emit('update:content:effect', { displayField: null, valueField: null });
+            }
+        },
+        'content.initialValue'(value) {
+            if (value !== undefined && !this.content.variableId) {
+                this.value = value[this.content.valueField || this.content.displayField] || value;
+            }
+        },
+        'wwEditorState.boundProps.options'(isBind) {
+            if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
+        },
+        /* wwEditor:end */
+    },
     mounted() {
-        if (this.content.initialValue !== undefined && !this.content.globalSettings.variableId)
+        if (this.content.initialValue !== undefined && !this.content.variableId) {
             this.value = this.content.initialValue;
+        }
     },
 };
 </script>
