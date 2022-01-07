@@ -100,7 +100,7 @@ export default {
         },
         value: {
             label: {
-                en: 'Initial value',
+                en: 'Value',
             },
             type: 'Text',
             bindable: true,
