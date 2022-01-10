@@ -98,26 +98,13 @@ export default {
             defaultValue: null,
             section: 'settings',
         },
-        variableId: {
+        value: {
             label: {
-                en: 'Associated variable',
-            },
-            type: 'Variable',
-            options: {
-                types: ['String', 'Number', 'Query'],
-            },
-            section: 'settings',
-            defaultValue: null,
-            hidden: content => !content.variableId,
-        },
-        initialValue: {
-            label: {
-                en: 'Initial value',
+                en: 'Value',
             },
             type: 'Text',
             bindable: true,
             section: 'settings',
-            hidden: content => content.variableId,
         },
         placeholder: {
             label: { en: 'Placeholder', fr: 'Placeholder' },
@@ -139,13 +126,6 @@ export default {
             type: 'OnOff',
             section: 'settings',
             defaultValue: false,
-        },
-        name: {
-            label: { en: 'Name', fr: 'Name' },
-            type: 'Text',
-            options: { placeholder: 'Name' },
-            section: 'settings',
-            defaultValue: '',
         },
         itemsProperties: {
             hidden: true,

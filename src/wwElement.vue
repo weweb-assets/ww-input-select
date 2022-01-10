@@ -1,9 +1,10 @@
 <template v-if="content">
     <select
+        ref="input"
         v-model="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
-        :name="content.name"
+        :name="wwElementState.name"
         :required="content.required"
         :multiple="content.multiple"
         :style="style"
@@ -18,8 +19,6 @@
 </template>
 
 <script>
-import { computed } from 'vue';
-
 export default {
     props: {
         content: { type: Object, required: true },
@@ -27,18 +26,12 @@ export default {
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
         uid: { type: String, required: true },
+        wwElementState: { type: Object, required: true },
     },
     emits: ['trigger-event', 'update:content:effect', 'update:sidepanel-content'],
     setup(props) {
-        const internalVariableId = computed(() => props.content.variableId);
-        const variableId = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '', internalVariableId);
-
-        return { variableId };
-    },
-    data() {
-        return {
-            internalValue: '',
-        };
+        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '');
+        return { variableValue, setValue };
     },
     computed: {
         isEditing() {
@@ -50,13 +43,13 @@ export default {
         },
         value: {
             get() {
-                if (this.variableId) return wwLib.wwVariable.getValue(this.variableId);
-                return this.internalValue;
+                return this.variableValue;
             },
             set(value) {
-                this.$emit('trigger-event', { name: 'change', event: { value } });
-                this.internalValue = value;
-                if (this.variableId) wwLib.wwVariable.updateValue(this.variableId, value);
+                if (value !== this.variableValue) {
+                    this.$emit('trigger-event', { name: 'change', event: { value } });
+                    this.setValue(value);
+                }
             },
         },
         options() {
@@ -86,6 +79,9 @@ export default {
         },
     },
     watch: {
+        'content.value'(value) {
+            this.value = value;
+        },
         /* wwEditor:start */
         'content.options': {
             immediate: true,
@@ -109,20 +105,10 @@ export default {
                 this.$emit('update:content:effect', { displayField: null, valueField: null });
             }
         },
-        'content.initialValue'(value) {
-            if (value !== undefined && !this.content.variableId) {
-                this.value = value[this.content.valueField || this.content.displayField] || value;
-            }
-        },
         'wwEditorState.boundProps.options'(isBind) {
             if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
         },
         /* wwEditor:end */
-    },
-    mounted() {
-        if (this.content.initialValue !== undefined && !this.content.variableId) {
-            this.value = this.content.initialValue;
-        }
     },
 };
 </script>
