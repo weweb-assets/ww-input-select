@@ -43,10 +43,10 @@ export default {
         },
         value: {
             get() {
-                return this.variableValue.toString();
+                return this.variableValue;
             },
             set(value) {
-                if (value !== undefined && value !== this.variableValue) {
+                if (value !== this.variableValue) {
                     this.$emit('trigger-event', { name: 'change', event: { value } });
                     this.setValue(value);
                 }
@@ -79,6 +79,9 @@ export default {
         },
     },
     watch: {
+        'content.value'(value) {
+            this.value = value;
+        },
         /* wwEditor:start */
         'content.options': {
             immediate: true,
@@ -104,13 +107,6 @@ export default {
         },
         'wwEditorState.boundProps.options'(isBind) {
             if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
-        },
-        'content.value'(value) {
-            this.value = value;
-            if (!this.options) return;
-            this.$refs.input.value = this.options.find(
-                item => item.value.toString().toLowerCase() === value.toString().toLowerCase()
-            ).name;
         },
         /* wwEditor:end */
     },
