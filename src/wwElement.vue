@@ -31,7 +31,11 @@ export default {
     },
     emits: ['trigger-event', 'update:content:effect', 'update:sidepanel-content'],
     setup(props) {
-        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '');
+        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(
+            props.uid,
+            'value',
+            props.content.value === undefined ? '' : props.content.value
+        );
         return { variableValue, setValue };
     },
     computed: {
