@@ -103,7 +103,7 @@ export default {
         },
         value: {
             label: {
-                en: 'Value',
+                en: 'Init value',
             },
             type: 'Text',
             bindable: true,
