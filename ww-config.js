@@ -2,7 +2,10 @@ export default {
     editor: {
         label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
     },
-    triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: '' } }],
+    triggerEvents: [
+        { name: 'change', label: { en: 'On change' }, event: { value: '' } },
+        { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
+    ],
     properties: {
         color: {
             label: { en: 'Color', fr: 'Couleur' },

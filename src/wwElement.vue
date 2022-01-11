@@ -8,6 +8,7 @@
         :required="content.required"
         :multiple="content.multiple"
         :style="style"
+        @input="handleManualInput"
     >
         <option value selected disabled>
             {{ wwLang.getText(content.placeholder) }}
@@ -46,8 +47,7 @@ export default {
                 return this.variableValue.toString();
             },
             set(value) {
-                if (value !== undefined && value !== this.variableValue) {
-                    this.$emit('trigger-event', { name: 'change', event: { value } });
+                if (value !== this.variableValue) {
                     this.setValue(value);
                 }
             },
@@ -105,14 +105,23 @@ export default {
         'wwEditorState.boundProps.options'(isBind) {
             if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
         },
-        'content.value'(value) {
-            this.value = value;
+        'content.value'(newValue, OldValue) {
+            if (newValue === OldValue) return;
+            this.value = newValue;
+            this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
             if (!this.options) return;
-            this.$refs.input.value = this.options.find(
-                item => item.value.toString().toLowerCase() === value.toString().toLowerCase()
-            ).name;
+
+            const match = this.options.find(
+                item => item.value.toString().toLowerCase() === newValue.toString().toLowerCase()
+            );
+            if (match && match.name) this.$refs.input.value = match.name;
         },
         /* wwEditor:end */
+    },
+    methods: {
+        handleManualInput(event) {
+            this.$emit('trigger-event', { name: 'change', event: { value: event.target.value } });
+        },
     },
 };
 </script>
