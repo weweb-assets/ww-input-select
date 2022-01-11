@@ -1,14 +1,14 @@
 <template v-if="content">
     <select
         ref="input"
-        v-model="value"
+        :value="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
         :multiple="content.multiple"
         :style="style"
-        @input="handleManualInput"
+        @input="handleManualInput($event.target.value)"
     >
         <option value selected disabled>
             {{ wwLang.getText(content.placeholder) }}
@@ -42,15 +42,8 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
-        value: {
-            get() {
-                return this.variableValue.toString();
-            },
-            set(value) {
-                if (value !== this.variableValue) {
-                    this.setValue(value);
-                }
-            },
+        value() {
+            return `${this.variableValue}`;
         },
         options() {
             if (!this.content.options) return;
@@ -105,22 +98,18 @@ export default {
         'wwEditorState.boundProps.options'(isBind) {
             if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
         },
+        /* wwEditor:end */
         'content.value'(newValue, OldValue) {
             if (newValue === OldValue) return;
-            this.value = newValue;
+            this.setValue(newValue);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
-            if (!this.options) return;
-
-            const match = this.options.find(
-                item => item.value.toString().toLowerCase() === newValue.toString().toLowerCase()
-            );
-            if (match && match.name) this.$refs.input.value = match.name;
         },
-        /* wwEditor:end */
     },
     methods: {
-        handleManualInput(event) {
-            this.$emit('trigger-event', { name: 'change', event: { value: event.target.value } });
+        handleManualInput(value) {
+            if (value === this.value) return;
+            this.setValue(value);
+            this.$emit('trigger-event', { name: 'change', event: { value } });
         },
     },
 };
