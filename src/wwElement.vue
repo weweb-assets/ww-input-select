@@ -76,6 +76,9 @@ export default {
         },
     },
     watch: {
+        'content.value'(value) {
+            this.value = value;
+        },
         /* wwEditor:start */
         'content.options': {
             immediate: true,
