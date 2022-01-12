@@ -1,13 +1,14 @@
 <template v-if="content">
     <select
         ref="input"
-        v-model="value"
+        :value="value"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
         :multiple="content.multiple"
         :style="style"
+        @input="handleManualInput($event.target.value)"
     >
         <option value selected disabled>
             {{ wwLang.getText(content.placeholder) }}
@@ -30,7 +31,11 @@ export default {
     },
     emits: ['trigger-event', 'update:content:effect', 'update:sidepanel-content'],
     setup(props) {
-        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(props.uid, 'value', '');
+        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(
+            props.uid,
+            'value',
+            props.content.value === undefined ? '' : props.content.value
+        );
         return { variableValue, setValue };
     },
     computed: {
@@ -41,16 +46,8 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
-        value: {
-            get() {
-                return this.variableValue;
-            },
-            set(value) {
-                if (value !== this.variableValue) {
-                    this.$emit('trigger-event', { name: 'change', event: { value } });
-                    this.setValue(value);
-                }
-            },
+        value() {
+            return `${this.variableValue}`;
         },
         options() {
             if (!this.content.options) return;
@@ -109,6 +106,19 @@ export default {
             if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
         },
         /* wwEditor:end */
+        'content.value'(newValue) {
+            newValue = `${newValue}`
+            if (newValue === this.value) return;
+            this.setValue(newValue);
+            this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
+        },
+    },
+    methods: {
+        handleManualInput(value) {
+            if (value === this.value) return;
+            this.setValue(value);
+            this.$emit('trigger-event', { name: 'change', event: { value } });
+        },
     },
 };
 </script>
