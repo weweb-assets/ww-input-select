@@ -125,7 +125,6 @@ export default {
 
 <style lang="scss" scoped>
 .ww-form-dropdown {
-    appearance: none;
     outline: none;
     width: 100%;
     height: auto;
