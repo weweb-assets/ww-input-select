@@ -6,7 +6,6 @@
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
-        :multiple="content.multiple"
         :style="style"
         @input="handleManualInput($event.target.value)"
     >

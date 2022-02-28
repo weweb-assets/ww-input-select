@@ -124,12 +124,6 @@ export default {
             section: 'settings',
             defaultValue: true,
         },
-        multiple: {
-            label: { en: 'Multiple', fr: 'Multiple' },
-            type: 'OnOff',
-            section: 'settings',
-            defaultValue: false,
-        },
         itemsProperties: {
             hidden: true,
             defaultValue: [],
