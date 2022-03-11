@@ -1,6 +1,7 @@
 export default {
     editor: {
         label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
+        icon: 'fontawesome/solid/chevron-down'
     },
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' } },
