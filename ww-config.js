@@ -61,20 +61,13 @@ export default {
                 en: 'Display field',
                 fr: 'Display field',
             },
-            type: 'TextSelect',
-            options: (content, sidepanelContent) => {
-                const data = content.options;
-                const options = sidepanelContent.itemsProperties
-                    .map(item => {
-                        return data && (typeof data[0][item] === 'string' || typeof data[0][item] === 'number')
-                            ? { value: item, label: { en: item } }
-                            : null;
-                    })
-                    .filter(item => !!item);
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.options.length || typeof content.options[0] !== 'object') {
+                    return null;
+                }
 
-                return {
-                    options: [{ value: null, label: { en: 'Select a property' } }, ...options],
-                };
+                return { object: content.options[0] };
             },
             defaultValue: null,
             section: 'settings',
@@ -86,17 +79,13 @@ export default {
                 en: 'Value field',
                 fr: 'Value field',
             },
-            type: 'TextSelect',
-            options: (content, sidepanelContent) => {
-                const options = sidepanelContent.itemsProperties
-                    .map(item => {
-                        return { value: item, label: { en: item } };
-                    })
-                    .filter(item => !!item);
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.options.length || typeof content.options[0] !== 'object') {
+                    return null;
+                }
 
-                return {
-                    options: [{ value: null, label: { en: 'Select a property' } }, ...options],
-                };
+                return { object: content.options[0] };
             },
             defaultValue: null,
             section: 'settings',
