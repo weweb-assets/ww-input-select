@@ -54,7 +54,7 @@ export default {
             ],
             bindable: true,
         },
-        displayField: {
+        labelField: {
             hidden: (content, sidepanelContent, boundProps) =>
                 !boundProps.options || !content.options || (content.options && typeof content.options[0] !== 'object'),
             label: {
