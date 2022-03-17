@@ -28,7 +28,7 @@ export default {
         uid: { type: String, required: true },
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content:effect', 'update:sidepanel-content'],
+    emits: ['trigger-event', 'update:content:effect'],
     setup(props) {
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(
             props.uid,
@@ -61,9 +61,11 @@ export default {
                 .filter(item => !!item)
                 .map(item => {
                     if (typeof item !== 'object') return { name: item, value: item };
+                    const labelField = this.content.labelField || 'name'
+                    const valueField = this.content.valueField || 'value'
                     return {
-                        name: wwLib.wwLang.getText(item[this.content.displayField || 'name'] || ''),
-                        value: item[this.content.valueField || 'value'],
+                        name: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(item, labelField) || ''),
+                        value: wwLib.resolveObjectPropertyPath(item, valueField),
                     };
                 });
         },
@@ -75,34 +77,9 @@ export default {
         },
     },
     watch: {
-        'content.value'(value) {
-            this.value = value;
-        },
         /* wwEditor:start */
-        'content.options': {
-            immediate: true,
-            handler(options) {
-                const objectOptions = (options || []).filter(option => option && typeof option === 'object');
-                if (objectOptions[0]) {
-                    this.$emit('update:sidepanel-content', {
-                        path: 'itemsProperties',
-                        value: Object.keys(objectOptions[0]),
-                    });
-                } else {
-                    this.$emit('update:sidepanel-content', { path: 'itemsProperties', value: [] });
-                }
-            },
-        },
-        'wwEditorState.sidepanelContent.itemsProperties'(newProperties, oldProperties) {
-            if (_.isEqual(newProperties, oldProperties)) return;
-            if (this.wwEditorState.boundProps.options && newProperties && newProperties[0]) {
-                this.$emit('update:content:effect', { displayField: newProperties[0], valueField: newProperties[0] });
-            } else {
-                this.$emit('update:content:effect', { displayField: null, valueField: null });
-            }
-        },
         'wwEditorState.boundProps.options'(isBind) {
-            if (!isBind) this.$emit('update:content:effect', { displayField: null, valueField: null });
+            if (!isBind) this.$emit('update:content:effect', { labelField: null, valueField: null });
         },
         /* wwEditor:end */
         'content.value'(newValue) {
