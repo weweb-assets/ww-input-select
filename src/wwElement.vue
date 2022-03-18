@@ -30,11 +30,12 @@ export default {
     },
     emits: ['trigger-event', 'update:content:effect'],
     setup(props) {
-        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(
-            props.uid,
-            'value',
-            props.content.value === undefined ? '' : props.content.value
-        );
+        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'value',
+            defaultValue: props.content.value,
+            sanitizer: value => (value === undefined ? '' : String(value)),
+        });
         return { variableValue, setValue };
     },
     computed: {
@@ -46,7 +47,7 @@ export default {
             return false;
         },
         value() {
-            return `${this.variableValue}`;
+            return this.variableValue;
         },
         options() {
             if (!this.content.options) return;
@@ -61,8 +62,8 @@ export default {
                 .filter(item => !!item)
                 .map(item => {
                     if (typeof item !== 'object') return { name: item, value: item };
-                    const labelField = this.content.labelField || 'name'
-                    const valueField = this.content.valueField || 'value'
+                    const labelField = this.content.labelField || 'name';
+                    const valueField = this.content.valueField || 'value';
                     return {
                         name: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(item, labelField) || ''),
                         value: wwLib.resolveObjectPropertyPath(item, valueField),
@@ -82,18 +83,19 @@ export default {
             if (!isBind) this.$emit('update:content:effect', { labelField: null, valueField: null });
         },
         /* wwEditor:end */
-        'content.value'(newValue) {
-            newValue = `${newValue}`
-            if (newValue === this.value) return;
-            this.setValue(newValue);
-            this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
+        'content.value'(value) {
+            const { newValue, hasChanged } = this.setValue(value);
+            if (hasChanged) {
+                this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
+            }
         },
     },
     methods: {
         handleManualInput(value) {
-            if (value === this.value) return;
-            this.setValue(value);
-            this.$emit('trigger-event', { name: 'change', event: { value } });
+            const { newValue, hasChanged } = this.setValue(value);
+            if (hasChanged) {
+                this.$emit('trigger-event', { name: 'change', event: { newValue } });
+            }
         },
     },
 };
