@@ -30,11 +30,11 @@ export default {
     },
     emits: ['trigger-event', 'update:content:effect'],
     setup(props) {
-        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable(
-            props.uid,
-            'value',
-            props.content.value === undefined ? '' : props.content.value
-        );
+        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'value',
+            defaultValue: props.content.value === undefined ? '' : props.content.value,
+        });
         return { variableValue, setValue };
     },
     computed: {
@@ -61,8 +61,8 @@ export default {
                 .filter(item => !!item)
                 .map(item => {
                     if (typeof item !== 'object') return { name: item, value: item };
-                    const labelField = this.content.labelField || 'name'
-                    const valueField = this.content.valueField || 'value'
+                    const labelField = this.content.labelField || 'name';
+                    const valueField = this.content.valueField || 'value';
                     return {
                         name: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(item, labelField) || ''),
                         value: wwLib.resolveObjectPropertyPath(item, valueField),
@@ -83,7 +83,7 @@ export default {
         },
         /* wwEditor:end */
         'content.value'(newValue) {
-            newValue = `${newValue}`
+            newValue = `${newValue}`;
             if (newValue === this.value) return;
             this.setValue(newValue);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
