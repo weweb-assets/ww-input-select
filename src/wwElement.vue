@@ -46,11 +46,11 @@ export default {
             return false;
         },
         value() {
-            if (!this.options.some(option => option.value === `${this.variableValue}`)) return null;
-            return `${this.variableValue}`;
+            if (!this.options.some(option => option.value === this.variableValue)) return null;
+            return this.variableValue;
         },
         options() {
-            if (!this.content.options) return;
+            if (!this.content.options) return [];
             let data = this.content.options;
             if (data && !Array.isArray(data) && typeof data === 'object') {
                 data = new Array(data);
