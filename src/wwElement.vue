@@ -1,7 +1,7 @@
 <template v-if="content">
     <select
         ref="input"
-        v-model.number="internalValue"
+        v-model="internalValue"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
@@ -50,9 +50,10 @@ export default {
                 return this.variableValue;
             },
             set(value) {
-                if (value === this.internalValue) return;
-                this.setValue(value);
-                this.$emit('trigger-event', { name: 'change', event: { value } });
+                const rawOption = this.options.find(option => option.value == value);
+                if (rawOption.value === this.internalValue) return;
+                this.setValue(rawOption.value);
+                this.$emit('trigger-event', { name: 'change', event: { value: rawOption.value } });
             },
         },
         options() {
