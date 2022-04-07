@@ -1,13 +1,12 @@
 <template v-if="content">
     <select
         ref="input"
-        :value="value"
+        v-model.number="internalValue"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
         :style="style"
-        @input="handleManualInput($event.target.value)"
     >
         <option value selected disabled>
             {{ wwLang.getText(content.placeholder) }}
@@ -45,9 +44,16 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
-        value() {
-            if (!this.options.some(option => option.value === this.variableValue)) return null;
-            return this.variableValue;
+        internalValue: {
+            get() {
+                if (!this.options.some(option => option.value === this.variableValue)) return null;
+                return this.variableValue;
+            },
+            set(value) {
+                if (value === this.internalValue) return;
+                this.setValue(value);
+                this.$emit('trigger-event', { name: 'change', event: { value } });
+            },
         },
         options() {
             if (!this.content.options) return [];
@@ -84,17 +90,9 @@ export default {
         },
         /* wwEditor:end */
         'content.value'(newValue) {
-            newValue = `${newValue}`;
-            if (newValue === this.value) return;
+            if (newValue === this.internalValue) return;
             this.setValue(newValue);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
-        },
-    },
-    methods: {
-        handleManualInput(value) {
-            if (value === this.value) return;
-            this.setValue(value);
-            this.$emit('trigger-event', { name: 'change', event: { value } });
         },
     },
 };
