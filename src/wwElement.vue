@@ -46,7 +46,7 @@ export default {
         },
         internalValue: {
             get() {
-                if (!this.options.some(option => option.value === this.variableValue)) return null;
+                if (!this.options.some(option => option.value === this.variableValue)) return '';
                 return this.variableValue;
             },
             set(value) {
