@@ -7,7 +7,7 @@ export default {
         { name: 'change', label: { en: 'On change' }, event: { value: '' } },
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
     ],
-    inherit: 'ww-text',
+    inherit: { type: 'ww-text', exclude: ['text'] },
     properties: {
         options: {
             label: { en: 'Options', fr: 'Options' },
