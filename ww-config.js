@@ -1,30 +1,14 @@
 export default {
     editor: {
         label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
-        icon: 'fontawesome/solid/chevron-down'
+        icon: 'fontawesome/solid/chevron-down',
     },
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' } },
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
     ],
+    inherit: 'ww-text',
     properties: {
-        color: {
-            label: { en: 'Color', fr: 'Couleur' },
-            type: 'Color',
-            defaultValue: 'black',
-        },
-        fontSize: {
-            label: { en: 'Font size', fr: 'Taille du texte' },
-            type: 'Length',
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 10, max: 50 },
-                    { value: 'em', label: 'em', min: 1, max: 50 },
-                    { value: 'rem', label: 'rem', min: 1, max: 50 },
-                ],
-            },
-            defaultValue: '15px',
-        },
         options: {
             label: { en: 'Options', fr: 'Options' },
             type: 'Array',
@@ -113,6 +97,13 @@ export default {
             type: 'OnOff',
             section: 'settings',
             defaultValue: true,
+        },
+        readonly: {
+            label: { en: 'Read only', fr: 'Lecture seule' },
+            type: 'OnOff',
+            section: 'settings',
+            bindable: true,
+            defaultValue: false,
         },
         itemsProperties: {
             hidden: true,
