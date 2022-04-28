@@ -1,6 +1,6 @@
 <template v-if="content">
     <select
-        v-if="!content.readonly"
+        v-if="!isReadonly"
         ref="input"
         v-model="internalValue"
         class="ww-form-dropdown"
@@ -110,6 +110,16 @@ export default {
                 textDecorationColor: this.content['_ww-text_textDecorationColor'],
             };
             return style;
+        },
+        isReadonly() {
+            /* wwEditor:start */
+            if (this.wwEditorState.isSelected) {
+                return this.wwElementState.states.includes('readonly');
+            }
+            /* wwEditor:end */
+            return this.wwElementState.props.readonly === undefined
+                ? this.content.readonly
+                : this.wwElementState.props.readonly;
         },
     },
     watch: {
