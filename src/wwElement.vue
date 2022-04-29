@@ -84,32 +84,7 @@ export default {
             return this.options.find(({ value }) => value === this.internalValue);
         },
         textStyle() {
-            const style = {
-                ...(this.content['_ww-text_font']
-                    ? {
-                          fontSize: 'unset',
-                          fontFamily: 'unset',
-                          lineHeight: 'unset',
-                          fontWeight: 'unset',
-                          font: this.content['_ww-text_font'],
-                      }
-                    : {
-                          fontSize: this.content['_ww-text_fontSize'],
-                          fontFamily: this.content['_ww-text_fontFamily'],
-                          lineHeight: this.content['_ww-text_lineHeight'],
-                          fontWeight: this.content['_ww-text_fontWeight'],
-                      }),
-                textAlign: this.content['_ww-text_textAlign'],
-                color: this.content['_ww-text_color'],
-                textTransform: this.content['_ww-text_textTransform'],
-                textShadow: this.content['_ww-text_textShadow'],
-                letterSpacing: this.content['_ww-text_letterSpacing'],
-                wordSpacing: this.content['_ww-text_wordSpacing'],
-                textDecoration: this.content['_ww-text_textDecoration'],
-                textDecorationStyle: this.content['_ww-text_textDecorationStyle'],
-                textDecorationColor: this.content['_ww-text_textDecorationColor'],
-            };
-            return style;
+            return wwLib.getTextStyleFromContent(this.content);
         },
         isReadonly() {
             /* wwEditor:start */
@@ -133,12 +108,14 @@ export default {
             this.setValue(newValue);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
         },
-        'content.readonly'(value) {
-            if (value) {
-                this.$emit('add-state', 'readonly');
-            } else {
-                this.$emit('remove-state', 'readonly');
-            }
+        isReadonly: {
+            handler(value) {
+                if (value) {
+                    this.$emit('add-state', 'readonly');
+                } else {
+                    this.$emit('remove-state', 'readonly');
+                }
+            },
         },
     },
 };
