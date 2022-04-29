@@ -109,6 +109,7 @@ export default {
             this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
         },
         isReadonly: {
+            immediate: true,
             handler(value) {
                 if (value) {
                     this.$emit('add-state', 'readonly');
