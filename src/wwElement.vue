@@ -16,7 +16,7 @@
             {{ option.name }}
         </option>
     </select>
-    <wwText v-else :text="selectedOption ? selectedOption.name : `${internalValue}`"></wwText>
+    <wwText v-else :text="selectedOption ? selectedOption.name : `${variableValue}`"></wwText>
 </template>
 
 <script>
