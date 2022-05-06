@@ -113,6 +113,7 @@ export default {
             type: 'OnOff',
             section: 'settings',
             defaultValue: true,
+            bindable: true
         },
         itemsProperties: {
             hidden: true,
