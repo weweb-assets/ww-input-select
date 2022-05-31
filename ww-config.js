@@ -104,6 +104,7 @@ export default {
             section: 'settings',
             bindable: true,
             defaultValue: false,
+            hidden: (content, sidePanelContent, boundProps, wwProps) => !!(wwProps && wwProps.readonly !== undefined),
         },
         itemsProperties: {
             hidden: true,
