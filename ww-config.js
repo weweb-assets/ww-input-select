@@ -97,6 +97,7 @@ export default {
             type: 'OnOff',
             section: 'settings',
             defaultValue: true,
+            bindable: true
         },
         readonly: {
             label: { en: 'Read only', fr: 'Lecture seule' },

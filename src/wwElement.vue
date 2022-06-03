@@ -8,6 +8,7 @@
         :name="wwElementState.name"
         :required="content.required"
         :style="textStyle"
+        @change="handleManualInput($event)"
     >
         <option value selected disabled>
             {{ wwLang.getText(content.placeholder) }}
@@ -51,13 +52,7 @@ export default {
             get() {
                 if (!this.options.some(option => option.value === this.variableValue)) return '';
                 return this.variableValue;
-            },
-            set(value) {
-                const rawOption = this.options.find(option => option.value == value);
-                if (rawOption.value === this.internalValue) return;
-                this.setValue(rawOption.value);
-                this.$emit('trigger-event', { name: 'change', event: { value: rawOption.value } });
-            },
+            }
         },
         options() {
             if (!this.content.options) return [];
@@ -119,6 +114,15 @@ export default {
             },
         },
     },
+    methods: {
+        handleManualInput(event){
+            const value = event.target.value;
+            const rawOption = this.options.find(option => option.value == value);
+            if (rawOption.value === this.internalValue) return;
+            this.setValue(rawOption.value);
+            this.$emit('trigger-event', { name: 'change', event: { domEvent: event, value: rawOption.value } });
+        }
+    }
 };
 </script>
 
