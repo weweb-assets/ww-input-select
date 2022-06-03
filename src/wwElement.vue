@@ -1,12 +1,13 @@
 <template v-if="content">
     <select
+        v-if="!isReadonly"
         ref="input"
         v-model="internalValue"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
-        :style="style"
+        :style="textStyle"
         @change="handleManualInput($event)"
     >
         <option value selected disabled>
@@ -16,6 +17,7 @@
             {{ option.name }}
         </option>
     </select>
+    <wwText v-else :text="selectedOption ? selectedOption.name : `${variableValue}`"></wwText>
 </template>
 
 <script>
@@ -28,13 +30,14 @@ export default {
         uid: { type: String, required: true },
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content:effect'],
+    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
     setup(props) {
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'value',
             defaultValue: props.content.value === undefined ? '' : props.content.value,
         });
+
         return { variableValue, setValue };
     },
     computed: {
@@ -72,11 +75,21 @@ export default {
                     };
                 });
         },
-        style() {
-            return {
-                color: this.content.color,
-                fontSize: `${this.content.fontSize}`,
-            };
+        selectedOption() {
+            return this.options.find(({ value }) => value === this.internalValue);
+        },
+        textStyle() {
+            return wwLib.getTextStyleFromContent(this.content);
+        },
+        isReadonly() {
+            /* wwEditor:start */
+            if (this.wwEditorState.isSelected) {
+                return this.wwElementState.states.includes('readonly');
+            }
+            /* wwEditor:end */
+            return this.wwElementState.props.readonly === undefined
+                ? this.content.readonly
+                : this.wwElementState.props.readonly;
         },
     },
     watch: {
@@ -89,6 +102,16 @@ export default {
             if (newValue === this.internalValue) return;
             this.setValue(newValue);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
+        },
+        isReadonly: {
+            immediate: true,
+            handler(value) {
+                if (value) {
+                    this.$emit('add-state', 'readonly');
+                } else {
+                    this.$emit('remove-state', 'readonly');
+                }
+            },
         },
     },
     methods: {
