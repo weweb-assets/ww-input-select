@@ -134,6 +134,9 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-radius: inherit;
     /* wwEditor:start */
     &.editing {
         pointer-events: none;
