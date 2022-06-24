@@ -1,44 +1,98 @@
-<template v-if="content">
-    <select
-        v-if="!isReadonly"
-        ref="input"
+<template>
+    <Multiselect
+        ref="select"
         v-model="internalValue"
-        class="ww-form-dropdown"
+        class="input-multiselect"
+        :style="cssVariables"
         :class="{ editing: isEditing }"
-        :name="wwElementState.name"
-        :required="content.required"
-        :style="textStyle"
-        @change="handleManualInput($event)"
+        :options="options"
+        :close-on-select="content.closeOnSelect"
+        :searchable="content.searchable"
+        mode="single"
+        :disabled="content.disabled"
+        :hideSelected="content.hideSelected"
+        :placeholder="placeholder"
+        :create-option="content.allowCreation"
     >
-        <option value selected disabled>
-            {{ wwLang.getText(content.placeholder) }}
-        </option>
-        <option v-for="(option, index) in options" :key="index" :value="option.value">
-            {{ option.name }}
-        </option>
-    </select>
-    <wwText v-else :text="selectedOption ? selectedOption.name : `${variableValue}`"></wwText>
+        <!-- Placeholder -->
+        <template v-slot:placeholder>
+            <wwElement
+                class="multiselect-placeholder-el"
+                v-bind="content.placeholderElement"
+                :wwProps="{ text: placeholder }"
+            />
+        </template>
+
+        <!-- Tag selected with remove icon -->
+        <template v-slot:singlelabel="{ value }">
+            <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
+                <wwLayoutItemContext :index="value" :item="{}" is-repeat :data="value">
+                    <wwElement
+                        class="multiselect-single-label-el"
+                        v-bind="content.optionElementSelected"
+                        :wwProps="{ text: value.label }"
+                    />
+                </wwLayoutItemContext>
+            </div>
+        </template>
+
+        <!-- Tag unselected in list -->
+        <template v-slot:option="{ option }">
+            <wwLayoutItemContext :index="option" :item="{}" is-repeat :data="option">
+                <wwElement
+                    class="multiselect-single-label-el"
+                    v-bind="content.optionElement"
+                    :wwProps="{ text: option.label }"
+                />
+            </wwLayoutItemContext>
+        </template>
+
+        <!-- Small triangle displayed on the right of the input -->
+        <template v-slot:caret>
+            <wwElement v-bind="content.caretIconElement" />
+        </template>
+
+        <!-- Clear icon shown when the input has at least one selected options -->
+        <template v-slot:clear="{ clear }">
+            <wwElement v-bind="content.clearIconElement" @mousedown.prevent="isEditing ? null : clear($event)" />
+        </template>
+    </Multiselect>
 </template>
 
 <script>
+import Multiselect from '@vueform/multiselect';
+
+const DEFAULT_LABEL_FIELD = 'label';
+const DEFAULT_VALUE_FIELD = 'value';
+const DEFAULT_TEXT_COLOR_FIELD = 'textColor';
+const DEFAULT_BG_COLOR_FIELD = 'bgColor';
+
 export default {
+    components: { Multiselect },
+    emits: ['trigger-event', 'update:content:effect'],
     props: {
+        uid: { type: String, required: true },
         content: { type: Object, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
-        uid: { type: String, required: true },
-        wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
     setup(props) {
-        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
+        const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
-            name: 'value',
-            defaultValue: props.content.value === undefined ? '' : props.content.value,
+            name: 'currentSelection',
+            type: 'string',
+            defaultValue: props.content.initialValue ? props.content.initialValue : '',
         });
 
-        return { variableValue, setValue };
+        return { currentSelection, setCurrentSelection };
+    },
+    data: () => ({
+        options: [],
+        selection: null,
+    }),
+    created() {
+        this.init();
     },
     computed: {
         isEditing() {
@@ -50,94 +104,165 @@ export default {
         },
         internalValue: {
             get() {
-                if (!this.options.some(option => option.value === this.variableValue)) return '';
-                return this.variableValue;
-            }
-        },
-        options() {
-            if (!this.content.options) return [];
-            let data = this.content.options;
-            if (data && !Array.isArray(data) && typeof data === 'object') {
-                data = new Array(data);
-            } else if ((data && !Array.isArray(data)) || typeof data !== 'object') {
-                return [];
-            }
+                if (this.content.allowCreation) {
+                    // we need to make available custom options before using them
+                    for (const selection of this.currentSelection) {
+                        if (!this.options.some(option => option.value === selection)) {
+                            this.options.push(this.formatOption(selection));
+                        }
+                    }
+                }
 
-            return data
-                .filter(item => !!item)
-                .map(item => {
-                    if (typeof item !== 'object') return { name: item, value: item };
-                    const labelField = this.content.labelField || 'name';
-                    const valueField = this.content.valueField || 'value';
-                    return {
-                        name: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(item, labelField) || ''),
-                        value: wwLib.resolveObjectPropertyPath(item, valueField),
-                    };
-                });
+                return this.currentSelection;
+            },
+            set(value) {
+                this.setCurrentSelection(value);
+            },
         },
-        selectedOption() {
-            return this.options.find(({ value }) => value === this.internalValue);
+        placeholder() {
+            return wwLib.wwLang.getText(this.content.placeholder);
         },
-        textStyle() {
-            return wwLib.getTextStyleFromContent(this.content);
+        defaultOptionStyle() {
+            return {
+                backgroundColor: this.content.optionsDefaultBgColor,
+                color: this.content.optionsDefaultTextColor,
+            };
         },
-        isReadonly() {
-            /* wwEditor:start */
-            if (this.wwEditorState.isSelected) {
-                return this.wwElementState.states.includes('readonly');
-            }
-            /* wwEditor:end */
-            return this.wwElementState.props.readonly === undefined
-                ? this.content.readonly
-                : this.wwElementState.props.readonly;
+        cssVariables() {
+            return {
+                '--ms-dropdown-bg': this.content.dropdownBackgroundColor,
+                '--ms-dropdown-border-width': this.content.dropdownBorderWidth,
+                '--ms-dropdown-border-color': this.content.dropdownBorderColor,
+                '--ms-dropdown-radius': this.content.dropdownBorderRadius,
+                '--ms-max-height': this.content.dropdownMaxHeight || '10rem',
+                '--ms-option-bg-pointed': this.content.optionBackgroundPointed,
+                '--ms-option-bg-selected': this.content.optionBackgroundPointed,
+                '--ms-option-bg-selected-pointed': this.content.optionBackgroundPointed,
+            };
         },
     },
     watch: {
+        isEditing() {
+            this.handleOpening(this.content.isOpen);
+        },
+        'content.initialValue'() {
+            this.init();
+        },
+        'content.options'() {
+            this.init();
+        },
+        currentSelection(value) {
+            this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
+        },
         /* wwEditor:start */
         'wwEditorState.boundProps.options'(isBind) {
-            if (!isBind) this.$emit('update:content:effect', { labelField: null, valueField: null });
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    labelField: null,
+                    valueField: null,
+                    bgColorField: null,
+                    textColorField: null,
+                });
+        },
+        'content.isOpen'(value) {
+            this.handleOpening(value);
         },
         /* wwEditor:end */
-        'content.value'(newValue) {
-            if (newValue === this.internalValue) return;
-            this.setValue(newValue);
-            this.$emit('trigger-event', { name: 'initValueChange', event: { value: newValue } });
-        },
-        isReadonly: {
-            immediate: true,
-            handler(value) {
-                if (value) {
-                    this.$emit('add-state', 'readonly');
-                } else {
-                    this.$emit('remove-state', 'readonly');
-                }
-            },
-        },
     },
     methods: {
-        handleManualInput(event){
-            const value = event.target.value;
-            const rawOption = this.options.find(option => option.value == value);
-            if (rawOption.value === this.internalValue) return;
-            this.setValue(rawOption.value);
-            this.$emit('trigger-event', { name: 'change', event: { domEvent: event, value: rawOption.value } });
-        }
-    }
+        async init() {
+            // reset selection and option to avoid mismatch
+            this.internalValue = '';
+            this.options = [];
+            const initialOptions = Array.isArray(this.content.options) ? this.content.options : [];
+            const initialValue = this.content.initialValue ? this.content.initialValue : '';
+            this.options.push(...initialOptions.map(option => this.formatOption(option)));
+
+            // add initial values as custom options if not already included
+            if (this.options.includes(this.internalValue) || Object.values(this.options).includes(this.internalValue))
+                this.options.push(initialValue);
+
+            // await to avoid mismatch (multiselect not rendering custom tags)
+            await this.$nextTick();
+            this.internalValue = initialValue;
+        },
+        formatOption(option) {
+            const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
+            const valueField = this.content.valueField || DEFAULT_VALUE_FIELD;
+            const bgColorField = this.content.bgColorField || DEFAULT_BG_COLOR_FIELD;
+            const textColorField = this.content.textColorField || DEFAULT_TEXT_COLOR_FIELD;
+
+            console.log({
+                label:
+                    typeof option === 'object'
+                        ? wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || '')
+                        : option,
+                value: typeof option === 'object' ? wwLib.resolveObjectPropertyPath(option, valueField) : option,
+                style: {
+                    backgroundColor:
+                        wwLib.resolveObjectPropertyPath(option, bgColorField) || this.content.optionsDefaultBgColor,
+                    color:
+                        wwLib.resolveObjectPropertyPath(option, textColorField) || this.content.optionsDefaultTextColor,
+                },
+            });
+
+            return {
+                label:
+                    typeof option === 'object'
+                        ? wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || '')
+                        : option,
+                value: typeof option === 'object' ? wwLib.resolveObjectPropertyPath(option, valueField) : option,
+                style: {
+                    backgroundColor:
+                        wwLib.resolveObjectPropertyPath(option, bgColorField) || this.content.optionsDefaultBgColor,
+                    color:
+                        wwLib.resolveObjectPropertyPath(option, textColorField) || this.content.optionsDefaultTextColor,
+                },
+            };
+        },
+        handleOpening(value) {
+            if (value) this.$refs.select.open();
+            else this.$refs.select.close();
+        },
+    },
+    mounted() {
+        this.handleOpening(this.content.isOpen);
+    },
 };
 </script>
 
-<style lang="scss" scoped>
-.ww-form-dropdown {
-    outline: none;
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
+<style src="@vueform/multiselect/themes/default.css"></style>
+
+<style type="scss">
+.input-multiselect {
+    --ms-border-width: 0px;
+    position: relative;
+    min-height: calc(var(--font-size) + 20px);
     /* wwEditor:start */
     &.editing {
         pointer-events: none;
     }
     /* wwEditor:end */
+}
+.multiselect-single-label {
+    padding: 4px;
+    border-radius: 4px;
+    width: 100%;
+}
+.multiselect.is-active {
+    box-shadow: unset;
+}
+.multiselect-caret {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.multiselect-dropdown {
+    max-height: unset;
+}
+.multiselect-placeholder-el {
+    position: absolute !important;
+    top: 50% !important;
+    left: 0px !important;
+    transform: translateY(-50%);
 }
 </style>
