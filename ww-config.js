@@ -22,6 +22,7 @@ export default {
             ['initialValue', 'options'],
             ['placeholder'],
             ['disabled', 'mode', 'allowCreation', 'hideSelected', 'searchable', 'closeOnSelect'],
+            ['clearIcon', 'caretIcon'],
             ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
         ],
     },
@@ -46,7 +47,7 @@ export default {
                 fr: 'Texte par défaut',
             },
             type: 'Text',
-            defaultValue: 'placeholder',
+            defaultValue: { en: 'Placeholder' },
             section: 'settings',
             bindable: true,
             multiLang: true,
@@ -98,12 +99,28 @@ export default {
             defaultValue: false,
             section: 'settings',
         },
+        clearIcon: {
+            label: {
+                en: 'Clear icon',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            section: 'settings',
+        },
+        caretIcon: {
+            label: {
+                en: 'Caret icon',
+            },
+            type: 'OnOff',
+            defaultValue: true,
+            section: 'settings',
+        },
         initialValue: {
             label: {
                 en: 'Initial value',
                 fr: 'Valeur initiale',
             },
-            type: 'Array',
+            type: 'Text',
             bindable: true,
             section: 'settings',
         },
@@ -114,7 +131,7 @@ export default {
             options: {
                 item: {
                     type: 'Object',
-                    defaultValue: { label: '', value: '' },
+                    defaultValue: { label: { en: 'New option' }, value: '' },
                     options: {
                         item: {
                             label: {
@@ -141,8 +158,8 @@ export default {
                 },
             },
             defaultValue: [
-                { value: 'option', label: { en: 'option - 1' }, bgColor: '#2196F3', textColor: '#FFFFFF' },
-                { value: 'option2', label: { en: 'option - 2' }, bgColor: '#2196F3', textColor: '#FFFFFF' },
+                { value: 'option', label: { en: 'option - 1' }, bgColor: '#FFFFFF', textColor: '#000000' },
+                { value: 'option2', label: { en: 'option - 2' }, bgColor: '#FFFFFF', textColor: '#000000' },
             ],
             bindable: true,
         },
@@ -173,7 +190,7 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: null,
+            defaultValue: '',
             section: 'settings',
         },
         valueField: {
@@ -190,7 +207,7 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: null,
+            defaultValue: '',
             section: 'settings',
         },
         bgColorField: {
@@ -207,7 +224,7 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: null,
+            defaultValue: '#FFFFFF',
             section: 'settings',
         },
         textColorField: {
@@ -224,7 +241,7 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: null,
+            defaultValue: '#000000',
             section: 'settings',
         },
         placeholderElement: {
@@ -243,7 +260,7 @@ export default {
                 },
             },
             navigator: {
-                group: 'Multiselect',
+                group: 'Select',
             },
         },
         optionElementSelected: {
@@ -257,6 +274,7 @@ export default {
                         default: {
                             padding: '0px 0px 0px 12px',
                             borderRadius: '4px',
+                            color: '#000000',
                         },
                     },
                 },
@@ -288,7 +306,7 @@ export default {
                 content: { default: { icon: 'fas fa-caret-down', color: '#9CA3AF', fontSize: '16' } },
             },
             navigator: {
-                group: 'Multiselect',
+                group: 'Select',
             },
         },
         clearIconElement: {
@@ -307,7 +325,7 @@ export default {
                 content: { default: { icon: 'wwi wwi-cross', color: '#9CA3AF', fontSize: '14' } },
             },
             navigator: {
-                group: 'Multiselect',
+                group: 'Select',
             },
         },
         optionsDefaultBgColor: {
@@ -315,14 +333,14 @@ export default {
                 en: 'Default option background',
             },
             type: 'Color',
-            defaultValue: '#099AF2',
+            defaultValue: '#FFFFFF',
         },
         optionsDefaultTextColor: {
             label: {
                 en: 'Default option text color',
             },
             type: 'Color',
-            defaultValue: '#099AF2',
+            defaultValue: '#000000',
         },
         optionBackgroundPointed: {
             label: {
