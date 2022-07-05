@@ -238,6 +238,7 @@ export default {
     --ms-border-width: 0px;
     position: relative;
     min-height: calc(var(--font-size) + 20px);
+    
     /* wwEditor:start */
     &.editing {
         pointer-events: none;
