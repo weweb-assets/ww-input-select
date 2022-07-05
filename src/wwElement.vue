@@ -135,8 +135,8 @@ export default {
                 '--ms-dropdown-radius': this.content.dropdownBorderRadius,
                 '--ms-max-height': this.content.dropdownMaxHeight || '10rem',
                 '--ms-option-bg-pointed': this.content.optionBackgroundPointed,
-                '--ms-option-bg-selected': this.content.optionBackgroundPointed,
-                '--ms-option-bg-selected-pointed': this.content.optionBackgroundPointed,
+                '--ms-option-bg-selected': this.content.optionBackgroundSelected,
+                '--ms-option-bg-selected-pointed': this.content.optionBackgroundSelectedPointed,
             };
         },
     },
