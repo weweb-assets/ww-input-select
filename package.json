@@ -1,21 +1,14 @@
 {
-    "name": "ww-form-dropdown",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/weweb-assets/ww-form-dropdown"
-    },
-    "version": "3.3.0",
+    "name": "ww-input-select-custom",
+    "version": "3.1.0",
     "scripts": {
         "build": "weweb build",
         "serve": "weweb serve"
     },
     "devDependencies": {
-        "@vue/eslint-config-prettier": "^6.0.0",
-        "@weweb/cli": "latest",
-        "eslint": "^7.7.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "eslint-plugin-vue": "7.0.0-beta.4",
-        "prettier": "^2.1.2"
+        "@weweb/cli": "latest"
     },
-    "license": "MIT"
+    "dependencies": {
+        "@vueform/multiselect": "2.3.3"
+    }
 }
