@@ -13,9 +13,11 @@
         :hideSelected="content.hideSelected"
         :placeholder="placeholder"
         :create-option="content.allowCreation"
+        :canClear="content.clearIcon"
+        :caret="content.caretIcon"
     >
         <!-- Placeholder -->
-        <template v-slot:placeholder>
+        <template v-slot:placeholder v-if="placeholder.length">
             <wwElement
                 class="multiselect-placeholder-el"
                 v-bind="content.placeholderElement"
@@ -64,8 +66,6 @@ import Multiselect from '@vueform/multiselect';
 
 const DEFAULT_LABEL_FIELD = 'label';
 const DEFAULT_VALUE_FIELD = 'value';
-const DEFAULT_TEXT_COLOR_FIELD = 'textColor';
-const DEFAULT_BG_COLOR_FIELD = 'bgColor';
 
 export default {
     components: { Multiselect },
@@ -89,7 +89,6 @@ export default {
     },
     data: () => ({
         options: [],
-        selection: null,
     }),
     created() {
         this.init();
@@ -189,36 +188,24 @@ export default {
         formatOption(option) {
             const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
             const valueField = this.content.valueField || DEFAULT_VALUE_FIELD;
-            const bgColorField = this.content.bgColorField || DEFAULT_BG_COLOR_FIELD;
-            const textColorField = this.content.textColorField || DEFAULT_TEXT_COLOR_FIELD;
 
-            console.log({
-                label:
-                    typeof option === 'object'
-                        ? wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || '')
-                        : option,
-                value: typeof option === 'object' ? wwLib.resolveObjectPropertyPath(option, valueField) : option,
-                style: {
-                    backgroundColor:
-                        wwLib.resolveObjectPropertyPath(option, bgColorField) || this.content.optionsDefaultBgColor,
-                    color:
-                        wwLib.resolveObjectPropertyPath(option, textColorField) || this.content.optionsDefaultTextColor,
-                },
-            });
-
-            return {
-                label:
-                    typeof option === 'object'
-                        ? wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || '')
-                        : option,
-                value: typeof option === 'object' ? wwLib.resolveObjectPropertyPath(option, valueField) : option,
-                style: {
-                    backgroundColor:
-                        wwLib.resolveObjectPropertyPath(option, bgColorField) || this.content.optionsDefaultBgColor,
-                    color:
-                        wwLib.resolveObjectPropertyPath(option, textColorField) || this.content.optionsDefaultTextColor,
-                },
-            };
+            return typeof option === 'object'
+                ? {
+                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
+                      value: wwLib.resolveObjectPropertyPath(option, valueField),
+                      style: {
+                          backgroundColor:
+                              wwLib.resolveObjectPropertyPath(option, 'bgColor') || this.content.optionsDefaultBgColor,
+                          color:
+                              wwLib.resolveObjectPropertyPath(option, 'textColor') ||
+                              this.content.optionsDefaultTextColor,
+                      },
+                  }
+                : {
+                      // to allow flat array / option
+                      label: option,
+                      value: option,
+                  };
         },
         handleOpening(value) {
             if (value) this.$refs.select.open();
