@@ -28,7 +28,7 @@
         <!-- Tag selected with remove icon -->
         <template v-slot:singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
-                <wwLayoutItemContext :index="value" :item="{}" is-repeat :data="value">
+                <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
                     <wwElement
                         class="multiselect-single-label-el"
                         v-bind="content.optionElementSelected"
@@ -40,7 +40,7 @@
 
         <!-- Tag unselected in list -->
         <template v-slot:option="{ option }">
-            <wwLayoutItemContext :index="option" :item="{}" is-repeat :data="option">
+            <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
                 <wwElement
                     class="multiselect-single-label-el"
                     v-bind="content.optionElement"
@@ -120,6 +120,12 @@ export default {
         },
         placeholder() {
             return wwLib.wwLang.getText(this.content.placeholder);
+        },
+        getValueIndex(value) {
+            return this.options.findIndex(option => option.value === value.value);
+        },
+        getOptionIndex(option) {
+            return this.options.indexOf(option);
         },
         defaultOptionStyle() {
             return {
