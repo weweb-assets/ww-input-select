@@ -228,6 +228,8 @@ export default {
 
 <style type="scss">
 .input-multiselect {
+    --ms-bg: transparent;
+
     --ms-border-width: 0px;
     position: relative;
     min-height: calc(var(--font-size) + 20px);

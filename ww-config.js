@@ -159,8 +159,8 @@ export default {
                 },
             },
             defaultValue: [
-                { value: 'option', label: { en: 'option - 1' }, bgColor: '#FFFFFF', textColor: '#000000' },
-                { value: 'option2', label: { en: 'option - 2' }, bgColor: '#FFFFFF', textColor: '#000000' },
+                { value: 'option', label: { en: 'option - 1' }, bgColor: '#FFFFFF00', textColor: '#000000' },
+                { value: 'option2', label: { en: 'option - 2' }, bgColor: '#FFFFFF00', textColor: '#000000' },
             ],
             bindable: true,
         },
@@ -225,7 +225,7 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: '#FFFFFF',
+            defaultValue: '#FFFFFF00',
             section: 'settings',
         },
         textColorField: {
@@ -334,7 +334,7 @@ export default {
                 en: 'Default option background',
             },
             type: 'Color',
-            defaultValue: '#FFFFFF',
+            defaultValue: '#FFFFFF00',
         },
         optionsDefaultTextColor: {
             label: {
