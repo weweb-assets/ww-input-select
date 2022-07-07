@@ -19,6 +19,7 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
+            'readonly',
             'isOpen',
             ['initialValue', 'options'],
             ['placeholder'],
@@ -31,7 +32,16 @@ export default {
         noBorderRadiusClipping: true,
     },
     triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: [] } }],
+    inherit: { type: 'ww-text', exclude: ['text'] },
     properties: {
+        readonly: {
+            label: { en: 'Read only', fr: 'Lecture seule' },
+            type: 'OnOff',
+            section: 'settings',
+            bindable: true,
+            defaultValue: false,
+            hidden: (content, sidePanelContent, boundProps, wwProps) => !!(wwProps && wwProps.readonly !== undefined),
+        },
         isOpen: {
             type: 'OnOff',
             label: {
