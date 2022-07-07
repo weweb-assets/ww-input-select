@@ -1,5 +1,6 @@
 <template>
     <Multiselect
+        v-if="!isReadonly"
         ref="select"
         v-model="internalValue"
         class="input-multiselect"
@@ -15,6 +16,7 @@
         :create-option="content.allowCreation"
         :canClear="content.clearIcon"
         :caret="content.caretIcon"
+        :name="wwElementState.name"
     >
         <!-- Placeholder -->
         <template v-slot:placeholder v-if="placeholder.length">
@@ -29,11 +31,12 @@
         <template v-slot:singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
                 <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
-                    <wwElement
+                    <!-- <wwElement
                         class="multiselect-single-label-el"
                         v-bind="content.optionElementSelected"
                         :wwProps="{ text: value.label }"
-                    />
+                    /> -->
+                    <wwText class="multiselect-single-label-el" :text="value.label"></wwText>
                 </wwLayoutItemContext>
             </div>
         </template>
@@ -59,6 +62,7 @@
             <wwElement v-bind="content.clearIconElement" @mousedown.prevent="isEditing ? null : clear($event)" />
         </template>
     </Multiselect>
+    <wwText v-else :text="valueLabel"></wwText>
 </template>
 
 <script>
@@ -69,13 +73,14 @@ const DEFAULT_VALUE_FIELD = 'value';
 
 export default {
     components: { Multiselect },
-    emits: ['trigger-event', 'update:content:effect'],
+    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
     props: {
         uid: { type: String, required: true },
         content: { type: Object, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
+        wwElementState: { type: Object, required: true },
     },
     setup(props) {
         const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
@@ -121,11 +126,9 @@ export default {
         placeholder() {
             return wwLib.wwLang.getText(this.content.placeholder);
         },
-        getValueIndex(value) {
-            return this.options.findIndex(option => option.value === value.value);
-        },
-        getOptionIndex(option) {
-            return this.options.indexOf(option);
+        valueLabel() {
+            const _option = this.options.find(option => option.value === this.internalValue);
+            return _option ? _option.label : '';
         },
         defaultOptionStyle() {
             return {
@@ -145,6 +148,16 @@ export default {
                 '--ms-option-bg-selected-pointed': this.content.optionBackgroundSelectedPointed,
             };
         },
+        isReadonly() {
+            /* wwEditor:start */
+            if (this.wwEditorState.isSelected) {
+                return this.wwElementState.states.includes('readonly');
+            }
+            /* wwEditor:end */
+            return this.wwElementState.props.readonly === undefined
+                ? this.content.readonly
+                : this.wwElementState.props.readonly;
+        },
     },
     watch: {
         isEditing() {
@@ -158,6 +171,20 @@ export default {
         },
         currentSelection(value) {
             this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
+        },
+        textStyle() {
+            return wwLib.getTextStyleFromContent(this.content);
+        },
+
+        isReadonly: {
+            immediate: true,
+            handler(value) {
+                if (value) {
+                    this.$emit('add-state', 'readonly');
+                } else {
+                    this.$emit('remove-state', 'readonly');
+                }
+            },
         },
         /* wwEditor:start */
         'wwEditorState.boundProps.options'(isBind) {
@@ -190,6 +217,12 @@ export default {
             // await to avoid mismatch (multiselect not rendering custom tags)
             await this.$nextTick();
             this.internalValue = initialValue;
+        },
+        getValueIndex(value) {
+            return this.options.findIndex(option => option.value === value.value);
+        },
+        getOptionIndex(option) {
+            return this.options.indexOf(option);
         },
         formatOption(option) {
             const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
@@ -233,7 +266,7 @@ export default {
     --ms-border-width: 0px;
     position: relative;
     min-height: calc(var(--font-size) + 20px);
-    
+
     /* wwEditor:start */
     &.editing {
         pointer-events: none;
@@ -241,8 +274,9 @@ export default {
     /* wwEditor:end */
 }
 .multiselect-single-label {
-    padding: 4px;
-    border-radius: 4px;
+    position: relative !important;
+    line-height: inherit !important;
+    padding: 0px !important;
     width: 100%;
 }
 .multiselect.is-active {
@@ -256,9 +290,6 @@ export default {
     max-height: unset;
 }
 .multiselect-placeholder-el {
-    position: absolute !important;
-    top: 50% !important;
-    left: 0px !important;
-    transform: translateY(-50%);
+    flex-grow: 1;
 }
 </style>
