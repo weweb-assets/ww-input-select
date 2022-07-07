@@ -95,6 +95,9 @@ export default {
     data: () => ({
         options: [],
     }),
+    created() {
+        this.init();
+    },
     computed: {
         isEditing() {
             /* wwEditor:start */
@@ -166,7 +169,12 @@ export default {
         textStyle() {
             return wwLib.getTextStyleFromContent(this.content);
         },
-
+        'content.initialValue'() {
+            this.init();
+        },
+        'content.options'() {
+            this.init();
+        },
         isReadonly: {
             immediate: true,
             handler(value) {
@@ -193,6 +201,25 @@ export default {
         /* wwEditor:end */
     },
     methods: {
+        async init() {
+            // reset selection and option to avoid mismatch
+            this.options = [];
+            const initialOptions = Array.isArray(this.content.options) ? this.content.options : [];
+            this.options.push(...initialOptions.map(option => this.formatOption(option)));
+
+            const initialValue = this.content.initialValue ? this.content.initialValue : '';
+            // add initial values as custom options if not already included
+            if (
+                this.content.allowCreation &&
+                (this.options.includes(this.internalValue) || Object.values(this.options).includes(this.internalValue))
+            ) {
+                this.options.push(initialValue);
+            }
+            // await to avoid mismatch (multiselect not rendering custom tags)
+            await this.$nextTick();
+            this.internalValue = initialValue;
+        },
+
         getValueIndex(value) {
             return this.options.findIndex(option => option.value === value.value);
         },
