@@ -247,8 +247,10 @@ export default {
                   };
         },
         handleOpening(value) {
-            if (value) this.$refs.select.open();
-            else this.$refs.select.close();
+            if (this.$refs.select) {
+                if (value) this.$refs.select.open();
+                else this.$refs.select.close();
+            }
         },
     },
     mounted() {
