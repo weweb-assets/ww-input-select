@@ -85,7 +85,7 @@ export default {
     setup(props) {
         const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
-            name: 'currentSelection',
+            name: 'value',
             type: 'string',
             defaultValue: props.content.initialValue ? props.content.initialValue : '',
         });
