@@ -23,7 +23,7 @@
             <wwElement
                 class="multiselect-placeholder-el"
                 v-bind="content.placeholderElement"
-                :wwProps="{ text: placeholder }"
+                :wwProps="{ text: placeholder || '' }"
             />
         </template>
 
@@ -36,7 +36,7 @@
                         v-bind="content.optionElementSelected"
                         :wwProps="{ text: value.label }"
                     /> -->
-                    <wwText class="multiselect-single-label-el" :text="value.label"></wwText>
+                    <wwText class="multiselect-single-label-el" :text="value.label || ''"></wwText>
                 </wwLayoutItemContext>
             </div>
         </template>
@@ -47,7 +47,7 @@
                 <wwElement
                     class="multiselect-single-label-el"
                     v-bind="content.optionElement"
-                    :wwProps="{ text: option.label }"
+                    :wwProps="{ text: option.label || '' }"
                 />
             </wwLayoutItemContext>
         </template>
@@ -110,10 +110,8 @@ export default {
             get() {
                 if (this.content.allowCreation) {
                     // we need to make available custom options before using them
-                    for (const selection of this.currentSelection) {
-                        if (!this.options.some(option => option.value === selection)) {
-                            this.options.push(this.formatOption(selection));
-                        }
+                    if (this.currentSelection && !this.options.some(option => option.value === this.currentSelection)) {
+                        this.options.push(this.formatOption(this.currentSelection));
                     }
                 }
 
@@ -169,8 +167,12 @@ export default {
         textStyle() {
             return wwLib.getTextStyleFromContent(this.content);
         },
-        'content.initialValue'() {
+        async 'content.initialValue'() {
             this.init();
+
+            // await to avoid mismatch (multiselect not rendering custom tags)
+            await this.$nextTick();
+            this.internalValue = this.content.initialValue;
         },
         'content.options'() {
             this.init();
@@ -207,17 +209,23 @@ export default {
             const initialOptions = Array.isArray(this.content.options) ? this.content.options : [];
             this.options.push(...initialOptions.map(option => this.formatOption(option)));
 
-            const initialValue = this.content.initialValue ? this.content.initialValue : '';
             // add initial values as custom options if not already included
+            console.log('this.options', this.options);
+            console.log('this.content.initialValue', this.content.initialValue);
+            console.log(
+                this.options.some(
+                    option => option === this.content.initialValue || option.value === this.content.initialValue
+                )
+            );
             if (
+                this.content.initialValue !== undefined &&
                 this.content.allowCreation &&
-                (this.options.includes(this.internalValue) || Object.values(this.options).includes(this.internalValue))
+                !this.options.some(
+                    option => option === this.content.initialValue || option.value === this.content.initialValue
+                )
             ) {
-                this.options.push(initialValue);
+                this.options.push(this.formatOption(this.content.initialValue));
             }
-            // await to avoid mismatch (multiselect not rendering custom tags)
-            await this.$nextTick();
-            this.internalValue = initialValue;
         },
 
         getValueIndex(value) {
