@@ -23,7 +23,7 @@ export default {
             'isOpen',
             ['initialValue', 'options'],
             ['placeholder'],
-            ['disabled', 'mode', 'allowCreation', 'hideSelected', 'searchable', 'closeOnSelect'],
+            ['disabled', 'mode', 'allowCreation', 'canDeselect', 'hideSelected', 'searchable', 'closeOnSelect'],
             ['clearIcon', 'caretIcon'],
             ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
         ],
@@ -82,6 +82,14 @@ export default {
             defaultValue: false,
             section: 'settings',
             bindable: true,
+        },
+        canDeselect: {
+            label: {
+                en: 'Can deselect',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            section: 'settings',
         },
         hideSelected: {
             label: {

@@ -11,24 +11,25 @@
         :searchable="content.searchable"
         mode="single"
         :disabled="content.disabled"
-        :hideSelected="content.hideSelected"
+        :hide-selected="content.hideSelected"
         :placeholder="placeholder"
         :create-option="content.allowCreation"
-        :canClear="content.clearIcon"
+        :can-clear="content.clearIcon"
+        :can-deselect="content.canDeselect"
         :caret="content.caretIcon"
         :name="wwElementState.name"
     >
         <!-- Placeholder -->
-        <template v-slot:placeholder v-if="placeholder.length">
+        <template v-if="placeholder.length" #placeholder>
             <wwElement
                 class="multiselect-placeholder-el"
                 v-bind="content.placeholderElement"
-                :wwProps="{ text: placeholder || '' }"
+                :ww-props="{ text: placeholder || '' }"
             />
         </template>
 
         <!-- Tag selected with remove icon -->
-        <template v-slot:singlelabel="{ value }">
+        <template #singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
                 <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
                     <!-- <wwElement
@@ -42,23 +43,23 @@
         </template>
 
         <!-- Tag unselected in list -->
-        <template v-slot:option="{ option }">
+        <template #option="{ option }">
             <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
                 <wwElement
                     class="multiselect-single-label-el"
                     v-bind="content.optionElement"
-                    :wwProps="{ text: option.label || '' }"
+                    :ww-props="{ text: option.label || '' }"
                 />
             </wwLayoutItemContext>
         </template>
 
         <!-- Small triangle displayed on the right of the input -->
-        <template v-slot:caret>
+        <template #caret>
             <wwElement v-bind="content.caretIconElement" />
         </template>
 
         <!-- Clear icon shown when the input has at least one selected options -->
-        <template v-slot:clear="{ clear }">
+        <template #clear="{ clear }">
             <wwElement v-bind="content.clearIconElement" @mousedown.prevent="isEditing ? null : clear($event)" />
         </template>
     </Multiselect>
@@ -73,7 +74,6 @@ const DEFAULT_VALUE_FIELD = 'value';
 
 export default {
     components: { Multiselect },
-    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
     props: {
         uid: { type: String, required: true },
         content: { type: Object, required: true },
@@ -82,6 +82,7 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
+    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
     setup(props) {
         const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -95,9 +96,6 @@ export default {
     data: () => ({
         options: [],
     }),
-    created() {
-        this.init();
-    },
     computed: {
         isEditing() {
             /* wwEditor:start */
@@ -202,6 +200,12 @@ export default {
         },
         /* wwEditor:end */
     },
+    created() {
+        this.init();
+    },
+    mounted() {
+        this.handleOpening(this.content.isOpen);
+    },
     methods: {
         async init() {
             // reset selection and option to avoid mismatch
@@ -262,9 +266,6 @@ export default {
                 else this.$refs.select.close();
             }
         },
-    },
-    mounted() {
-        this.handleOpening(this.content.isOpen);
     },
 };
 </script>
