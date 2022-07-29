@@ -85,7 +85,7 @@ export default {
         },
         canDeselect: {
             label: {
-                en: 'Can deselect',
+                en: 'Can unselect',
             },
             type: 'OnOff',
             defaultValue: false,
