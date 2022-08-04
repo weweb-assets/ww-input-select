@@ -210,17 +210,10 @@ export default {
         async init() {
             // reset selection and option to avoid mismatch
             this.options = [];
-            const initialOptions = Array.isArray(this.content.options) ? this.content.options : [];
+            const initialOptions = Array.isArray(this.content.options) ? [...this.content.options] : [];
             this.options.push(...initialOptions.map(option => this.formatOption(option)));
 
             // add initial values as custom options if not already included
-            console.log('this.options', this.options);
-            console.log('this.content.initialValue', this.content.initialValue);
-            console.log(
-                this.options.some(
-                    option => option === this.content.initialValue || option.value === this.content.initialValue
-                )
-            );
             if (
                 this.content.initialValue !== undefined &&
                 this.content.allowCreation &&
