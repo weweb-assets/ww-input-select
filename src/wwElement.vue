@@ -124,7 +124,7 @@ export default {
         },
         valueLabel() {
             const _option = this.options.find(option => option.value === this.internalValue);
-            return _option ? _option.label : '';
+            return _option ? _option.label : this.internalValue;
         },
         defaultOptionStyle() {
             return {
