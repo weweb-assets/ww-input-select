@@ -18,6 +18,7 @@
         :can-deselect="content.canDeselect"
         :caret="content.caretIcon"
         :name="wwElementState.name"
+        :attrs="wwElementState.props.attributes"
     >
         <!-- Placeholder -->
         <template v-if="placeholder.length" #placeholder>
