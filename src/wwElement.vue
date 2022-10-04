@@ -69,9 +69,6 @@
 <script>
 import Multiselect from '@vueform/multiselect';
 
-const DEFAULT_LABEL_FIELD = 'label';
-const DEFAULT_VALUE_FIELD = 'value';
-
 export default {
     components: { Multiselect },
     props: {
@@ -91,7 +88,9 @@ export default {
             defaultValue: props.content.initialValue ? props.content.initialValue : '',
         });
 
-        return { currentSelection, setCurrentSelection };
+        const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
+
+        return { currentSelection, setCurrentSelection, resolveMappingFormula };
     },
     data: () => ({
         options: [],
@@ -232,19 +231,23 @@ export default {
             return this.options.indexOf(option);
         },
         formatOption(option) {
-            const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
-            const valueField = this.content.valueField || DEFAULT_VALUE_FIELD;
-
             return typeof option === 'object'
                 ? {
-                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
-                      value: wwLib.resolveObjectPropertyPath(option, valueField),
+                      label: wwLib.wwLang.getText(
+                          this.resolveMappingFormula(this.content.labelField, option, option.label || '')
+                      ),
+                      value: this.resolveMappingFormula(this.content.valueField, option, option.value || ''),
                       style: {
-                          backgroundColor:
-                              wwLib.resolveObjectPropertyPath(option, 'bgColor') || this.content.optionsDefaultBgColor,
-                          color:
-                              wwLib.resolveObjectPropertyPath(option, 'textColor') ||
-                              this.content.optionsDefaultTextColor,
+                          backgroundColor: this.resolveMappingFormula(
+                              this.content.bgColorField,
+                              option,
+                              option.bgColor || this.content.tagsDefaultBgColor
+                          ),
+                          color: this.resolveMappingFormula(
+                              this.content.textColorField,
+                              option,
+                              option.textColor || this.content.tagsDefaultTextColor
+                          ),
                       },
                   }
                 : {

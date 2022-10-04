@@ -198,69 +198,45 @@ export default {
         labelField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
             label: {
-                en: 'Label field',
-                fr: 'Label field',
+                en: 'Option label',
+                fr: 'Option label',
             },
             type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            defaultValue: '',
+            options: content => ({ template: content.options.length ? content.options[0] : null }),
+            defaultValue: null,
             section: 'settings',
         },
         valueField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
             label: {
-                en: 'Value field',
-                fr: 'Value field',
+                en: 'Option value',
+                fr: 'Option value',
             },
             type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            defaultValue: '',
+            options: content => ({ template: content.options.length ? content.options[0] : null }),
+            defaultValue: null,
             section: 'settings',
         },
         bgColorField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
             label: {
-                en: 'Background color field',
-                fr: 'Background color field',
+                en: 'Option bg color',
+                fr: 'Option bg color',
             },
             type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            defaultValue: '#FFFFFF00',
+            options: content => ({ template: content.options.length ? content.options[0] : null }),
+            defaultValue: null,
             section: 'settings',
         },
         textColorField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
             label: {
-                en: 'Text color field',
-                fr: 'Text color field',
+                en: 'Option text color',
+                fr: 'Option text color',
             },
             type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            defaultValue: '#000000',
+            options: content => ({ template: content.options.length ? content.options[0] : null }),
+            defaultValue: null,
             section: 'settings',
         },
         placeholderElement: {
