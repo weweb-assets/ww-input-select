@@ -284,15 +284,13 @@ export default {
     }
     /* wwEditor:end */
 }
-.ww-input-select::v-deep {
-    .multiselect-single-label {
-        position: relative !important;
-        line-height: inherit !important;
-        padding: 0px !important;
-        width: 100%;
-    }
-    .multiselect-placeholder-el {
-        flex-grow: 1;
-    }
+.ww-input-select::v-deep .multiselect-single-label {
+    position: relative !important;
+    line-height: inherit !important;
+    padding: 0px !important;
+    width: 100%;
+}
+.ww-input-select::v-deep .multiselect-placeholder-el {
+    flex-grow: 1;
 }
 </style>
