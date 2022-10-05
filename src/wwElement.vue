@@ -3,7 +3,7 @@
         v-if="!isReadonly"
         ref="select"
         v-model="internalValue"
-        class="input-select"
+        class="ww-input-select"
         :style="cssVariables"
         :class="{ editing: isEditing }"
         :options="options"
@@ -22,7 +22,7 @@
         <!-- Placeholder -->
         <template v-if="placeholder.length" #placeholder>
             <wwElement
-                class="select-placeholder-el"
+                class="multiselect-placeholder-el"
                 v-bind="content.placeholderElement"
                 :ww-props="{ text: placeholder || '' }"
             />
@@ -30,14 +30,14 @@
 
         <!-- Tag selected with remove icon -->
         <template #singlelabel="{ value }">
-            <div class="select-single-label" :style="value.style || defaultOptionStyle">
+            <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
                 <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
                     <!-- <wwElement
-                        class="select-single-label-el"
+                        class="multiselect-single-label-el"
                         v-bind="content.optionElementSelected"
                         :wwProps="{ text: value.label }"
                     /> -->
-                    <wwText class="select-single-label-el" :text="value.label || ''"></wwText>
+                    <wwText class="multiselect-single-label-el" :text="value.label || ''"></wwText>
                 </wwLayoutItemContext>
             </div>
         </template>
@@ -46,7 +46,7 @@
         <template #option="{ option }">
             <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
                 <wwElement
-                    class="select-single-label-el"
+                    class="multiselect-single-label-el"
                     v-bind="content.optionElement"
                     :ww-props="{ text: option.label || '' }"
                 />
@@ -266,12 +266,17 @@ export default {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style type="scss" scoped>
-.input-select {
+/* We need to use multiselect classname  */
+.ww-input-select {
     --ms-bg: transparent;
 
     --ms-border-width: 0px;
     position: relative;
     min-height: calc(var(--font-size) + 20px);
+
+    &.is-active {
+        box-shadow: unset;
+    }
 
     /* wwEditor:start */
     &.editing {
@@ -279,17 +284,14 @@ export default {
     }
     /* wwEditor:end */
 }
-.input-select::v-deep {
-    .select-single-label {
+.ww-input-select::v-deep {
+    .multiselect-single-label {
         position: relative !important;
         line-height: inherit !important;
         padding: 0px !important;
         width: 100%;
     }
-    .select.is-active {
-        box-shadow: unset;
-    }
-    .select-placeholder-el {
+    .multiselect-placeholder-el {
         flex-grow: 1;
     }
 }
