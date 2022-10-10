@@ -17,15 +17,21 @@ export default {
                 'dropdownBorderRadius',
                 'dropdownMaxHeight',
             ],
+            'isCustomStyle',
+            'customStyle',
         ],
         customSettingsPropertiesOrder: [
-            'readonly',
             'isOpen',
-            ['initialValue', 'options'],
-            ['placeholder'],
-            ['disabled', 'mode', 'allowCreation', 'canDeselect', 'hideSelected', 'searchable', 'closeOnSelect'],
-            ['clearIcon', 'caretIcon'],
+            'layoutType',
+            'required',
+            'readonly',
+            'disabled',
+            'initialValue',
+            'placeholder',
+            ['options'],
             ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
+            ['advanced', 'searchable', 'closeOnSelect', 'canDeselect'],
+            ['clearIcon', 'caretIcon'],
         ],
     },
     options: {
@@ -34,6 +40,21 @@ export default {
     triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true }],
     inherit: { type: 'ww-text', exclude: ['text'] },
     properties: {
+        layoutType: {
+            label: {
+                en: 'Layout type',
+            },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'text', label: { en: 'Text' } },
+                    { value: 'imageText', label: { en: 'Image with text' } },
+                    { value: 'free', label: { en: 'Free layout' } },
+                ],
+            },
+            defaultValue: 'text',
+            section: 'settings',
+        },
         readonly: {
             label: { en: 'Read only', fr: 'Lecture seule' },
             type: 'OnOff',
@@ -73,17 +94,17 @@ export default {
             section: 'settings',
             bindable: true,
         },
-        allowCreation: {
-            label: {
-                en: 'Allow to create option',
-                fr: "Permettre la création d'option",
-            },
+        advanced: {
             type: 'OnOff',
+            label: {
+                en: 'Advanced options',
+            },
             defaultValue: false,
-            section: 'settings',
             bindable: true,
+            section: 'settings',
         },
         canDeselect: {
+            hidden: content => !content.advanced,
             label: {
                 en: 'Can unselect',
             },
@@ -91,16 +112,8 @@ export default {
             defaultValue: false,
             section: 'settings',
         },
-        hideSelected: {
-            label: {
-                en: 'Hide selected elements',
-                fr: 'Cacher les éléments sélectionnés',
-            },
-            type: 'OnOff',
-            defaultValue: true,
-            section: 'settings',
-        },
         searchable: {
+            hidden: content => !content.advanced,
             label: {
                 en: 'Searchable',
                 fr: 'Recherche',
@@ -110,6 +123,7 @@ export default {
             section: 'settings',
         },
         closeOnSelect: {
+            hidden: content => !content.advanced,
             label: {
                 en: 'Close on select',
                 fr: 'Ferme à la sélection',
@@ -164,13 +178,11 @@ export default {
                                 type: 'Text',
                                 options: { placeholder: 'Value' },
                             },
-                            textColor: {
-                                label: { en: 'Color' },
-                                type: 'Color',
-                            },
-                            bgColor: {
-                                label: { en: 'Background color' },
-                                type: 'Color',
+                            image: {
+                                hidden: content => content.layoutType !== 'imageText',
+                                label: { en: 'Image' },
+                                type: 'Text',
+                                options: { placeholder: 'Image link' },
                             },
                         },
                     },
@@ -230,7 +242,8 @@ export default {
             section: 'settings',
         },
         bgColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
+            hidden: (content, sidepanelContent, boundProps) =>
+                !boundProps.options || !content.options || !content.isCustomStyle,
             label: {
                 en: 'Background color field',
                 fr: 'Background color field',
@@ -247,7 +260,8 @@ export default {
             section: 'settings',
         },
         textColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
+            hidden: (content, sidepanelContent, boundProps) =>
+                !boundProps.options || !content.options || !content.isCustomStyle,
             label: {
                 en: 'Text color field',
                 fr: 'Text color field',
@@ -273,7 +287,6 @@ export default {
                     style: {
                         default: {
                             color: '#D1D5DB',
-                            padding: '0px 0px 0px 12px',
                         },
                     },
                 },
@@ -282,29 +295,34 @@ export default {
                 group: 'Select',
             },
         },
-        optionElementSelected: {
+        textElement: {
             hidden: true,
-            defaultValue: {
-                isWwObject: true,
-                type: 'ww-text',
-                state: {
-                    name: 'Text - selected',
-                    style: {
-                        default: {
-                            padding: '0px 0px 0px 12px',
-                            borderRadius: '4px',
-                            color: '#000000',
-                        },
-                    },
-                },
-            },
+            defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Option text' } },
             navigator: {
                 group: 'Option',
             },
         },
-        optionElement: {
+        imageElement: {
             hidden: true,
-            defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Text' } },
+            defaultValue: { isWwObject: true, type: 'ww-image', state: { name: 'Option image' } },
+            navigator: {
+                group: 'Option',
+            },
+        },
+        flexboxElement: {
+            hidden: true,
+            defaultValue: {
+                isWwObject: true,
+                type: 'ww-flexbox',
+                state: {
+                    name: 'Option container',
+                    style: {
+                        default: {
+                            width: '100%',
+                        },
+                    },
+                },
+            },
             navigator: {
                 group: 'Option',
             },
@@ -318,7 +336,7 @@ export default {
                     name: 'Caret icon',
                     style: {
                         default: {
-                            padding: '12px',
+                            padding: '0px 12px',
                         },
                     },
                 },
@@ -347,49 +365,53 @@ export default {
                 group: 'Select',
             },
         },
-        optionsDefaultBgColor: {
-            label: {
-                en: 'Default option background',
-            },
-            type: 'Color',
-            defaultValue: '#FFFFFF00',
-        },
-        optionsDefaultTextColor: {
-            label: {
-                en: 'Default option text color',
-            },
-            type: 'Color',
-            defaultValue: '#000000',
-        },
-        optionBackgroundPointed: {
-            label: {
-                en: 'Dropdown option hover color',
-            },
-            type: 'Color',
-            defaultValue: '#d1d5db',
-        },
-        optionBackgroundSelected: {
-            label: {
-                en: 'Dropdown option selected color',
-            },
-            type: 'Color',
-            defaultValue: '#8e9091',
-        },
-        optionBackgroundSelectedPointed: {
-            label: {
-                en: 'Dropdown option selected - hover color',
-            },
-            type: 'Color',
-            defaultValue: '#6a6a6b',
-        },
-        dropdownBackgroundColor: {
-            label: {
-                en: 'Dropdown background color',
-            },
-            type: 'Color',
-            defaultValue: '#ffffff',
-        },
+        // optionsDefaultBgColor: {
+        //     hidden: content => content.isCustomStyle,
+        //     label: {
+        //         en: 'Default option background',
+        //     },
+        //     type: 'Color',
+        //     defaultValue: '#FFFFFF00',
+        // },
+        // optionsDefaultTextColor: {
+        //     hidden: content => content.isCustomStyle,
+        //     label: {
+        //         en: 'Default option text color',
+        //     },
+        //     type: 'Color',
+        //     defaultValue: '#000000',
+        // },
+        // optionBackgroundPointed: {
+        //     hidden: content => content.isCustomStyle,
+        //     label: {
+        //         en: 'Dropdown option hover color',
+        //     },
+        //     type: 'Color',
+        // },
+        // optionBackgroundSelected: {
+        //     hidden: content => content.isCustomStyle,
+        //     label: {
+        //         en: 'Dropdown option selected color',
+        //     },
+        //     type: 'Color',
+        // },
+        // optionBackgroundSelectedPointed: {
+        //     hidden: content => content.isCustomStyle,
+        //     label: {
+        //         en: 'Dropdown option selected - hover color',
+        //     },
+        //     type: 'Color',
+        // },
+        // dropdownBackgroundColor: {
+        //     hidden: content => content.isCustomStyle,
+        //     label: {
+        //         en: 'Dropdown background color',
+        //     },
+        //     type: 'Color',
+        //     defaultValue: '#ffffff',
+        // },
         dropdownBorderWidth: {
+            hidden: content => content.isCustomStyle,
             type: 'Length',
             label: {
                 en: 'Dropdown border width',
@@ -400,6 +422,7 @@ export default {
             defaultValue: '1px',
         },
         dropdownBorderColor: {
+            hidden: content => content.isCustomStyle,
             label: {
                 en: 'Dropdown border color',
             },
@@ -407,6 +430,7 @@ export default {
             defaultValue: '#d1d5db',
         },
         dropdownBorderRadius: {
+            hidden: content => content.isCustomStyle,
             type: 'Length',
             label: {
                 en: 'Dropdown border radius',
@@ -417,6 +441,7 @@ export default {
             defaultValue: '4px',
         },
         dropdownMaxHeight: {
+            hidden: content => content.isCustomStyle,
             label: {
                 en: 'Dropdown max height',
             },
@@ -427,6 +452,25 @@ export default {
             responsive: true,
             states: true,
             defaultValue: '150px',
+        },
+        isCustomStyle: {
+            label: {
+                en: 'Full custom style',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+        },
+        // TODO: configure binding tooltip - https://github.com/vueform/multiselect#styling
+        customStyle: {
+            hidden: content => !content.isCustomStyle,
+            label: {
+                en: 'Variables',
+            },
+            type: 'Info',
+            options: {
+                text: { en: 'Override select variables' },
+            },
+            bindable: true,
         },
     },
 };
