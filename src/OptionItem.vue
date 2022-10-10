@@ -50,10 +50,8 @@ export default {
     computed: {
         // TODO label property for search
         optionStates() {
-            console.log('GET STATES 🥲', this.option.value);
-            //  if (this.content.isCustomStyle) return [];
             if (this.isSelected && this.isHovered) return ['Selected:hover'];
-            else if (!this.isSelected && this.isHovered) return ['Selected'];
+            else if (this.isSelected && !this.isHovered) return ['Selected'];
 
             return [];
         },
