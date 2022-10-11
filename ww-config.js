@@ -41,6 +41,12 @@ export default {
             bindable: true,
             defaultValue: false,
             hidden: (content, sidePanelContent, boundProps, wwProps) => !!(wwProps && wwProps.readonly !== undefined),
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the input is readonly: `true | false`',
+            },
+            /* wwEditor:end */
         },
         isOpen: {
             type: 'OnOff',
@@ -51,6 +57,12 @@ export default {
             defaultValue: false,
             bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the select is open: `true | false`',
+            },
+            /* wwEditor:end */
         },
         placeholder: {
             label: {
@@ -62,6 +74,12 @@ export default {
             section: 'settings',
             bindable: true,
             multiLang: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the placeholder: `"placeholder"`',
+            },
+            /* wwEditor:end */
         },
         disabled: {
             label: {
@@ -72,6 +90,12 @@ export default {
             defaultValue: false,
             section: 'settings',
             bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the select is disabled: `true | false`',
+            },
+            /* wwEditor:end */
         },
         allowCreation: {
             label: {
@@ -82,6 +106,12 @@ export default {
             defaultValue: false,
             section: 'settings',
             bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the user can create options: `true | false`',
+            },
+            /* wwEditor:end */
         },
         canDeselect: {
             label: {
@@ -142,6 +172,12 @@ export default {
             type: 'Text',
             bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the initial value: `"option1 || option2"`',
+            },
+            /* wwEditor:end */
         },
         options: {
             label: { en: 'Options', fr: 'Options' },
@@ -181,6 +217,13 @@ export default {
                 { value: 'option2', label: { en: 'option - 2' }, bgColor: '#FFFFFF00', textColor: '#000000' },
             ],
             bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'array',
+                tooltip:
+                    'A collection of data in array format: \n\n `[{}, {}, ...] || ["string1", "string2", ...] || [1, 2, ...]`',
+            },
+            /* wwEditor:end */
         },
         hintFields: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.options || content.options,
