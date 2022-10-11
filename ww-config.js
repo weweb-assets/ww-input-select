@@ -300,6 +300,7 @@ export default {
             defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Option text' } },
             navigator: {
                 group: 'Option',
+                hidden: content => content.layoutType === 'free',
             },
         },
         imageElement: {
@@ -307,6 +308,7 @@ export default {
             defaultValue: { isWwObject: true, type: 'ww-image', state: { name: 'Option image' } },
             navigator: {
                 group: 'Option',
+                hidden: content => content.layoutType === 'free' || content.layoutType === 'text',
             },
         },
         flexboxElement: {
@@ -325,6 +327,7 @@ export default {
             },
             navigator: {
                 group: 'Option',
+                hidden: content => content.layoutType !== 'free',
             },
         },
         caretIconElement: {

@@ -4,13 +4,13 @@
         ref="select"
         v-model="internalValue"
         class="ww-input-select"
+        mode="single"
         :style="cssVariables"
         :class="{ editing: isEditing }"
         :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
         :options="options"
         :close-on-select="content.closeOnSelect"
         :searchable="content.searchable"
-        mode="single"
         :disabled="content.disabled"
         :placeholder="placeholder"
         :can-clear="content.clearIcon"
@@ -43,7 +43,6 @@
                 <OptionItem
                     :option="option"
                     :layoutType="content.layoutType"
-                    :isSelected="option && option.value === internalValue"
                     :flexboxElement="content.flexboxElement"
                     :imageElement="content.imageElement"
                     :textElement="content.textElement"
@@ -94,7 +93,6 @@ export default {
     },
     data: () => ({
         options: [],
-        optionHovered: null,
         resizeObserver: null,
         adaptivePadding: '12px',
     }),

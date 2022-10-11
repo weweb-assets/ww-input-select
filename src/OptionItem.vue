@@ -5,15 +5,8 @@
         v-bind="textElement"
         :ww-props="{ text: option.label || '' }"
         :states="optionStates"
-        @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false"
     />
-    <div
-        v-else-if="layoutType === 'imageText'"
-        class="multiselect-single-label-el image-text-layout"
-        @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false"
-    >
+    <div v-else-if="layoutType === 'imageText'" class="multiselect-single-label-el image-text-layout">
         <wwElement v-bind="imageElement" :ww-props="{ text: option.label || '' }" :states="optionStates" />
         <wwElement
             class="multiselect-single-label-el"
@@ -25,8 +18,6 @@
     <wwElement
         v-else-if="layoutType === 'free'"
         class="multiselect-single-label-el free-layout"
-        @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false"
         v-bind="flexboxElement"
         :states="optionStates"
     />
@@ -37,24 +28,52 @@ export default {
     props: {
         option: { type: Object, required: true },
         layoutType: { type: String, required: true },
-        imageElement: { type: Object, required: true }, // TODO look for hide in navigator
+        imageElement: { type: Object, required: true },
         textElement: { type: Object, required: true },
         flexboxElement: { type: Object, required: true },
-        isSelected: { type: Boolean, required: true },
     },
     data() {
         return {
-            isHovered: false,
+            observer: null,
+            optionStates: [],
         };
     },
-    computed: {
-        // TODO label property for search
-        optionStates() {
-            if (this.isSelected && this.isHovered) return ['Selected:hover'];
-            else if (this.isSelected && !this.isHovered) return ['Selected'];
+    mounted() {
+        const optionNode = this.$el.parentElement;
+        if (!optionNode) return;
 
-            return [];
+        this.observer = new MutationObserver(mutations => {
+            for (const m of mutations) {
+                const classes = m.target.getAttribute(m.attributeName);
+                this.$nextTick(() => {
+                    this.handleOntionState(classes);
+                });
+            }
+        });
+
+        this.observer.observe(optionNode, {
+            attributes: true,
+            attributeOldValue: true,
+            attributeFilter: ['class'],
+        });
+    },
+    methods: {
+        handleOntionState(classes) {
+            if (!classes || typeof classes !== 'string') return;
+
+            if (classes.includes('is-pointed') && !classes.includes('is-selected')) {
+                this.optionStates = [':hover'];
+            } else if (!classes.includes('is-pointed') && classes.includes('is-selected')) {
+                this.optionStates = ['Selected'];
+            } else if (classes.includes('is-pointed') && classes.includes('is-selected')) {
+                this.optionStates = ['Selected:hover'];
+            } else {
+                this.optionStates = [];
+            }
         },
+    },
+    beforeUnmount() {
+        if (this.observer) this.observer.disconnect();
     },
 };
 </script>
