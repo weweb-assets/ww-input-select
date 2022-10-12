@@ -17,8 +17,6 @@ export default {
                 'dropdownBorderRadius',
                 'dropdownMaxHeight',
             ],
-            'isCustomStyle',
-            'customStyle',
         ],
         customSettingsPropertiesOrder: [
             'isOpen',
@@ -128,7 +126,7 @@ export default {
                 fr: 'Ferme à la sélection',
             },
             type: 'OnOff',
-            defaultValue: false,
+            defaultValue: true,
             section: 'settings',
         },
         clearIcon: {
@@ -241,8 +239,7 @@ export default {
             section: 'settings',
         },
         bgColorField: {
-            hidden: (content, sidepanelContent, boundProps) =>
-                !boundProps.options || !content.options || !content.isCustomStyle,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
             label: {
                 en: 'Background color field',
                 fr: 'Background color field',
@@ -259,8 +256,7 @@ export default {
             section: 'settings',
         },
         textColorField: {
-            hidden: (content, sidepanelContent, boundProps) =>
-                !boundProps.options || !content.options || !content.isCustomStyle,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
             label: {
                 en: 'Text color field',
                 fr: 'Text color field',
@@ -359,53 +355,7 @@ export default {
                 group: 'Select',
             },
         },
-        // optionsDefaultBgColor: {
-        //     hidden: content => content.isCustomStyle,
-        //     label: {
-        //         en: 'Default option background',
-        //     },
-        //     type: 'Color',
-        //     defaultValue: '#FFFFFF00',
-        // },
-        // optionsDefaultTextColor: {
-        //     hidden: content => content.isCustomStyle,
-        //     label: {
-        //         en: 'Default option text color',
-        //     },
-        //     type: 'Color',
-        //     defaultValue: '#000000',
-        // },
-        // optionBackgroundPointed: {
-        //     hidden: content => content.isCustomStyle,
-        //     label: {
-        //         en: 'Dropdown option hover color',
-        //     },
-        //     type: 'Color',
-        // },
-        // optionBackgroundSelected: {
-        //     hidden: content => content.isCustomStyle,
-        //     label: {
-        //         en: 'Dropdown option selected color',
-        //     },
-        //     type: 'Color',
-        // },
-        // optionBackgroundSelectedPointed: {
-        //     hidden: content => content.isCustomStyle,
-        //     label: {
-        //         en: 'Dropdown option selected - hover color',
-        //     },
-        //     type: 'Color',
-        // },
-        // dropdownBackgroundColor: {
-        //     hidden: content => content.isCustomStyle,
-        //     label: {
-        //         en: 'Dropdown background color',
-        //     },
-        //     type: 'Color',
-        //     defaultValue: '#ffffff',
-        // },
         dropdownBorderWidth: {
-            hidden: content => content.isCustomStyle,
             type: 'Length',
             label: {
                 en: 'Dropdown border width',
@@ -416,7 +366,6 @@ export default {
             defaultValue: '1px',
         },
         dropdownBorderColor: {
-            hidden: content => content.isCustomStyle,
             label: {
                 en: 'Dropdown border color',
             },
@@ -424,7 +373,6 @@ export default {
             defaultValue: '#d1d5db',
         },
         dropdownBorderRadius: {
-            hidden: content => content.isCustomStyle,
             type: 'Length',
             label: {
                 en: 'Dropdown border radius',
@@ -435,7 +383,6 @@ export default {
             defaultValue: '4px',
         },
         dropdownMaxHeight: {
-            hidden: content => content.isCustomStyle,
             label: {
                 en: 'Dropdown max height',
             },
@@ -454,17 +401,6 @@ export default {
             type: 'OnOff',
             defaultValue: false,
         },
-        // TODO: configure binding tooltip - https://github.com/vueform/multiselect#styling
-        customStyle: {
-            hidden: content => !content.isCustomStyle,
-            label: {
-                en: 'Variables',
-            },
-            type: 'Info',
-            options: {
-                text: { en: 'Override select variables' },
-            },
-            bindable: true,
-        },
+        // TODO: full custom style option - https://github.com/vueform/multiselect#styling
     },
 };

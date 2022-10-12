@@ -146,6 +146,8 @@ export default {
                 '--ms-option-bg-selected': 'transparent',
                 '--ms-option-bg-selected-pointed': 'transparent',
                 '--ms-option-color-selected': '#000000',
+                '--ms-ring-width': '0px',
+                '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
             };
         },
