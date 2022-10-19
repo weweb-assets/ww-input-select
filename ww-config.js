@@ -19,13 +19,17 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
-            'readonly',
             'isOpen',
-            ['initialValue', 'options'],
-            ['placeholder'],
-            ['disabled', 'mode', 'allowCreation', 'canDeselect', 'hideSelected', 'searchable', 'closeOnSelect'],
-            ['clearIcon', 'caretIcon'],
+            'layoutType',
+            'required',
+            'readonly',
+            'disabled',
+            'initialValue',
+            'placeholder',
+            ['options'],
             ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
+            ['advanced', 'searchable', 'closeOnSelect', 'canDeselect'],
+            ['clearIcon', 'caretIcon'],
         ],
     },
     options: {
@@ -34,6 +38,20 @@ export default {
     triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true }],
     inherit: { type: 'ww-text', exclude: ['text'] },
     properties: {
+        layoutType: {
+            label: {
+                en: 'Layout type',
+            },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'text', label: { en: 'Text' } },
+                    { value: 'free', label: { en: 'Free layout' } },
+                ],
+            },
+            defaultValue: 'text',
+            section: 'settings',
+        },
         readonly: {
             label: { en: 'Read only', fr: 'Lecture seule' },
             type: 'OnOff',
@@ -97,15 +115,14 @@ export default {
             },
             /* wwEditor:end */
         },
-        allowCreation: {
-            label: {
-                en: 'Allow to create option',
-                fr: "Permettre la création d'option",
-            },
+        advanced: {
             type: 'OnOff',
+            label: {
+                en: 'Advanced options',
+            },
             defaultValue: false,
-            section: 'settings',
             bindable: true,
+            section: 'settings',
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
@@ -114,6 +131,7 @@ export default {
             /* wwEditor:end */
         },
         canDeselect: {
+            hidden: content => !content.advanced,
             label: {
                 en: 'Can unselect',
             },
@@ -121,16 +139,8 @@ export default {
             defaultValue: false,
             section: 'settings',
         },
-        hideSelected: {
-            label: {
-                en: 'Hide selected elements',
-                fr: 'Cacher les éléments sélectionnés',
-            },
-            type: 'OnOff',
-            defaultValue: true,
-            section: 'settings',
-        },
         searchable: {
+            hidden: content => !content.advanced,
             label: {
                 en: 'Searchable',
                 fr: 'Recherche',
@@ -140,12 +150,13 @@ export default {
             section: 'settings',
         },
         closeOnSelect: {
+            hidden: content => !content.advanced,
             label: {
                 en: 'Close on select',
                 fr: 'Ferme à la sélection',
             },
             type: 'OnOff',
-            defaultValue: false,
+            defaultValue: true,
             section: 'settings',
         },
         clearIcon: {
@@ -200,13 +211,11 @@ export default {
                                 type: 'Text',
                                 options: { placeholder: 'Value' },
                             },
-                            textColor: {
-                                label: { en: 'Color' },
-                                type: 'Color',
-                            },
-                            bgColor: {
-                                label: { en: 'Background color' },
-                                type: 'Color',
+                            image: {
+                                hidden: content => content.layoutType !== 'imageText',
+                                label: { en: 'Image' },
+                                type: 'Text',
+                                options: { placeholder: 'Image link' },
                             },
                         },
                     },
@@ -316,7 +325,6 @@ export default {
                     style: {
                         default: {
                             color: '#D1D5DB',
-                            padding: '0px 0px 0px 12px',
                         },
                     },
                 },
@@ -325,31 +333,31 @@ export default {
                 group: 'Select',
             },
         },
-        optionElementSelected: {
+        textElement: {
+            hidden: true,
+            defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Option text' } },
+            navigator: {
+                group: 'Option',
+                hidden: content => content.layoutType === 'free',
+            },
+        },
+        flexboxElement: {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
-                type: 'ww-text',
+                type: 'ww-flexbox',
                 state: {
-                    name: 'Text - selected',
+                    name: 'Option container',
                     style: {
                         default: {
-                            padding: '0px 0px 0px 12px',
-                            borderRadius: '4px',
-                            color: '#000000',
+                            width: '100%',
                         },
                     },
                 },
             },
             navigator: {
                 group: 'Option',
-            },
-        },
-        optionElement: {
-            hidden: true,
-            defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Text' } },
-            navigator: {
-                group: 'Option',
+                hidden: content => content.layoutType !== 'free',
             },
         },
         caretIconElement: {
@@ -361,7 +369,7 @@ export default {
                     name: 'Caret icon',
                     style: {
                         default: {
-                            padding: '12px',
+                            padding: '0px 12px',
                         },
                     },
                 },
@@ -389,48 +397,6 @@ export default {
             navigator: {
                 group: 'Select',
             },
-        },
-        optionsDefaultBgColor: {
-            label: {
-                en: 'Default option background',
-            },
-            type: 'Color',
-            defaultValue: '#FFFFFF00',
-        },
-        optionsDefaultTextColor: {
-            label: {
-                en: 'Default option text color',
-            },
-            type: 'Color',
-            defaultValue: '#000000',
-        },
-        optionBackgroundPointed: {
-            label: {
-                en: 'Dropdown option hover color',
-            },
-            type: 'Color',
-            defaultValue: '#d1d5db',
-        },
-        optionBackgroundSelected: {
-            label: {
-                en: 'Dropdown option selected color',
-            },
-            type: 'Color',
-            defaultValue: '#8e9091',
-        },
-        optionBackgroundSelectedPointed: {
-            label: {
-                en: 'Dropdown option selected - hover color',
-            },
-            type: 'Color',
-            defaultValue: '#6a6a6b',
-        },
-        dropdownBackgroundColor: {
-            label: {
-                en: 'Dropdown background color',
-            },
-            type: 'Color',
-            defaultValue: '#ffffff',
         },
         dropdownBorderWidth: {
             type: 'Length',
@@ -471,5 +437,13 @@ export default {
             states: true,
             defaultValue: '150px',
         },
+        isCustomStyle: {
+            label: {
+                en: 'Full custom style',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+        },
+        // TODO: full custom style option - https://github.com/vueform/multiselect#styling
     },
 };

@@ -4,20 +4,20 @@
         ref="select"
         v-model="internalValue"
         class="ww-input-select"
+        mode="single"
         :style="cssVariables"
         :class="{ editing: isEditing }"
+        :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
         :options="options"
         :close-on-select="content.closeOnSelect"
         :searchable="content.searchable"
-        mode="single"
         :disabled="content.disabled"
-        :hide-selected="content.hideSelected"
         :placeholder="placeholder"
-        :create-option="content.allowCreation"
         :can-clear="content.clearIcon"
         :can-deselect="content.canDeselect"
         :caret="content.caretIcon"
         :name="wwElementState.name"
+        @close="checkIsOpen"
     >
         <!-- Placeholder -->
         <template v-if="placeholder.length" #placeholder>
@@ -32,12 +32,7 @@
         <template #singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
                 <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
-                    <!-- <wwElement
-                        class="multiselect-single-label-el"
-                        v-bind="content.optionElementSelected"
-                        :wwProps="{ text: value.label }"
-                    /> -->
-                    <wwText class="multiselect-single-label-el" :text="value.label || ''"></wwText>
+                    <wwText class="multiselect-single-label-el" :text="getLabel(value) || ''"></wwText>
                 </wwLayoutItemContext>
             </div>
         </template>
@@ -45,10 +40,12 @@
         <!-- Tag unselected in list -->
         <template #option="{ option }">
             <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
-                <wwElement
-                    class="multiselect-single-label-el"
-                    v-bind="content.optionElement"
-                    :ww-props="{ text: option.label || '' }"
+                <OptionItem
+                    :option="option"
+                    :layoutType="content.layoutType"
+                    :flexboxElement="content.flexboxElement"
+                    :imageElement="content.imageElement"
+                    :textElement="content.textElement"
                 />
             </wwLayoutItemContext>
         </template>
@@ -68,12 +65,13 @@
 
 <script>
 import Multiselect from '@vueform/multiselect';
+import OptionItem from './OptionItem.vue';
 
 const DEFAULT_LABEL_FIELD = 'label';
 const DEFAULT_VALUE_FIELD = 'value';
 
 export default {
-    components: { Multiselect },
+    components: { Multiselect, OptionItem },
     props: {
         uid: { type: String, required: true },
         content: { type: Object, required: true },
@@ -95,6 +93,8 @@ export default {
     },
     data: () => ({
         options: [],
+        resizeObserver: null,
+        adaptivePadding: '12px',
     }),
     computed: {
         isEditing() {
@@ -133,15 +133,22 @@ export default {
             };
         },
         cssVariables() {
+            if (this.content.isCustomStyle)
+                return { ...this.content.customStyle, '--adaptive-padding': this.adaptivePadding };
+
             return {
                 '--ms-dropdown-bg': this.content.dropdownBackgroundColor,
                 '--ms-dropdown-border-width': this.content.dropdownBorderWidth,
                 '--ms-dropdown-border-color': this.content.dropdownBorderColor,
                 '--ms-dropdown-radius': this.content.dropdownBorderRadius,
                 '--ms-max-height': this.content.dropdownMaxHeight || '10rem',
-                '--ms-option-bg-pointed': this.content.optionBackgroundPointed,
-                '--ms-option-bg-selected': this.content.optionBackgroundSelected,
-                '--ms-option-bg-selected-pointed': this.content.optionBackgroundSelectedPointed,
+                '--ms-option-bg-pointed': 'transparent',
+                '--ms-option-bg-selected': 'transparent',
+                '--ms-option-bg-selected-pointed': 'transparent',
+                '--ms-option-color-selected': '#000000',
+                '--ms-ring-width': '0px',
+                '--ms-ring-color': 'transparent',
+                '--adaptive-padding': this.adaptivePadding,
             };
         },
         isReadonly() {
@@ -204,6 +211,7 @@ export default {
         this.init();
     },
     mounted() {
+        this.handleObserver();
         this.handleOpening(this.content.isOpen);
     },
     methods: {
@@ -224,7 +232,6 @@ export default {
                 this.options.push(this.formatOption(this.content.initialValue));
             }
         },
-
         getValueIndex(value) {
             return this.options.findIndex(option => option.value === value.value);
         },
@@ -235,10 +242,18 @@ export default {
             const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
             const valueField = this.content.valueField || DEFAULT_VALUE_FIELD;
 
+            if (this.content.layoutType === 'free')
+                return {
+                    label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
+                    value: wwLib.resolveObjectPropertyPath(option, valueField),
+                    data: option,
+                };
+
             return typeof option === 'object'
                 ? {
                       label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
+                      image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
                           backgroundColor:
                               wwLib.resolveObjectPropertyPath(option, 'bgColor') || this.content.optionsDefaultBgColor,
@@ -253,11 +268,25 @@ export default {
                       value: option,
                   };
         },
+        getLabel(option) {
+            return option && option.label ? option.label : '';
+        },
         handleOpening(value) {
             if (this.$refs.select) {
                 if (value) this.$refs.select.open();
                 else this.$refs.select.close();
             }
+        },
+        handleObserver() {
+            if (this.resizeObserver) this.resizeObserver.disconnect();
+            this.adaptivePadding = this.$el.style.padding;
+            this.resizeObserver = new ResizeObserver(() => {
+                this.adaptivePadding = this.$el.style.padding;
+            });
+            this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
+        },
+        checkIsOpen() {
+            if (this.isEditing && this.content.isOpen) this.handleOpening(true);
         },
     },
 };
@@ -272,7 +301,6 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
-    min-height: calc(var(--font-size) + 20px);
 
     &.is-active {
         box-shadow: unset;
@@ -284,13 +312,30 @@ export default {
     }
     /* wwEditor:end */
 }
+.ww-input-select::v-deep .multiselect-search {
+    padding: var(--adaptive-padding);
+}
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;
     line-height: inherit !important;
     padding: 0px !important;
     width: 100%;
 }
+.ww-input-select::v-deep .multiselect-option {
+    padding: 0px !important;
+    width: 100%;
+}
 .ww-input-select::v-deep .multiselect-placeholder-el {
     flex-grow: 1;
+    width: 100%;
+}
+.ww-input-select::v-deep .image-text-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.ww-input-select::v-deep .free-layout {
+    width: 100%;
 }
 </style>
