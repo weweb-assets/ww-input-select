@@ -11,6 +11,7 @@
         :options="options"
         :close-on-select="content.closeOnSelect"
         :searchable="content.searchable"
+        :required="content.required"
         :disabled="content.disabled"
         :placeholder="placeholder"
         :can-clear="content.clearIcon"

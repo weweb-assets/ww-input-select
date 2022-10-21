@@ -82,6 +82,16 @@ export default {
             },
             /* wwEditor:end */
         },
+        required: {
+            type: 'OnOff',
+            label: {
+                en: 'Required',
+                fr: 'Required',
+            },
+            defaultValue: false,
+            bindable: true,
+            section: 'settings',
+        },
         placeholder: {
             label: {
                 en: 'Placeholder',
