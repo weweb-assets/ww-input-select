@@ -133,9 +133,6 @@ export default {
             };
         },
         cssVariables() {
-            if (this.content.isCustomStyle)
-                return { ...this.content.customStyle, '--adaptive-padding': this.adaptivePadding };
-
             return {
                 '--ms-dropdown-bg': this.content.dropdownBackgroundColor,
                 '--ms-dropdown-border-width': this.content.dropdownBorderWidth,
