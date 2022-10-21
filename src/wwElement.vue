@@ -279,9 +279,9 @@ export default {
         },
         handleObserver() {
             if (this.resizeObserver) this.resizeObserver.disconnect();
-            this.adaptivePadding = this.$el.style.padding;
+            this.adaptivePadding = (this.$el.style || {}).padding;
             this.resizeObserver = new ResizeObserver(() => {
-                this.adaptivePadding = this.$el.style.padding;
+                this.adaptivePadding = (this.$el.style || {}).padding;
             });
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },
