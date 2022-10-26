@@ -82,6 +82,16 @@ export default {
             },
             /* wwEditor:end */
         },
+        required: {
+            type: 'OnOff',
+            label: {
+                en: 'Required',
+                fr: 'Required',
+            },
+            defaultValue: false,
+            bindable: true,
+            section: 'settings',
+        },
         placeholder: {
             label: {
                 en: 'Placeholder',
@@ -437,13 +447,5 @@ export default {
             states: true,
             defaultValue: '150px',
         },
-        isCustomStyle: {
-            label: {
-                en: 'Full custom style',
-            },
-            type: 'OnOff',
-            defaultValue: false,
-        },
-        // TODO: full custom style option - https://github.com/vueform/multiselect#styling
     },
 };

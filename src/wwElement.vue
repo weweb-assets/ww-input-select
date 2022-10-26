@@ -11,6 +11,7 @@
         :options="options"
         :close-on-select="content.closeOnSelect"
         :searchable="content.searchable"
+        :required="content.required"
         :disabled="content.disabled"
         :placeholder="placeholder"
         :can-clear="content.clearIcon"
@@ -133,9 +134,6 @@ export default {
             };
         },
         cssVariables() {
-            if (this.content.isCustomStyle)
-                return { ...this.content.customStyle, '--adaptive-padding': this.adaptivePadding };
-
             return {
                 '--ms-dropdown-bg': this.content.dropdownBackgroundColor,
                 '--ms-dropdown-border-width': this.content.dropdownBorderWidth,
