@@ -180,6 +180,12 @@ export default {
         'content.options'() {
             this.init();
         },
+        'content.labelField'() {
+            this.init();
+        },
+        'content.valueField'() {
+            this.init();
+        },
         isReadonly: {
             immediate: true,
             handler(value) {
@@ -322,6 +328,9 @@ export default {
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
     width: 100%;
+}
+.ww-input-select::v-deep .multiselect-dropdown {
+    max-height: unset;
 }
 .ww-input-select::v-deep .multiselect-placeholder-el {
     flex-grow: 1;
