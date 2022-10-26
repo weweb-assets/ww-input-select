@@ -196,8 +196,8 @@ export default {
                 },
             },
             defaultValue: [
-                { value: 'option', label: { en: 'option - 1' }, bgColor: '#FFFFFF00', textColor: '#000000' },
-                { value: 'option2', label: { en: 'option - 2' }, bgColor: '#FFFFFF00', textColor: '#000000' },
+                { value: 'option', label: { en: 'option - 1' } },
+                { value: 'option2', label: { en: 'option - 2' } },
             ],
             bindable: true,
         },
@@ -262,7 +262,6 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: '#FFFFFF00',
             section: 'settings',
         },
         textColorField: {
@@ -279,7 +278,6 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: '#000000',
             section: 'settings',
         },
         placeholderElement: {
