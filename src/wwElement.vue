@@ -143,7 +143,9 @@ export default {
                 '--ms-option-bg-pointed': 'transparent',
                 '--ms-option-bg-selected': 'transparent',
                 '--ms-option-bg-selected-pointed': 'transparent',
+                '--ms-option-color-pointed': '#000000',
                 '--ms-option-color-selected': '#000000',
+                '--ms-option-color-selected-pointed': '#000000',
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
@@ -178,6 +180,9 @@ export default {
             this.internalValue = this.content.initialValue;
         },
         'content.options'() {
+            this.init();
+        },
+        'content.layoutType'() {
             this.init();
         },
         'content.labelField'() {
@@ -259,11 +264,8 @@ export default {
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
-                          backgroundColor:
-                              wwLib.resolveObjectPropertyPath(option, 'bgColor') || this.content.optionsDefaultBgColor,
-                          color:
-                              wwLib.resolveObjectPropertyPath(option, 'textColor') ||
-                              this.content.optionsDefaultTextColor,
+                          backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
+                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || '#000000',
                       },
                   }
                 : {
@@ -283,9 +285,14 @@ export default {
         },
         handleObserver() {
             if (this.resizeObserver) this.resizeObserver.disconnect();
-            this.adaptivePadding = this.$el.style.padding;
+
+            this.adaptivePadding =
+                this.$el && this.$el.style && this.$el.style.padding ? this.$el.style.padding : this.adaptivePadding;
             this.resizeObserver = new ResizeObserver(() => {
-                this.adaptivePadding = this.$el.style.padding;
+                this.adaptivePadding =
+                    this.$el && this.$el.style && this.$el.style.padding
+                        ? this.$el.style.padding
+                        : this.adaptivePadding;
             });
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },

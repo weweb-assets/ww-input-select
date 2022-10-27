@@ -6,7 +6,6 @@ export default {
         },
         icon: 'fontawesome/solid/chevron-circle-down',
         customStylePropertiesOrder: [
-            ['optionsDefaultBgColor', 'optionsDefaultTextColor'],
             [
                 'dropdownBackgroundColor',
                 'optionBackgroundPointed',
@@ -343,7 +342,19 @@ export default {
         },
         textElement: {
             hidden: true,
-            defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Option text' } },
+            defaultValue: {
+                isWwObject: true,
+                type: 'ww-text',
+                state: {
+                    name: 'Option text',
+                    style: {
+                        default: {
+                            color: '#BD0F0F',
+                            width: '100%',
+                        },
+                    },
+                },
+            },
             navigator: {
                 group: 'Option',
                 hidden: content => content.layoutType === 'free',
