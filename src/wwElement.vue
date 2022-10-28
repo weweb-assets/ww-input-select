@@ -195,9 +195,13 @@ export default {
             immediate: true,
             handler(value) {
                 if (value) {
+                    if (this.resizeObserver) this.resizeObserver.disconnect();
                     this.$emit('add-state', 'readonly');
                 } else {
                     this.$emit('remove-state', 'readonly');
+                    this.$nextTick(() => {
+                        this.handleObserver();
+                    });
                 }
             },
         },
@@ -278,21 +282,20 @@ export default {
             return option && option.label ? option.label : '';
         },
         handleOpening(value) {
-            if (this.$refs.select) {
-                if (value) this.$refs.select.open();
-                else this.$refs.select.close();
-            }
+            if (!this.$refs.select) return;
+
+            if (value) this.$refs.select.open();
+            else this.$refs.select.close();
         },
         handleObserver() {
+            if (!this.$refs.select) return;
             if (this.resizeObserver) this.resizeObserver.disconnect();
 
-            this.adaptivePadding =
-                this.$el && this.$el.style && this.$el.style.padding ? this.$el.style.padding : this.adaptivePadding;
+            const el = this.$refs.select.el;
+            this.adaptivePadding = el && el.style && el.style.padding ? el.style.padding : this.adaptivePadding;
             this.resizeObserver = new ResizeObserver(() => {
                 this.adaptivePadding =
-                    this.$el && this.$el.style && this.$el.style.padding
-                        ? this.$el.style.padding
-                        : this.adaptivePadding;
+                    el && el.style && el.style.padding ? this.$el.style.padding : this.adaptivePadding;
             });
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },
