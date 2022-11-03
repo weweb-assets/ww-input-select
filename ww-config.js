@@ -18,7 +18,7 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
-            'isOpen',
+            'openInEditor',
             'layoutType',
             'required',
             'readonly',
@@ -65,21 +65,14 @@ export default {
             },
             /* wwEditor:end */
         },
-        isOpen: {
+        openInEditor: {
             type: 'OnOff',
             label: {
-                en: 'Is open?',
-                fr: 'Is open?',
+                en: 'Force open in editor',
             },
+            editorOnly: true,
             defaultValue: false,
-            bindable: true,
             section: 'settings',
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip: 'A boolean that defines if the select is open: `true | false`',
-            },
-            /* wwEditor:end */
         },
         required: {
             type: 'OnOff',

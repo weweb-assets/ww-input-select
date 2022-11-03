@@ -124,7 +124,7 @@ export default {
             return wwLib.wwLang.getText(this.content.placeholder);
         },
         valueLabel() {
-            const _option = this.options.find(option => option.value === this.internalValue);
+            const _option = this.options.find(option => option.value == this.internalValue);
             return _option ? _option.label : this.internalValue;
         },
         defaultOptionStyle() {
@@ -164,7 +164,7 @@ export default {
     },
     watch: {
         isEditing() {
-            this.handleOpening(this.content.isOpen);
+            this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
         currentSelection(value) {
             this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
@@ -215,7 +215,7 @@ export default {
                     textColorField: null,
                 });
         },
-        'content.isOpen'(value) {
+        'wwEditorState.sidepanelContent.openInEditor'(value) {
             this.handleOpening(value);
         },
         /* wwEditor:end */
@@ -225,7 +225,7 @@ export default {
     },
     mounted() {
         this.handleObserver();
-        this.handleOpening(this.content.isOpen);
+        this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
     },
     methods: {
         async init() {
@@ -300,7 +300,7 @@ export default {
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },
         checkIsOpen() {
-            if (this.isEditing && this.content.isOpen) this.handleOpening(true);
+            if (this.isEditing && this.wwEditorState.sidepanelContent.openInEditor) this.handleOpening(true);
         },
     },
 };
