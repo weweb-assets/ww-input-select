@@ -73,6 +73,7 @@ export default {
             editorOnly: true,
             defaultValue: false,
             section: 'settings',
+            hidden: content => content.readonly || content.disabled,
         },
         required: {
             type: 'OnOff',

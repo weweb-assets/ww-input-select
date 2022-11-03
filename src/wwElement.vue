@@ -225,7 +225,6 @@ export default {
     },
     mounted() {
         this.handleObserver();
-        this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
     },
     methods: {
         async init() {
@@ -300,7 +299,8 @@ export default {
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },
         checkIsOpen() {
-            if (this.isEditing && this.wwEditorState.sidepanelContent.openInEditor) this.handleOpening(true);
+            if (!this.isEditing) return;
+            this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
         },
     },
 };
