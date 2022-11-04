@@ -301,8 +301,10 @@ export default {
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },
         checkIsOpen() {
+            /* wwEditor:start */
             if (!this.isEditing) return;
             this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
+            /* wwEditor:end */
         },
     },
 };
