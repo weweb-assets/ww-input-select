@@ -163,9 +163,11 @@ export default {
         },
     },
     watch: {
+        /* wwEditor:start */
         isEditing() {
             this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
+        /* wwEditor:end */
         currentSelection(value) {
             this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
         },
