@@ -4,9 +4,8 @@ export default {
             en: 'Input select',
             fr: 'Champs sélection',
         },
-        icon: 'fontawesome/solid/chevron-circle-down',
+        icon: 'chevron-down',
         customStylePropertiesOrder: [
-            ['optionsDefaultBgColor', 'optionsDefaultTextColor'],
             [
                 'dropdownBackgroundColor',
                 'optionBackgroundPointed',
@@ -19,7 +18,7 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
-            'isOpen',
+            'openInEditor',
             'layoutType',
             'required',
             'readonly',
@@ -66,21 +65,25 @@ export default {
             },
             /* wwEditor:end */
         },
-        isOpen: {
+        openInEditor: {
             type: 'OnOff',
             label: {
-                en: 'Is open?',
-                fr: 'Is open?',
+                en: 'Force open in editor',
+            },
+            editorOnly: true,
+            defaultValue: false,
+            section: 'settings',
+            hidden: content => content.readonly || content.disabled,
+        },
+        required: {
+            type: 'OnOff',
+            label: {
+                en: 'Required',
+                fr: 'Required',
             },
             defaultValue: false,
             bindable: true,
             section: 'settings',
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip: 'A boolean that defines if the select is open: `true | false`',
-            },
-            /* wwEditor:end */
         },
         placeholder: {
             label: {
@@ -222,8 +225,8 @@ export default {
                 },
             },
             defaultValue: [
-                { value: 'option', label: { en: 'option - 1' }, bgColor: '#FFFFFF00', textColor: '#000000' },
-                { value: 'option2', label: { en: 'option - 2' }, bgColor: '#FFFFFF00', textColor: '#000000' },
+                { value: 'option', label: { en: 'option - 1' } },
+                { value: 'option2', label: { en: 'option - 2' } },
             ],
             bindable: true,
             /* wwEditor:start */
@@ -295,7 +298,6 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: '#FFFFFF00',
             section: 'settings',
         },
         textColorField: {
@@ -312,7 +314,6 @@ export default {
 
                 return { object: content.options[0] };
             },
-            defaultValue: '#000000',
             section: 'settings',
         },
         placeholderElement: {
@@ -335,7 +336,19 @@ export default {
         },
         textElement: {
             hidden: true,
-            defaultValue: { isWwObject: true, type: 'ww-text', state: { name: 'Option text' } },
+            defaultValue: {
+                isWwObject: true,
+                type: 'ww-text',
+                state: {
+                    name: 'Option text',
+                    style: {
+                        default: {
+                            color: '#BD0F0F',
+                            width: '100%',
+                        },
+                    },
+                },
+            },
             navigator: {
                 group: 'Option',
                 hidden: content => content.layoutType === 'free',
@@ -437,13 +450,5 @@ export default {
             states: true,
             defaultValue: '150px',
         },
-        isCustomStyle: {
-            label: {
-                en: 'Full custom style',
-            },
-            type: 'OnOff',
-            defaultValue: false,
-        },
-        // TODO: full custom style option - https://github.com/vueform/multiselect#styling
     },
 };

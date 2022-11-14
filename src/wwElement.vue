@@ -11,6 +11,7 @@
         :options="options"
         :close-on-select="content.closeOnSelect"
         :searchable="content.searchable"
+        :required="content.required"
         :disabled="content.disabled"
         :placeholder="placeholder"
         :can-clear="content.clearIcon"
@@ -123,7 +124,7 @@ export default {
             return wwLib.wwLang.getText(this.content.placeholder);
         },
         valueLabel() {
-            const _option = this.options.find(option => option.value === this.internalValue);
+            const _option = this.options.find(option => option.value == this.internalValue);
             return _option ? _option.label : this.internalValue;
         },
         defaultOptionStyle() {
@@ -133,9 +134,6 @@ export default {
             };
         },
         cssVariables() {
-            if (this.content.isCustomStyle)
-                return { ...this.content.customStyle, '--adaptive-padding': this.adaptivePadding };
-
             return {
                 '--ms-dropdown-bg': this.content.dropdownBackgroundColor,
                 '--ms-dropdown-border-width': this.content.dropdownBorderWidth,
@@ -145,7 +143,9 @@ export default {
                 '--ms-option-bg-pointed': 'transparent',
                 '--ms-option-bg-selected': 'transparent',
                 '--ms-option-bg-selected-pointed': 'transparent',
+                '--ms-option-color-pointed': '#000000',
                 '--ms-option-color-selected': '#000000',
+                '--ms-option-color-selected-pointed': '#000000',
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
@@ -163,9 +163,11 @@ export default {
         },
     },
     watch: {
+        /* wwEditor:start */
         isEditing() {
-            this.handleOpening(this.content.isOpen);
+            this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
+        /* wwEditor:end */
         currentSelection(value) {
             this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
         },
@@ -182,13 +184,26 @@ export default {
         'content.options'() {
             this.init();
         },
+        'content.layoutType'() {
+            this.init();
+        },
+        'content.labelField'() {
+            this.init();
+        },
+        'content.valueField'() {
+            this.init();
+        },
         isReadonly: {
             immediate: true,
             handler(value) {
                 if (value) {
+                    if (this.resizeObserver) this.resizeObserver.disconnect();
                     this.$emit('add-state', 'readonly');
                 } else {
                     this.$emit('remove-state', 'readonly');
+                    this.$nextTick(() => {
+                        this.handleObserver();
+                    });
                 }
             },
         },
@@ -202,7 +217,7 @@ export default {
                     textColorField: null,
                 });
         },
-        'content.isOpen'(value) {
+        'wwEditorState.sidepanelContent.openInEditor'(value) {
             this.handleOpening(value);
         },
         /* wwEditor:end */
@@ -212,7 +227,6 @@ export default {
     },
     mounted() {
         this.handleObserver();
-        this.handleOpening(this.content.isOpen);
     },
     methods: {
         async init() {
@@ -255,11 +269,8 @@ export default {
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
-                          backgroundColor:
-                              wwLib.resolveObjectPropertyPath(option, 'bgColor') || this.content.optionsDefaultBgColor,
-                          color:
-                              wwLib.resolveObjectPropertyPath(option, 'textColor') ||
-                              this.content.optionsDefaultTextColor,
+                          backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
+                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || '#000000',
                       },
                   }
                 : {
@@ -273,21 +284,28 @@ export default {
             return `${option.label}`;
         },
         handleOpening(value) {
-            if (this.$refs.select) {
-                if (value) this.$refs.select.open();
-                else this.$refs.select.close();
-            }
+            if (!this.$refs.select) return;
+
+            if (value) this.$refs.select.open();
+            else this.$refs.select.close();
         },
         handleObserver() {
+            if (!this.$refs.select) return;
             if (this.resizeObserver) this.resizeObserver.disconnect();
-            this.adaptivePadding = (this.$el.style || {}).padding;
+
+            const el = this.$refs.select.el;
+            this.adaptivePadding = el && el.style && el.style.padding ? el.style.padding : this.adaptivePadding;
             this.resizeObserver = new ResizeObserver(() => {
-                this.adaptivePadding = (this.$el.style || {}).padding;
+                this.adaptivePadding =
+                    el && el.style && el.style.padding ? this.$el.style.padding : this.adaptivePadding;
             });
             this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
         },
         checkIsOpen() {
-            if (this.isEditing && this.content.isOpen) this.handleOpening(true);
+            /* wwEditor:start */
+            if (!this.isEditing) return;
+            this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
+            /* wwEditor:end */
         },
     },
 };
@@ -325,6 +343,9 @@ export default {
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
     width: 100%;
+}
+.ww-input-select::v-deep .multiselect-dropdown {
+    max-height: unset;
 }
 .ww-input-select::v-deep .multiselect-placeholder-el {
     flex-grow: 1;
