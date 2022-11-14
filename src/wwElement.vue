@@ -32,7 +32,7 @@
         <template #singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
                 <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
-                    <wwText class="multiselect-single-label-el" :text="getLabel(value) || ''"></wwText>
+                    <wwText class="multiselect-single-label-el" :text="getLabel(value)"></wwText>
                 </wwLayoutItemContext>
             </div>
         </template>
@@ -269,7 +269,8 @@ export default {
                   };
         },
         getLabel(option) {
-            return option && option.label ? option.label : '';
+            if (!option || option.label === undefined || option.label === null) return '';
+            return `${option.label}`;
         },
         handleOpening(value) {
             if (this.$refs.select) {
