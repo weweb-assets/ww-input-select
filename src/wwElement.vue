@@ -237,7 +237,7 @@ export default {
 
             return typeof option === 'object'
                 ? {
-                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
+                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
                       style: {
                           backgroundColor:
