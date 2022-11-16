@@ -258,14 +258,14 @@ export default {
 
             if (this.content.layoutType === 'free')
                 return {
-                    label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
+                    label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
                     value: wwLib.resolveObjectPropertyPath(option, valueField),
                     data: option,
                 };
 
             return typeof option === 'object'
                 ? {
-                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField) || ''),
+                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
