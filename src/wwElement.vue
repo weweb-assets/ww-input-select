@@ -70,7 +70,7 @@ export default {
                     const labelField = this.content.labelField || 'name';
                     const valueField = this.content.valueField || 'value';
                     return {
-                        name: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(item, labelField) || ''),
+                        name: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(item, labelField)),
                         value: wwLib.resolveObjectPropertyPath(item, valueField),
                     };
                 });
