@@ -4,7 +4,7 @@ export default {
             en: 'Input select',
             fr: 'Champs sélection',
         },
-        icon: 'fontawesome/solid/chevron-circle-down',
+        icon: 'select',
         customStylePropertiesOrder: [
             ['optionsDefaultBgColor', 'optionsDefaultTextColor'],
             [
