@@ -4,7 +4,7 @@ export default {
             en: 'Input select',
             fr: 'Champs sélection',
         },
-        icon: 'chevron-down',
+        icon: 'select',
         customStylePropertiesOrder: [
             [
                 'dropdownBackgroundColor',
