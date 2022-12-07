@@ -5,7 +5,7 @@ export default {
             fr: 'Champs sélection',
         },
         icon: 'select',
-        deprecated: 'Use a select input from the Elements panel instead of this one.'',
+        deprecated: 'Use a select input from the Elements panel instead of this one.',
         customStylePropertiesOrder: [
             ['optionsDefaultBgColor', 'optionsDefaultTextColor'],
             [
