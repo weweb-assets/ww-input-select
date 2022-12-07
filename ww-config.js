@@ -2,6 +2,7 @@ export default {
     editor: {
         label: { en: 'Form Dropdown', fr: 'Sélecteur de Formulaire' },
         icon: 'select',
+        deprecated: 'Use a select input from the Elements panel instead of this one.'',
     },
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' } },
