@@ -4,20 +4,21 @@
         ref="select"
         v-model="internalValue"
         class="ww-input-select"
+        mode="single"
         :style="cssVariables"
         :class="{ editing: isEditing }"
+        :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
         :options="options"
         :close-on-select="content.closeOnSelect"
         :searchable="content.searchable"
-        mode="single"
+        :required="content.required"
         :disabled="content.disabled"
-        :hide-selected="content.hideSelected"
         :placeholder="placeholder"
-        :create-option="content.allowCreation"
         :can-clear="content.clearIcon"
         :can-deselect="content.canDeselect"
         :caret="content.caretIcon"
         :name="wwElementState.name"
+        @close="checkIsOpen"
     >
         <!-- Placeholder -->
         <template v-if="placeholder.length" #placeholder>
@@ -32,12 +33,7 @@
         <template #singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
                 <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
-                    <!-- <wwElement
-                        class="multiselect-single-label-el"
-                        v-bind="content.optionElementSelected"
-                        :wwProps="{ text: value.label }"
-                    /> -->
-                    <wwText class="multiselect-single-label-el" :text="value.label || ''"></wwText>
+                    <wwText class="multiselect-single-label-el" :text="getLabel(value)"></wwText>
                 </wwLayoutItemContext>
             </div>
         </template>
@@ -45,10 +41,12 @@
         <!-- Tag unselected in list -->
         <template #option="{ option }">
             <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
-                <wwElement
-                    class="multiselect-single-label-el"
-                    v-bind="content.optionElement"
-                    :ww-props="{ text: option.label || '' }"
+                <OptionItem
+                    :option="option"
+                    :layoutType="content.layoutType"
+                    :flexboxElement="content.flexboxElement"
+                    :imageElement="content.imageElement"
+                    :textElement="content.textElement"
                 />
             </wwLayoutItemContext>
         </template>
@@ -68,12 +66,13 @@
 
 <script>
 import Multiselect from '@vueform/multiselect';
+import OptionItem from './OptionItem.vue';
 
 const DEFAULT_LABEL_FIELD = 'label';
 const DEFAULT_VALUE_FIELD = 'value';
 
 export default {
-    components: { Multiselect },
+    components: { Multiselect, OptionItem },
     props: {
         uid: { type: String, required: true },
         content: { type: Object, required: true },
@@ -95,6 +94,8 @@ export default {
     },
     data: () => ({
         options: [],
+        resizeObserver: null,
+        adaptivePadding: '12px',
     }),
     computed: {
         isEditing() {
@@ -123,7 +124,7 @@ export default {
             return wwLib.wwLang.getText(this.content.placeholder);
         },
         valueLabel() {
-            const _option = this.options.find(option => option.value === this.internalValue);
+            const _option = this.options.find(option => option.value == this.internalValue);
             return _option ? _option.label : this.internalValue;
         },
         defaultOptionStyle() {
@@ -139,9 +140,15 @@ export default {
                 '--ms-dropdown-border-color': this.content.dropdownBorderColor,
                 '--ms-dropdown-radius': this.content.dropdownBorderRadius,
                 '--ms-max-height': this.content.dropdownMaxHeight || '10rem',
-                '--ms-option-bg-pointed': this.content.optionBackgroundPointed,
-                '--ms-option-bg-selected': this.content.optionBackgroundSelected,
-                '--ms-option-bg-selected-pointed': this.content.optionBackgroundSelectedPointed,
+                '--ms-option-bg-pointed': 'transparent',
+                '--ms-option-bg-selected': 'transparent',
+                '--ms-option-bg-selected-pointed': 'transparent',
+                '--ms-option-color-pointed': '#000000',
+                '--ms-option-color-selected': '#000000',
+                '--ms-option-color-selected-pointed': '#000000',
+                '--ms-ring-width': '0px',
+                '--ms-ring-color': 'transparent',
+                '--adaptive-padding': this.adaptivePadding,
             };
         },
         isReadonly() {
@@ -156,9 +163,11 @@ export default {
         },
     },
     watch: {
+        /* wwEditor:start */
         isEditing() {
-            this.handleOpening(this.content.isOpen);
+            this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
+        /* wwEditor:end */
         currentSelection(value) {
             this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
         },
@@ -175,13 +184,26 @@ export default {
         'content.options'() {
             this.init();
         },
+        'content.layoutType'() {
+            this.init();
+        },
+        'content.labelField'() {
+            this.init();
+        },
+        'content.valueField'() {
+            this.init();
+        },
         isReadonly: {
             immediate: true,
             handler(value) {
                 if (value) {
+                    if (this.resizeObserver) this.resizeObserver.disconnect();
                     this.$emit('add-state', 'readonly');
                 } else {
                     this.$emit('remove-state', 'readonly');
+                    this.$nextTick(() => {
+                        this.handleObserver();
+                    });
                 }
             },
         },
@@ -195,7 +217,7 @@ export default {
                     textColorField: null,
                 });
         },
-        'content.isOpen'(value) {
+        'wwEditorState.sidepanelContent.openInEditor'(value) {
             this.handleOpening(value);
         },
         /* wwEditor:end */
@@ -204,7 +226,7 @@ export default {
         this.init();
     },
     mounted() {
-        this.handleOpening(this.content.isOpen);
+        this.handleObserver();
     },
     methods: {
         async init() {
@@ -224,7 +246,6 @@ export default {
                 this.options.push(this.formatOption(this.content.initialValue));
             }
         },
-
         getValueIndex(value) {
             return this.options.findIndex(option => option.value === value.value);
         },
@@ -235,16 +256,21 @@ export default {
             const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
             const valueField = this.content.valueField || DEFAULT_VALUE_FIELD;
 
+            if (this.content.layoutType === 'free')
+                return {
+                    label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
+                    value: wwLib.resolveObjectPropertyPath(option, valueField),
+                    data: option,
+                };
+
             return typeof option === 'object'
                 ? {
                       label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
+                      image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
-                          backgroundColor:
-                              wwLib.resolveObjectPropertyPath(option, 'bgColor') || this.content.optionsDefaultBgColor,
-                          color:
-                              wwLib.resolveObjectPropertyPath(option, 'textColor') ||
-                              this.content.optionsDefaultTextColor,
+                          backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
+                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || '#000000',
                       },
                   }
                 : {
@@ -253,11 +279,33 @@ export default {
                       value: option,
                   };
         },
+        getLabel(option) {
+            if (!option || option.label === undefined || option.label === null) return '';
+            return `${option.label}`;
+        },
         handleOpening(value) {
-            if (this.$refs.select) {
-                if (value) this.$refs.select.open();
-                else this.$refs.select.close();
-            }
+            if (!this.$refs.select) return;
+
+            if (value) this.$refs.select.open();
+            else this.$refs.select.close();
+        },
+        handleObserver() {
+            if (!this.$refs.select) return;
+            if (this.resizeObserver) this.resizeObserver.disconnect();
+
+            const el = this.$refs.select.el;
+            this.adaptivePadding = el && el.style && el.style.padding ? el.style.padding : this.adaptivePadding;
+            this.resizeObserver = new ResizeObserver(() => {
+                this.adaptivePadding =
+                    el && el.style && el.style.padding ? this.$el.style.padding : this.adaptivePadding;
+            });
+            this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
+        },
+        checkIsOpen() {
+            /* wwEditor:start */
+            if (!this.isEditing) return;
+            this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
+            /* wwEditor:end */
         },
     },
 };
@@ -272,7 +320,6 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
-    min-height: calc(var(--font-size) + 20px);
 
     &.is-active {
         box-shadow: unset;
@@ -284,13 +331,33 @@ export default {
     }
     /* wwEditor:end */
 }
+.ww-input-select::v-deep .multiselect-search {
+    padding: var(--adaptive-padding);
+}
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;
     line-height: inherit !important;
     padding: 0px !important;
     width: 100%;
 }
+.ww-input-select::v-deep .multiselect-option {
+    padding: 0px !important;
+    width: 100%;
+}
+.ww-input-select::v-deep .multiselect-dropdown {
+    max-height: unset;
+}
 .ww-input-select::v-deep .multiselect-placeholder-el {
     flex-grow: 1;
+    width: 100%;
+}
+.ww-input-select::v-deep .image-text-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.ww-input-select::v-deep .free-layout {
+    width: 100%;
 }
 </style>
