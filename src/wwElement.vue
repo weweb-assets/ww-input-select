@@ -180,6 +180,7 @@ export default {
             // await to avoid mismatch (multiselect not rendering custom tags)
             await this.$nextTick();
             this.internalValue = this.content.initialValue;
+            this.$emit('trigger-event', { name: 'initValueChange', event: { value: this.content.initialValue } });
         },
         'content.options'() {
             this.init();
