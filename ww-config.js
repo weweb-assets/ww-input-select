@@ -18,6 +18,7 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
+            'limit',
             'openInEditor',
             'layoutType',
             'required',
@@ -37,6 +38,20 @@ export default {
     triggerEvents: [{ name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true }],
     inherit: { type: 'ww-text', exclude: ['text'] },
     properties: {
+        limit: {
+            type: 'Number',
+            label: {
+                en: 'Limit',
+                fr: 'Limit',
+            },
+            options: {
+                min: 10,
+                max: 40,
+                step: 1,
+            },
+            defaultValue: 10,
+            section: 'settings',
+        },
         layoutType: {
             label: {
                 en: 'Layout type',

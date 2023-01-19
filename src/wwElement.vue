@@ -8,16 +8,7 @@
         :style="cssVariables"
         :class="{ editing: isEditing }"
         :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
-        :options="options"
-        :close-on-select="content.closeOnSelect"
-        :searchable="content.searchable"
-        :required="content.required"
-        :disabled="content.disabled"
-        :placeholder="placeholder"
-        :can-clear="content.clearIcon"
-        :can-deselect="content.canDeselect"
-        :caret="content.caretIcon"
-        :name="wwElementState.name"
+        v-bind="multiselectProps"
         @close="checkIsOpen"
     >
         <!-- Placeholder -->
@@ -104,6 +95,23 @@ export default {
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
+        },
+        multiselectProps() {
+            return {
+                closeOnSelect: this.content.closeOnSelect,
+                searchable: this.content.searchable,
+                required: this.content.required,
+                disabled: this.content.disabled,
+                placeholder: 'placeholder',
+                canClear: this.content.clearIcon,
+                canDeselect: this.content.canDeselect,
+                caret: this.content.caretIcon,
+                name: this.wwElementState.name,
+                options: this.options,
+                infinite: true,
+                limit: this.content.limit,
+                resolveOnLoad: false,
+            };
         },
         internalValue: {
             get() {
@@ -316,6 +324,9 @@ export default {
 <style type="scss" scoped>
 /* We need to use multiselect classname  */
 .ww-input-select {
+    /* TO REMOVE */
+    border: 3px solid red;
+
     --ms-bg: transparent;
 
     --ms-border-width: 0px;
