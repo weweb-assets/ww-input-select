@@ -8,7 +8,7 @@
         :style="cssVariables"
         :class="{ editing: isEditing }"
         :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
-        v-bind="multiselectProps"
+        v-bind="selectProps"
         @close="checkIsOpen"
     >
         <!-- Placeholder -->
@@ -96,7 +96,7 @@ export default {
             // eslint-disable-next-line no-unreachable
             return false;
         },
-        multiselectProps() {
+        selectProps() {
             return {
                 closeOnSelect: this.content.closeOnSelect,
                 searchable: this.content.searchable,
@@ -157,6 +157,7 @@ export default {
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
+                // '--ms-spinner-color': this.content.LoadingSpinnerColor, TBD
             };
         },
         isReadonly() {
@@ -324,9 +325,6 @@ export default {
 <style type="scss" scoped>
 /* We need to use multiselect classname  */
 .ww-input-select {
-    /* TO REMOVE */
-    border: 3px solid red;
-
     --ms-bg: transparent;
 
     --ms-border-width: 0px;
@@ -354,9 +352,6 @@ export default {
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
     width: 100%;
-}
-.ww-input-select::v-deep .multiselect-dropdown {
-    max-height: unset;
 }
 .ww-input-select::v-deep .multiselect-placeholder-el {
     flex-grow: 1;
