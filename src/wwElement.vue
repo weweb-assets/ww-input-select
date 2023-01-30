@@ -2,6 +2,7 @@
     <Multiselect
         v-if="!isReadonly"
         ref="select"
+        :key="componentKey"
         v-model="internalValue"
         class="ww-input-select"
         mode="single"
@@ -87,6 +88,7 @@ export default {
         options: [],
         resizeObserver: null,
         adaptivePadding: '12px',
+        componentKey: 0,
     }),
     computed: {
         isEditing() {
@@ -233,6 +235,8 @@ export default {
             if (value) {
                 this.$emit('update:content', { limitedOptions: true });
             }
+
+            this.componentKey += 1;
             this.$nextTick(() => {
                 this.init();
             });
@@ -241,6 +245,8 @@ export default {
             if (!value) {
                 this.$emit('update:content', { infiniteScroll: false });
             }
+
+            this.componentKey += 1;
             this.$nextTick(() => {
                 this.init();
             });
