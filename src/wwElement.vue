@@ -72,7 +72,7 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
+    emits: ['trigger-event', 'update:content', 'update:content:effect', 'add-state', 'remove-state'],
     setup(props) {
         const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -108,8 +108,8 @@ export default {
                 caret: this.content.caretIcon,
                 name: this.wwElementState.name,
                 options: this.options,
-                infinite: true,
-                limit: this.content.limit,
+                infinite: this.content.infiniteScroll,
+                limit: this.content.limitedOptions ? this.content.limit : -1,
                 resolveOnLoad: false,
             };
         },
@@ -228,6 +228,22 @@ export default {
         },
         'wwEditorState.sidepanelContent.openInEditor'(value) {
             this.handleOpening(value);
+        },
+        'content.infiniteScroll'(value) {
+            if (value) {
+                this.$emit('update:content', { limitedOptions: true });
+            }
+            this.$nextTick(() => {
+                this.init();
+            });
+        },
+        'content.limitedOptions'(value) {
+            if (!value) {
+                this.$emit('update:content', { infiniteScroll: false });
+            }
+            this.$nextTick(() => {
+                this.init();
+            });
         },
         /* wwEditor:end */
     },
