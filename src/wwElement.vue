@@ -159,7 +159,7 @@ export default {
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
-                // '--ms-spinner-color': this.content.LoadingSpinnerColor, TBD
+                '--ms-spinner-color': this.content.loadingRingColor,
             };
         },
         isReadonly() {
