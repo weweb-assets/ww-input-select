@@ -337,8 +337,11 @@ export default {
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;
     line-height: inherit !important;
+    width: inherit;
     padding: 0px !important;
-    width: 100%;
+}
+.ww-input-select::v-deep .multiselect-single-label-el {
+    width: inherit;
 }
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
