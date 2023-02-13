@@ -320,6 +320,9 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
+    height: inherit;
+    min-height: inherit;
+    max-height: inherit;
 
     &.is-active {
         box-shadow: unset;
@@ -330,6 +333,9 @@ export default {
         pointer-events: none;
     }
     /* wwEditor:end */
+}
+.ww-input-select::v-deep .multiselect-wrapper {
+    height: inherit;
 }
 .ww-input-select::v-deep .multiselect-search {
     padding: var(--adaptive-padding);
@@ -346,9 +352,6 @@ export default {
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
     width: 100%;
-}
-.ww-input-select::v-deep .multiselect-dropdown {
-    max-height: unset;
 }
 .ww-input-select::v-deep .multiselect-placeholder-el {
     flex-grow: 1;
