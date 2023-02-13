@@ -118,6 +118,7 @@ export default {
             },
             set(value) {
                 this.setCurrentSelection(value);
+                this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
             },
         },
         placeholder() {
@@ -168,19 +169,16 @@ export default {
             this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
         /* wwEditor:end */
-        currentSelection(value) {
-            this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
-        },
         textStyle() {
             return wwLib.getTextStyleFromContent(this.content);
         },
-        async 'content.initialValue'() {
+        async 'content.initialValue'(value) {
             this.init();
 
             // await to avoid mismatch (multiselect not rendering custom tags)
             await this.$nextTick();
-            this.internalValue = this.content.initialValue;
-            this.$emit('trigger-event', { name: 'initValueChange', event: { value: this.content.initialValue } });
+            this.setCurrentSelection(value);
+            this.$emit('trigger-event', { name: 'initValueChange', event: { value } });
         },
         'content.options'() {
             this.init();
