@@ -67,7 +67,7 @@
 <script>
 import Multiselect from '@vueform/multiselect';
 import OptionItem from './OptionItem.vue';
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 const DEFAULT_LABEL_FIELD = 'label';
 const DEFAULT_VALUE_FIELD = 'value';
@@ -88,7 +88,7 @@ export default {
             uid: props.uid,
             name: 'value',
             type: 'string',
-            defaultValue: computed(() => props.content.initialValue ? props.content.initialValue : ''),
+            defaultValue: computed(() => (props.content.initialValue ? props.content.initialValue : '')),
         });
 
         return { currentSelection, setCurrentSelection };
@@ -151,6 +151,9 @@ export default {
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
+                '--search-font-size': this.content.searchFontSize || 'inherit',
+                '--search-font-family': this.content.searchFontFamily || 'inherit',
+                '--search-font-color': this.content.searchFontColor || 'inherit',
             };
         },
         isReadonly() {
@@ -339,6 +342,9 @@ export default {
 }
 .ww-input-select::v-deep .multiselect-search {
     padding: var(--adaptive-padding);
+    font-size: var(--search-font-size);
+    font-family: var(--search-font-family);
+    color: var(--search-font-color);
 }
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;

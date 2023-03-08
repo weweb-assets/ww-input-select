@@ -16,6 +16,7 @@ export default {
                 'dropdownBorderRadius',
                 'dropdownMaxHeight',
             ],
+            ['searchFontFamily', 'searchFontSize', 'searchFontColor'],
         ],
         customSettingsPropertiesOrder: [
             'openInEditor',
@@ -154,6 +155,44 @@ export default {
             type: 'OnOff',
             defaultValue: true,
             section: 'settings',
+        },
+        searchFontFamily: {
+            label: {
+                en: 'Search font family',
+            },
+            type: 'FontFamily',
+            responsive: true,
+            states: true,
+            hidden: content => !content.searchable,
+        },
+        searchFontSize: {
+            label: {
+                en: 'Search font size',
+            },
+            type: 'Length',
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 100 },
+                    { value: 'em', label: 'em', min: 1, max: 10, digits: 2 },
+                    { value: 'rem', label: 'rem', min: 1, max: 10, digits: 2 },
+                ],
+            },
+            responsive: true,
+            states: true,
+            hidden: content => !content.searchable,
+        },
+        searchFontColor: {
+            label: {
+                en: 'Search font color',
+            },
+            type: 'Color',
+            options: {
+                nullable: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            hidden: content => !content.searchable,
         },
         closeOnSelect: {
             hidden: content => !content.advanced,
