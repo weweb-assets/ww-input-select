@@ -59,6 +59,7 @@
 <script>
 import Multiselect from '@vueform/multiselect';
 import OptionItem from './OptionItem.vue';
+import { computed } from 'vue';
 
 const DEFAULT_LABEL_FIELD = 'label';
 const DEFAULT_VALUE_FIELD = 'value';
@@ -79,7 +80,7 @@ export default {
             uid: props.uid,
             name: 'value',
             type: 'string',
-            defaultValue: props.content.initialValue ? props.content.initialValue : '',
+            defaultValue: computed(() => (props.content.initialValue ? props.content.initialValue : '')),
         });
 
         return { currentSelection, setCurrentSelection };
@@ -128,6 +129,7 @@ export default {
             },
             set(value) {
                 this.setCurrentSelection(value);
+                this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
             },
         },
         placeholder() {
@@ -160,6 +162,9 @@ export default {
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
                 '--ms-spinner-color': this.content.loadingRingColor,
+                '--search-font-size': this.content.searchFontSize || 'inherit',
+                '--search-font-family': this.content.searchFontFamily || 'inherit',
+                '--search-font-color': this.content.searchFontColor || 'inherit',
             };
         },
         isReadonly() {
@@ -179,18 +184,16 @@ export default {
             this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
         /* wwEditor:end */
-        currentSelection(value) {
-            this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
-        },
         textStyle() {
             return wwLib.getTextStyleFromContent(this.content);
         },
-        async 'content.initialValue'() {
+        async 'content.initialValue'(value) {
             this.init();
 
             // await to avoid mismatch (multiselect not rendering custom tags)
             await this.$nextTick();
-            this.internalValue = this.content.initialValue;
+            this.setCurrentSelection(value);
+            this.$emit('trigger-event', { name: 'initValueChange', event: { value } });
         },
         'content.options'() {
             this.init();
@@ -351,6 +354,9 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
+    height: inherit;
+    min-height: inherit;
+    max-height: inherit;
 
     &.is-active {
         box-shadow: unset;
@@ -362,14 +368,23 @@ export default {
     }
     /* wwEditor:end */
 }
+.ww-input-select::v-deep .multiselect-wrapper {
+    height: inherit;
+}
 .ww-input-select::v-deep .multiselect-search {
     padding: var(--adaptive-padding);
+    font-size: var(--search-font-size);
+    font-family: var(--search-font-family);
+    color: var(--search-font-color);
 }
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;
     line-height: inherit !important;
+    width: inherit;
     padding: 0px !important;
-    width: 100%;
+}
+.ww-input-select::v-deep .multiselect-single-label-el {
+    width: inherit;
 }
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
