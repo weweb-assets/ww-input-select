@@ -370,6 +370,7 @@ export default {
 }
 .ww-input-select::v-deep .multiselect-wrapper {
     height: inherit;
+    min-height: unset;
 }
 .ww-input-select::v-deep .multiselect-search {
     padding: var(--adaptive-padding);
