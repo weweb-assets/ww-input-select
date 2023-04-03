@@ -275,6 +275,7 @@ export default {
                           backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
                           color: wwLib.resolveObjectPropertyPath(option, 'textColor') || '#000000',
                       },
+                      data: option,
                   }
                 : {
                       // to allow flat array / option
