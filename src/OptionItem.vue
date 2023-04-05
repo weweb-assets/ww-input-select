@@ -10,8 +10,8 @@
 </template>
 
 <script>
-// Looking for vistual scroll
-// https://github.com/vueform/multiselect#load-async-options-from-api-on-open-with-infinite-scroll
+import { ref } from 'vue';
+
 export default {
     props: {
         option: { type: Object, required: true },
@@ -19,11 +19,11 @@ export default {
         textElement: { type: Object, required: true },
         flexboxElement: { type: Object, required: true },
     },
-    data() {
-        return {
-            observer: null,
-            optionStates: [],
-        };
+    setup() {
+        const observer = null;
+        const optionStates = ref([]);
+
+        return { observer, optionStates };
     },
     mounted() {
         const optionNode = this.$el.parentElement;

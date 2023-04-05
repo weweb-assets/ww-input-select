@@ -28,7 +28,16 @@ export default {
             'placeholder',
             ['options'],
             ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
-            ['advanced', 'searchable', 'closeOnSelect', 'canDeselect'],
+            [
+                'advanced',
+                'searchable',
+                'closeOnSelect',
+                'canDeselect',
+                'infiniteScroll',
+                'loadingRingColor',
+                'limitedOptions',
+                'limit',
+            ],
             ['clearIcon', 'caretIcon'],
         ],
     },
@@ -202,6 +211,50 @@ export default {
             },
             type: 'OnOff',
             defaultValue: true,
+            section: 'settings',
+        },
+        infiniteScroll: {
+            hidden: content => !content.advanced,
+            label: {
+                en: 'Infinite scroll',
+                fr: 'Scroll infini',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            section: 'settings',
+        },
+        loadingRingColor: {
+            hidden: content => !content.advanced || !content.infiniteScroll,
+            label: {
+                en: 'Loading ring color',
+            },
+            type: 'Color',
+            defaultValue: '#099af2',
+            section: 'settings',
+        },
+        limitedOptions: {
+            hidden: content => !content.advanced,
+            label: {
+                en: 'Limited options',
+                fr: 'Options limitées',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            section: 'settings',
+        },
+        limit: {
+            hidden: content => !content.advanced || !content.limitedOptions,
+            type: 'Number',
+            label: {
+                en: 'Limit',
+                fr: 'Limite',
+            },
+            options: {
+                min: 10,
+                max: 50,
+                step: 1,
+            },
+            defaultValue: 20,
             section: 'settings',
         },
         clearIcon: {

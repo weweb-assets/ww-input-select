@@ -2,22 +2,14 @@
     <Multiselect
         v-if="!isReadonly"
         ref="select"
+        :key="componentKey"
         v-model="internalValue"
         class="ww-input-select"
         mode="single"
         :style="cssVariables"
         :class="{ editing: isEditing }"
         :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
-        :options="options"
-        :close-on-select="content.closeOnSelect"
-        :searchable="content.searchable"
-        :required="content.required"
-        :disabled="content.disabled"
-        :placeholder="placeholder"
-        :can-clear="content.clearIcon"
-        :can-deselect="content.canDeselect"
-        :caret="content.caretIcon"
-        :name="wwElementState.name"
+        v-bind="selectProps"
         @close="checkIsOpen"
     >
         <!-- Placeholder -->
@@ -82,7 +74,7 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
+    emits: ['trigger-event', 'update:content', 'update:content:effect', 'add-state', 'remove-state'],
     setup(props) {
         const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -97,6 +89,7 @@ export default {
         options: [],
         resizeObserver: null,
         adaptivePadding: '12px',
+        componentKey: 0,
     }),
     computed: {
         isEditing() {
@@ -105,6 +98,23 @@ export default {
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
+        },
+        selectProps() {
+            return {
+                closeOnSelect: this.content.closeOnSelect,
+                searchable: this.content.searchable,
+                required: this.content.required,
+                disabled: this.content.disabled,
+                placeholder: 'placeholder',
+                canClear: this.content.clearIcon,
+                canDeselect: this.content.canDeselect,
+                caret: this.content.caretIcon,
+                name: this.wwElementState.name,
+                options: this.options,
+                infinite: this.content.infiniteScroll,
+                limit: this.content.limitedOptions ? this.content.limit : -1,
+                resolveOnLoad: false,
+            };
         },
         internalValue: {
             get() {
@@ -151,6 +161,7 @@ export default {
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
                 '--adaptive-padding': this.adaptivePadding,
+                '--ms-spinner-color': this.content.loadingRingColor,
                 '--search-font-size': this.content.searchFontSize || 'inherit',
                 '--search-font-family': this.content.searchFontFamily || 'inherit',
                 '--search-font-color': this.content.searchFontColor || 'inherit',
@@ -222,6 +233,26 @@ export default {
         },
         'wwEditorState.sidepanelContent.openInEditor'(value) {
             this.handleOpening(value);
+        },
+        'content.infiniteScroll'(value) {
+            if (value) {
+                this.$emit('update:content:effect', { limitedOptions: true });
+            }
+
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
+        },
+        'content.limitedOptions'(value) {
+            if (!value) {
+                this.$emit('update:content:effect', { infiniteScroll: false });
+            }
+
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
         },
         /* wwEditor:end */
     },
@@ -339,6 +370,7 @@ export default {
 }
 .ww-input-select::v-deep .multiselect-wrapper {
     height: inherit;
+    min-height: unset;
 }
 .ww-input-select::v-deep .multiselect-search {
     padding: var(--adaptive-padding);
