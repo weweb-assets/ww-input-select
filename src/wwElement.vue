@@ -395,6 +395,18 @@ export default {
     flex-grow: 1;
     width: 100%;
 }
+
+/* wwEditor:start */
+.ww-input-select:not(.editing)::v-deep .multiselect-placeholder-el {
+    pointer-events: none;
+}
+/* wwEditor:end */
+/* wwFront:start */
+.ww-input-select::v-deep .multiselect-placeholder-el {
+    pointer-events: none;
+}
+/* wwFront:end */
+
 .ww-input-select::v-deep .image-text-layout {
     display: flex;
     flex-direction: row;
