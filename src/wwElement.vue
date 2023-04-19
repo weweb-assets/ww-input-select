@@ -87,8 +87,6 @@ export default {
     },
     data: () => ({
         options: [],
-        resizeObserver: null,
-        adaptivePadding: '12px',
         componentKey: 0,
     }),
     computed: {
@@ -160,7 +158,6 @@ export default {
                 '--ms-option-color-selected-pointed': '#000000',
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
-                '--adaptive-padding': this.adaptivePadding,
                 '--ms-spinner-color': this.content.loadingRingColor,
                 '--search-font-size': this.content.searchFontSize || 'inherit',
                 '--search-font-family': this.content.searchFontFamily || 'inherit',
@@ -211,13 +208,9 @@ export default {
             immediate: true,
             handler(value) {
                 if (value) {
-                    if (this.resizeObserver) this.resizeObserver.disconnect();
                     this.$emit('add-state', 'readonly');
                 } else {
                     this.$emit('remove-state', 'readonly');
-                    this.$nextTick(() => {
-                        this.handleObserver();
-                    });
                 }
             },
         },
@@ -258,9 +251,6 @@ export default {
     },
     created() {
         this.init();
-    },
-    mounted() {
-        this.handleObserver();
     },
     methods: {
         async init() {
@@ -323,18 +313,6 @@ export default {
             if (value) this.$refs.select.open();
             else this.$refs.select.close();
         },
-        handleObserver() {
-            if (!this.$refs.select) return;
-            if (this.resizeObserver) this.resizeObserver.disconnect();
-
-            const el = this.$refs.select.el;
-            this.adaptivePadding = el && el.style && el.style.padding ? el.style.padding : this.adaptivePadding;
-            this.resizeObserver = new ResizeObserver(() => {
-                this.adaptivePadding =
-                    el && el.style && el.style.padding ? this.$el.style.padding : this.adaptivePadding;
-            });
-            this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
-        },
         checkIsOpen() {
             /* wwEditor:start */
             if (!this.isEditing) return;
@@ -373,10 +351,10 @@ export default {
     min-height: unset;
 }
 .ww-input-select::v-deep .multiselect-search {
-    padding: var(--adaptive-padding);
     font-size: var(--search-font-size);
     font-family: var(--search-font-family);
     color: var(--search-font-color);
+    padding: 0px !important;
 }
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;
@@ -395,6 +373,18 @@ export default {
     flex-grow: 1;
     width: 100%;
 }
+
+/* wwEditor:start */
+.ww-input-select:not(.editing)::v-deep .multiselect-placeholder-el {
+    pointer-events: none;
+}
+/* wwEditor:end */
+/* wwFront:start */
+.ww-input-select::v-deep .multiselect-placeholder-el {
+    pointer-events: none;
+}
+/* wwFront:end */
+
 .ww-input-select::v-deep .image-text-layout {
     display: flex;
     flex-direction: row;
