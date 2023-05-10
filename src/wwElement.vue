@@ -2,22 +2,14 @@
     <Multiselect
         v-if="!isReadonly"
         ref="select"
+        :key="componentKey"
         v-model="internalValue"
         class="ww-input-select"
         mode="single"
         :style="cssVariables"
         :class="{ editing: isEditing }"
         :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
-        :options="options"
-        :close-on-select="content.closeOnSelect"
-        :searchable="content.searchable"
-        :required="content.required"
-        :disabled="content.disabled"
-        :placeholder="placeholder"
-        :can-clear="content.clearIcon"
-        :can-deselect="content.canDeselect"
-        :caret="content.caretIcon"
-        :name="wwElementState.name"
+        v-bind="selectProps"
         @close="checkIsOpen"
     >
         <!-- Placeholder -->
@@ -82,7 +74,7 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content:effect', 'add-state', 'remove-state'],
+    emits: ['trigger-event', 'update:content', 'update:content:effect', 'add-state', 'remove-state'],
     setup(props) {
         const { value: currentSelection, setValue: setCurrentSelection } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -95,8 +87,7 @@ export default {
     },
     data: () => ({
         options: [],
-        resizeObserver: null,
-        adaptivePadding: '12px',
+        componentKey: 0,
     }),
     computed: {
         isEditing() {
@@ -105,6 +96,23 @@ export default {
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
+        },
+        selectProps() {
+            return {
+                closeOnSelect: this.content.closeOnSelect,
+                searchable: this.content.searchable,
+                required: this.content.required,
+                disabled: this.content.disabled,
+                placeholder: 'placeholder',
+                canClear: this.content.clearIcon,
+                canDeselect: this.content.canDeselect,
+                caret: this.content.caretIcon,
+                name: this.wwElementState.name,
+                options: this.options,
+                infinite: this.content.infiniteScroll,
+                limit: this.content.limitedOptions ? this.content.limit : -1,
+                resolveOnLoad: false,
+            };
         },
         internalValue: {
             get() {
@@ -150,7 +158,7 @@ export default {
                 '--ms-option-color-selected-pointed': '#000000',
                 '--ms-ring-width': '0px',
                 '--ms-ring-color': 'transparent',
-                '--adaptive-padding': this.adaptivePadding,
+                '--ms-spinner-color': this.content.loadingRingColor,
                 '--search-font-size': this.content.searchFontSize || 'inherit',
                 '--search-font-family': this.content.searchFontFamily || 'inherit',
                 '--search-font-color': this.content.searchFontColor || 'inherit',
@@ -200,13 +208,9 @@ export default {
             immediate: true,
             handler(value) {
                 if (value) {
-                    if (this.resizeObserver) this.resizeObserver.disconnect();
                     this.$emit('add-state', 'readonly');
                 } else {
                     this.$emit('remove-state', 'readonly');
-                    this.$nextTick(() => {
-                        this.handleObserver();
-                    });
                 }
             },
         },
@@ -223,13 +227,30 @@ export default {
         'wwEditorState.sidepanelContent.openInEditor'(value) {
             this.handleOpening(value);
         },
+        'content.infiniteScroll'(value) {
+            if (value) {
+                this.$emit('update:content:effect', { limitedOptions: true });
+            }
+
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
+        },
+        'content.limitedOptions'(value) {
+            if (!value) {
+                this.$emit('update:content:effect', { infiniteScroll: false });
+            }
+
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
+        },
         /* wwEditor:end */
     },
     created() {
         this.init();
-    },
-    mounted() {
-        this.handleObserver();
     },
     methods: {
         async init() {
@@ -293,18 +314,6 @@ export default {
             if (value) this.$refs.select.open();
             else this.$refs.select.close();
         },
-        handleObserver() {
-            if (!this.$refs.select) return;
-            if (this.resizeObserver) this.resizeObserver.disconnect();
-
-            const el = this.$refs.select.el;
-            this.adaptivePadding = el && el.style && el.style.padding ? el.style.padding : this.adaptivePadding;
-            this.resizeObserver = new ResizeObserver(() => {
-                this.adaptivePadding =
-                    el && el.style && el.style.padding ? this.$el.style.padding : this.adaptivePadding;
-            });
-            this.resizeObserver.observe(this.$el, { box: 'device-pixel-content-box' });
-        },
         checkIsOpen() {
             /* wwEditor:start */
             if (!this.isEditing) return;
@@ -340,12 +349,13 @@ export default {
 }
 .ww-input-select::v-deep .multiselect-wrapper {
     height: inherit;
+    min-height: unset;
 }
 .ww-input-select::v-deep .multiselect-search {
-    padding: var(--adaptive-padding);
     font-size: var(--search-font-size);
     font-family: var(--search-font-family);
     color: var(--search-font-color);
+    padding: 0px !important;
 }
 .ww-input-select::v-deep .multiselect-single-label {
     position: relative !important;
@@ -364,6 +374,18 @@ export default {
     flex-grow: 1;
     width: 100%;
 }
+
+/* wwEditor:start */
+.ww-input-select:not(.editing)::v-deep .multiselect-placeholder-el {
+    pointer-events: none;
+}
+/* wwEditor:end */
+/* wwFront:start */
+.ww-input-select::v-deep .multiselect-placeholder-el {
+    pointer-events: none;
+}
+/* wwFront:end */
+
 .ww-input-select::v-deep .image-text-layout {
     display: flex;
     flex-direction: row;
