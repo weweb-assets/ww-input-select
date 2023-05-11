@@ -13,7 +13,7 @@
         @close="checkIsOpen"
     >
         <!-- Placeholder -->
-        <template v-if="placeholder.length" #placeholder>
+        <template #placeholder>
             <wwElement
                 class="multiselect-placeholder-el"
                 v-bind="content.placeholderElement"
