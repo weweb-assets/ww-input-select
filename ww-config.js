@@ -27,7 +27,7 @@ export default {
             'initialValue',
             'placeholder',
             ['options'],
-            ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
+            ['hintFields', 'labelField', 'valueField'],
             [
                 'advanced',
                 'searchable',
@@ -379,8 +379,11 @@ export default {
             defaultValue: '',
             section: 'settings',
         },
+        /**
+         * DEPRECATED FIELD
+         */
         bgColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
+            hidden: true,
             label: {
                 en: 'Background color field',
                 fr: 'Background color field',
@@ -395,8 +398,11 @@ export default {
             },
             section: 'settings',
         },
+        /**
+         * DEPRECATED FIELD
+         */
         textColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
+            hidden: true,
             label: {
                 en: 'Text color field',
                 fr: 'Text color field',
