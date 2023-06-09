@@ -395,4 +395,8 @@ export default {
 .ww-input-select::v-deep .free-layout {
     width: 100%;
 }
+
+.ww-input-select::v-deep .multiselect-dropdown {
+    border-radius: var(--ms-dropdown-radius) !important;
+}
 </style>
