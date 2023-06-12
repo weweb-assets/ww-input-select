@@ -362,6 +362,7 @@ export default {
     line-height: inherit !important;
     width: inherit;
     padding: 0px !important;
+    overflow: hidden;
 }
 .ww-input-select::v-deep .multiselect-single-label-el {
     width: inherit;
