@@ -57,8 +57,8 @@
         </template>
 
         <!-- Clear icon shown when the input has at least one selected options -->
-        <template #clear="{ clear }">
-            <wwElement v-bind="content.clearIconElement" @mousedown.prevent="isEditing ? null : clear($event)" />
+        <template #clear>
+            <wwElement v-bind="content.clearIconElement" @mousedown.prevent="clear" />
         </template>
     </Multiselect>
     <wwText v-else :text="valueLabel"></wwText>
@@ -309,6 +309,9 @@ export default {
             if (!this.isEditing) return;
             this.handleOpening(this.wwEditorState.sidepanelContent.openInEditor);
             /* wwEditor:end */
+        },
+        clear() {
+            if (!this.isEditing) this.internalValue = '';
         },
     },
 };
