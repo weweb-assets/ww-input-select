@@ -350,53 +350,53 @@ export default {
     }
     /* wwEditor:end */
 }
-.ww-input-select::v-deep .multiselect-wrapper {
+.ww-input-select:deep(.multiselect-wrapper) {
     height: inherit;
     min-height: unset;
 }
-.ww-input-select::v-deep .multiselect-search {
+.ww-input-select:deep(.multiselect-search) {
     font-size: var(--search-font-size);
     font-family: var(--search-font-family);
     color: var(--search-font-color);
     padding: 0px !important;
 }
-.ww-input-select::v-deep .multiselect-single-label {
+.ww-input-select:deep(.multiselect-single-label) {
     position: relative !important;
     line-height: inherit !important;
     width: inherit;
     padding: 0px !important;
     overflow: hidden;
 }
-.ww-input-select::v-deep .multiselect-single-label-el {
+.ww-input-select:deep(.multiselect-single-label-el) {
     width: inherit;
 }
-.ww-input-select::v-deep .multiselect-option {
+.ww-input-select:deep(.multiselect-option) {
     padding: 0px !important;
     width: 100%;
 }
-.ww-input-select::v-deep .multiselect-placeholder-el {
+.ww-input-select:deep(.multiselect-placeholder-el) {
     flex-grow: 1;
     width: 100%;
 }
 
 /* wwEditor:start */
-.ww-input-select:not(.editing)::v-deep .multiselect-placeholder-el {
+.ww-input-select:not(.editing):deep(.multiselect-placeholder-el) {
     pointer-events: none;
 }
 /* wwEditor:end */
 /* wwFront:start */
-.ww-input-select::v-deep .multiselect-placeholder-el {
+.ww-input-select:deep(.multiselect-placeholder-el) {
     pointer-events: none;
 }
 /* wwFront:end */
 
-.ww-input-select::v-deep .image-text-layout {
+.ww-input-select:deep(.image-text-layout) {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-.ww-input-select::v-deep .free-layout {
+.ww-input-select:deep(.free-layout) {
     width: 100%;
 }
 </style>
