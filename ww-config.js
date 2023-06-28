@@ -172,6 +172,7 @@ export default {
             type: 'FontFamily',
             responsive: true,
             states: true,
+            classes: true,
             hidden: content => !content.searchable,
         },
         searchFontSize: {
@@ -188,6 +189,7 @@ export default {
             },
             responsive: true,
             states: true,
+            classes: true,
             hidden: content => !content.searchable,
         },
         searchFontColor: {
@@ -201,6 +203,7 @@ export default {
             bindable: true,
             responsive: true,
             states: true,
+            classes: true,
             hidden: content => !content.searchable,
         },
         closeOnSelect: {
@@ -379,44 +382,6 @@ export default {
             defaultValue: '',
             section: 'settings',
         },
-        /**
-         * DEPRECATED FIELD
-         */
-        bgColorField: {
-            hidden: true,
-            label: {
-                en: 'Background color field',
-                fr: 'Background color field',
-            },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            section: 'settings',
-        },
-        /**
-         * DEPRECATED FIELD
-         */
-        textColorField: {
-            hidden: true,
-            label: {
-                en: 'Text color field',
-                fr: 'Text color field',
-            },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            section: 'settings',
-        },
         placeholderElement: {
             hidden: true,
             defaultValue: {
@@ -520,14 +485,22 @@ export default {
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 100 }],
             },
-            defaultValue: '1px',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         dropdownBorderColor: {
             label: {
                 en: 'Dropdown border color',
             },
             type: 'Color',
-            defaultValue: '#d1d5db',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         dropdownBorderRadius: {
             type: 'Length',
@@ -537,7 +510,11 @@ export default {
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 100 }],
             },
-            defaultValue: '4px',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         dropdownMaxHeight: {
             label: {
@@ -549,7 +526,11 @@ export default {
             },
             responsive: true,
             states: true,
-            defaultValue: '150px',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
     },
 };
