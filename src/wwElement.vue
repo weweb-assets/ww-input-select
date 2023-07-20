@@ -2,7 +2,7 @@
     <Multiselect
         v-if="!isReadonly"
         ref="select"
-        :key="componentKey + currentLang"
+        :key="componentKey"
         v-model="internalValue"
         class="ww-input-select"
         mode="single"
@@ -206,6 +206,12 @@ export default {
         },
         'content.valueField'() {
             this.init();
+        },
+        currentLang() {
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
         },
         isReadonly: {
             immediate: true,
