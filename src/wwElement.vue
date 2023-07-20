@@ -2,7 +2,7 @@
     <Multiselect
         v-if="!isReadonly"
         ref="select"
-        :key="componentKey"
+        :key="componentKey + currentLang"
         v-model="internalValue"
         class="ww-input-select"
         mode="single"
@@ -90,6 +90,9 @@ export default {
         componentKey: 0,
     }),
     computed: {
+        currentLang() {
+            return wwLib.wwLang.lang;
+        },
         isEditing() {
             /* wwEditor:start */
             return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
