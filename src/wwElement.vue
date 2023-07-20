@@ -351,6 +351,10 @@ export default {
         box-shadow: unset;
     }
 
+    &.is-disabled {
+        cursor: unset;
+    }
+
     /* wwEditor:start */
     &.editing {
         pointer-events: none;
@@ -358,6 +362,7 @@ export default {
     /* wwEditor:end */
 }
 .ww-input-select:deep(.multiselect-wrapper) {
+    cursor: unset;
     height: inherit;
     min-height: unset;
 }
