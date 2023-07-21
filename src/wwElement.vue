@@ -115,6 +115,7 @@ export default {
                 infinite: this.content.infiniteScroll,
                 limit: this.content.limitedOptions ? this.content.limit : -1,
                 resolveOnLoad: false,
+                locale: this.currentLang,
             };
         },
         internalValue: {
@@ -138,7 +139,7 @@ export default {
         },
         valueLabel() {
             const _option = this.options.find(option => option.value == this.internalValue);
-            return _option ? _option.label : this.internalValue;
+            return _option ? wwLib.wwLang.getText(_option.label) : this.internalValue;
         },
         defaultOptionStyle() {
             return {
@@ -206,12 +207,6 @@ export default {
         },
         'content.valueField'() {
             this.init();
-        },
-        currentLang() {
-            this.componentKey += 1;
-            this.$nextTick(() => {
-                this.init();
-            });
         },
         isReadonly: {
             immediate: true,
@@ -289,14 +284,14 @@ export default {
 
             if (this.content.layoutType === 'free')
                 return {
-                    label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
+                    label: wwLib.resolveObjectPropertyPath(option, labelField),
                     value: wwLib.resolveObjectPropertyPath(option, valueField),
                     data: option,
                 };
 
             return typeof option === 'object'
                 ? {
-                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
+                      label: wwLib.resolveObjectPropertyPath(option, labelField),
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
@@ -313,7 +308,7 @@ export default {
         },
         getLabel(option) {
             if (!option || option.label === undefined || option.label === null) return '';
-            return `${option.label}`;
+            return `${wwLib.wwLang.getText(option.label)}`;
         },
         handleOpening(value) {
             if (!this.$refs.select) return;
