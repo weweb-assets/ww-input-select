@@ -24,7 +24,12 @@
         <!-- Tag selected with remove icon -->
         <template #singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
-                <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
+                <wwLayoutItemContext
+                    :index="value => getValueIndex(value)"
+                    :item="{}"
+                    is-repeat
+                    :data="{ ...value, label: getLabel(value) }"
+                >
                     <wwText class="multiselect-single-label-el" :text="getLabel(value)"></wwText>
                 </wwLayoutItemContext>
             </div>
@@ -32,9 +37,14 @@
 
         <!-- Tag unselected in list -->
         <template #option="{ option }">
-            <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
+            <wwLayoutItemContext
+                :index="option => getOptionIndex(option)"
+                :item="{}"
+                is-repeat
+                :data="{ ...option, label: getLabel(option) }"
+            >
                 <OptionItem
-                    :option="option"
+                    :option="{ ...option, label: getLabel(option) }"
                     :layoutType="content.layoutType"
                     :flexboxElement="content.flexboxElement"
                     :imageElement="content.imageElement"
@@ -346,10 +356,6 @@ export default {
         box-shadow: unset;
     }
 
-    &.is-disabled {
-        cursor: unset;
-    }
-
     /* wwEditor:start */
     &.editing {
         pointer-events: none;
@@ -357,7 +363,6 @@ export default {
     /* wwEditor:end */
 }
 .ww-input-select:deep(.multiselect-wrapper) {
-    cursor: unset;
     height: inherit;
     min-height: unset;
 }
