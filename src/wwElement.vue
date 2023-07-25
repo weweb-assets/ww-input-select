@@ -24,7 +24,12 @@
         <!-- Tag selected with remove icon -->
         <template #singlelabel="{ value }">
             <div class="multiselect-single-label" :style="value.style || defaultOptionStyle">
-                <wwLayoutItemContext :index="value => getValueIndex(value)" :item="{}" is-repeat :data="value">
+                <wwLayoutItemContext
+                    :index="value => getValueIndex(value)"
+                    :item="{}"
+                    is-repeat
+                    :data="{ ...value, label: getLabel(value) }"
+                >
                     <wwText class="multiselect-single-label-el" :text="getLabel(value)"></wwText>
                 </wwLayoutItemContext>
             </div>
@@ -32,9 +37,14 @@
 
         <!-- Tag unselected in list -->
         <template #option="{ option }">
-            <wwLayoutItemContext :index="option => getOptionIndex(option)" :item="{}" is-repeat :data="option">
+            <wwLayoutItemContext
+                :index="option => getOptionIndex(option)"
+                :item="{}"
+                is-repeat
+                :data="{ ...option, label: getLabel(option) }"
+            >
                 <OptionItem
-                    :option="option"
+                    :option="{ ...option, label: getLabel(option) }"
                     :layoutType="content.layoutType"
                     :flexboxElement="content.flexboxElement"
                     :imageElement="content.imageElement"
@@ -90,6 +100,9 @@ export default {
         componentKey: 0,
     }),
     computed: {
+        currentLang() {
+            return wwLib.wwLang.lang;
+        },
         isEditing() {
             /* wwEditor:start */
             return this.wwEditorState.editMode === wwLib.wwEditorHelper.EDIT_MODES.EDITION;
@@ -112,6 +125,7 @@ export default {
                 infinite: this.content.infiniteScroll,
                 limit: this.content.limitedOptions ? this.content.limit : -1,
                 resolveOnLoad: false,
+                locale: this.currentLang,
             };
         },
         internalValue: {
@@ -135,7 +149,7 @@ export default {
         },
         valueLabel() {
             const _option = this.options.find(option => option.value == this.internalValue);
-            return _option ? _option.label : this.internalValue;
+            return _option ? wwLib.wwLang.getText(_option.label) : this.internalValue;
         },
         defaultOptionStyle() {
             return {
@@ -280,14 +294,14 @@ export default {
 
             if (this.content.layoutType === 'free')
                 return {
-                    label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
+                    label: wwLib.resolveObjectPropertyPath(option, labelField),
                     value: wwLib.resolveObjectPropertyPath(option, valueField),
                     data: option,
                 };
 
             return typeof option === 'object'
                 ? {
-                      label: wwLib.wwLang.getText(wwLib.resolveObjectPropertyPath(option, labelField)),
+                      label: wwLib.resolveObjectPropertyPath(option, labelField),
                       value: wwLib.resolveObjectPropertyPath(option, valueField),
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
@@ -304,7 +318,7 @@ export default {
         },
         getLabel(option) {
             if (!option || option.label === undefined || option.label === null) return '';
-            return `${option.label}`;
+            return `${wwLib.wwLang.getText(option.label)}`;
         },
         handleOpening(value) {
             if (!this.$refs.select) return;
