@@ -69,7 +69,7 @@
 <script>
 import Multiselect from '@vueform/multiselect';
 import OptionItem from './OptionItem.vue';
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
 const DEFAULT_LABEL_FIELD = 'label';
 const DEFAULT_VALUE_FIELD = 'value';
@@ -93,7 +93,11 @@ export default {
             defaultValue: computed(() => (props.content.initialValue ? props.content.initialValue : '')),
         });
 
-        return { currentSelection, setCurrentSelection };
+        const styles = inject('componentStyle');
+
+        const cursor = computed(() => styles.cursor);
+
+        return { currentSelection, setCurrentSelection, cursor };
     },
     data: () => ({
         options: [],
@@ -176,6 +180,7 @@ export default {
                 '--search-font-size': this.content.searchFontSize || 'inherit',
                 '--search-font-family': this.content.searchFontFamily || 'inherit',
                 '--search-font-color': this.content.searchFontColor || 'inherit',
+                '--component-cursor': this.cursor || 'pointer',
             };
         },
         isReadonly() {
@@ -344,6 +349,7 @@ export default {
 <style type="scss" scoped>
 /* We need to use multiselect classname  */
 .ww-input-select {
+    cursor: var(--component-cursor);
     --ms-bg: transparent;
 
     --ms-border-width: 0px;
@@ -363,6 +369,7 @@ export default {
     /* wwEditor:end */
 }
 .ww-input-select:deep(.multiselect-wrapper) {
+    cursor: var(--component-cursor);
     height: inherit;
     min-height: unset;
 }
