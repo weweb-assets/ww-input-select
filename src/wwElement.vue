@@ -60,7 +60,7 @@
 
         <!-- Clear icon shown when the input has at least one selected options -->
         <template #clear>
-            <wwElement v-bind="content.clearIconElement" @mousedown.prevent="clear" />
+            <wwElement v-bind="content.clearIconElement" @click="clear" />
         </template>
     </Multiselect>
     <wwText v-else :text="valueLabel"></wwText>
