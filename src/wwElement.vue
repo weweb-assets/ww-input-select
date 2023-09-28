@@ -61,7 +61,7 @@
             <wwElement v-bind="content.clearIconElement" @mousedown.prevent="isEditing ? null : clear($event)" />
         </template>
     </Multiselect>
-    <wwText v-else :text="valueLabel"></wwText>
+    <wwText class="multiselect-single-label-readonly" v-else :text="valueLabel"></wwText>
 </template>
 
 <script>
@@ -340,6 +340,15 @@ export default {
     line-height: inherit !important;
     padding: 0px !important;
     width: 100%;
+}
+.multiselect-single-label-readonly {
+    position: relative;
+    line-height: inherit;
+    width: 100%;
+    height: unset;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: none;
 }
 .ww-input-select::v-deep .multiselect-option {
     padding: 0px !important;
