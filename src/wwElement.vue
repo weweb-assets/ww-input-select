@@ -90,7 +90,7 @@ export default {
             uid: props.uid,
             name: 'value',
             type: 'string',
-            defaultValue: computed(() => (props.content.initialValue ? props.content.initialValue : '')),
+            defaultValue: computed(() => props.content.initialValue ?? ''),
         });
 
         const styles = inject('componentStyle');
