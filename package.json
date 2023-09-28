@@ -9,6 +9,6 @@
         "@weweb/cli": "latest"
     },
     "dependencies": {
-        "@vueform/multiselect": "2.3.3"
+        "@vueform/multiselect": "2.6.2"
     }
 }

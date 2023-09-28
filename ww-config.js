@@ -16,6 +16,7 @@ export default {
                 'dropdownBorderRadius',
                 'dropdownMaxHeight',
             ],
+            ['searchFontFamily', 'searchFontSize', 'searchFontColor'],
         ],
         customSettingsPropertiesOrder: [
             'openInEditor',
@@ -26,8 +27,17 @@ export default {
             'initialValue',
             'placeholder',
             ['options'],
-            ['hintFields', 'labelField', 'valueField', 'textColorField', 'bgColorField'],
-            ['advanced', 'searchable', 'closeOnSelect', 'canDeselect'],
+            ['hintFields', 'labelField', 'valueField'],
+            [
+                'advanced',
+                'searchable',
+                'closeOnSelect',
+                'canDeselect',
+                'infiniteScroll',
+                'loadingRingColor',
+                'limitedOptions',
+                'limit',
+            ],
             ['clearIcon', 'caretIcon'],
         ],
     },
@@ -155,6 +165,47 @@ export default {
             defaultValue: true,
             section: 'settings',
         },
+        searchFontFamily: {
+            label: {
+                en: 'Search font family',
+            },
+            type: 'FontFamily',
+            responsive: true,
+            states: true,
+            classes: true,
+            hidden: content => !content.searchable,
+        },
+        searchFontSize: {
+            label: {
+                en: 'Search font size',
+            },
+            type: 'Length',
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 100 },
+                    { value: 'em', label: 'em', min: 1, max: 10, digits: 2 },
+                    { value: 'rem', label: 'rem', min: 1, max: 10, digits: 2 },
+                ],
+            },
+            responsive: true,
+            states: true,
+            classes: true,
+            hidden: content => !content.searchable,
+        },
+        searchFontColor: {
+            label: {
+                en: 'Search font color',
+            },
+            type: 'Color',
+            options: {
+                nullable: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            hidden: content => !content.searchable,
+        },
         closeOnSelect: {
             hidden: content => !content.advanced,
             label: {
@@ -163,6 +214,50 @@ export default {
             },
             type: 'OnOff',
             defaultValue: true,
+            section: 'settings',
+        },
+        infiniteScroll: {
+            hidden: content => !content.advanced,
+            label: {
+                en: 'Infinite scroll',
+                fr: 'Scroll infini',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            section: 'settings',
+        },
+        loadingRingColor: {
+            hidden: content => !content.advanced || !content.infiniteScroll,
+            label: {
+                en: 'Loading ring color',
+            },
+            type: 'Color',
+            defaultValue: '#099af2',
+            section: 'settings',
+        },
+        limitedOptions: {
+            hidden: content => !content.advanced,
+            label: {
+                en: 'Limited options',
+                fr: 'Options limitées',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            section: 'settings',
+        },
+        limit: {
+            hidden: content => !content.advanced || !content.limitedOptions,
+            type: 'Number',
+            label: {
+                en: 'Limit',
+                fr: 'Limite',
+            },
+            options: {
+                min: 10,
+                max: 50,
+                step: 1,
+            },
+            defaultValue: 20,
             section: 'settings',
         },
         clearIcon: {
@@ -269,6 +364,7 @@ export default {
             },
             defaultValue: '',
             section: 'settings',
+            multiLang: true,
         },
         valueField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
@@ -285,38 +381,6 @@ export default {
                 return { object: content.options[0] };
             },
             defaultValue: '',
-            section: 'settings',
-        },
-        bgColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
-            label: {
-                en: 'Background color field',
-                fr: 'Background color field',
-            },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
-            section: 'settings',
-        },
-        textColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.options || !content.options,
-            label: {
-                en: 'Text color field',
-                fr: 'Text color field',
-            },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.options.length || typeof content.options[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.options[0] };
-            },
             section: 'settings',
         },
         placeholderElement: {
@@ -422,14 +486,22 @@ export default {
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 100 }],
             },
-            defaultValue: '1px',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         dropdownBorderColor: {
             label: {
                 en: 'Dropdown border color',
             },
             type: 'Color',
-            defaultValue: '#d1d5db',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         dropdownBorderRadius: {
             type: 'Length',
@@ -439,7 +511,11 @@ export default {
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 100 }],
             },
-            defaultValue: '4px',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         dropdownMaxHeight: {
             label: {
@@ -451,7 +527,11 @@ export default {
             },
             responsive: true,
             states: true,
-            defaultValue: '150px',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
     },
 };
