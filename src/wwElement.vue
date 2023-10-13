@@ -63,7 +63,11 @@
             <wwElement v-bind="content.clearIconElement" @mousedown.prevent="clear" />
         </template>
     </Multiselect>
-    <wwText class="multiselect-single-label-readonly" v-else :text="valueLabel"></wwText>
+    <div v-else class="multiselect-single-label-readonly">
+        <wwText :text="valueLabel"></wwText>
+        <wwElement style="opacity:0; pointer-events: none;" v-if="internalValue" v-bind="content.clearIconElement" />
+        <wwElement style="opacity:0; pointer-events: none;" v-bind="content.caretIconElement" />
+    </div>
 </template>
 
 <script>
@@ -361,7 +365,6 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
-    height: inherit;
     min-height: inherit;
     max-height: inherit;
 
@@ -397,10 +400,10 @@ export default {
     position: relative;
     line-height: inherit;
     width: 100%;
-    height: unset;
-    top: 50%;
-    transform: translateY(-50%);
     transition: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 .ww-input-select:deep(.multiselect-single-label-el) {
     width: inherit;
@@ -433,5 +436,9 @@ export default {
 }
 .ww-input-select:deep(.free-layout) {
     width: 100%;
+}
+.ww-input-select.is-disabled {
+    overflow: hidden;
+    border-radius: inherit;
 }
 </style>
