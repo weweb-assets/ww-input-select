@@ -418,6 +418,9 @@ export default {
     flex-grow: 1;
     width: 100%;
 }
+.ww-input-select:deep(.multiselect-dropdown) {
+    overflow-y: auto;
+}
 
 /* wwEditor:start */
 .ww-input-select:not(.editing):deep(.multiselect-placeholder-el) {
