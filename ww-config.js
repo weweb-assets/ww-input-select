@@ -6,12 +6,7 @@ export default {
         },
         icon: 'select',
         customStylePropertiesOrder: [
-            [
-                'dropdownBorderWidth',
-                'dropdownBorderColor',
-                'dropdownBorderRadius',
-                'dropdownMaxHeight',
-            ],
+            ['dropdownBorderWidth', 'dropdownBorderColor', 'dropdownBorderRadius', 'dropdownMaxHeight'],
             ['searchFontFamily', 'searchFontSize', 'searchFontColor'],
         ],
         customSettingsPropertiesOrder: [
@@ -118,7 +113,7 @@ export default {
                 en: 'No options text',
                 fr: 'Texte si aucune option',
             },
-            type: 'Text',,
+            type: 'Text',
             section: 'settings',
             multiLang: true,
         },
