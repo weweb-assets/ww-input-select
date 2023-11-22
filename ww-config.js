@@ -7,10 +7,6 @@ export default {
         icon: 'select',
         customStylePropertiesOrder: [
             [
-                'dropdownBackgroundColor',
-                'optionBackgroundPointed',
-                'optionBackgroundSelected',
-                'optionBackgroundSelectedPointed',
                 'dropdownBorderWidth',
                 'dropdownBorderColor',
                 'dropdownBorderRadius',
@@ -26,6 +22,8 @@ export default {
             'disabled',
             'initialValue',
             'placeholder',
+            'noOptionsText',
+            'noResultsText',
             ['options'],
             ['hintFields', 'labelField', 'valueField'],
             [
@@ -114,6 +112,24 @@ export default {
                 tooltip: 'A string that defines the placeholder: `"placeholder"`',
             },
             /* wwEditor:end */
+        },
+        noOptionsText: {
+            label: {
+                en: 'No options text',
+                fr: 'Texte si aucune option',
+            },
+            type: 'Text',,
+            section: 'settings',
+            multiLang: true,
+        },
+        noResultsText: {
+            label: {
+                en: 'No options text',
+                fr: 'Texte si aucune option',
+            },
+            type: 'Text',
+            section: 'settings',
+            multiLang: true,
         },
         disabled: {
             label: {
