@@ -111,20 +111,22 @@ export default {
         noOptionsText: {
             label: {
                 en: 'No options text',
-                fr: 'Texte si aucune option',
+                fr: 'No options text',
             },
             type: 'Text',
             section: 'settings',
             multiLang: true,
+            bindable: true,
         },
         noResultsText: {
             label: {
-                en: 'No options text',
-                fr: 'Texte si aucune option',
+                en: 'No results text',
+                fr: 'No results text',
             },
             type: 'Text',
             section: 'settings',
             multiLang: true,
+            bindable: true,
         },
         disabled: {
             label: {
