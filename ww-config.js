@@ -16,9 +16,7 @@ export default {
             'readonly',
             'disabled',
             'initialValue',
-            'placeholder',
-            'noOptionsText',
-            'noResultsText',
+            ['placeholder', 'noResultsText', 'noOptionsText'],
             ['options'],
             ['hintFields', 'labelField', 'valueField'],
             [
