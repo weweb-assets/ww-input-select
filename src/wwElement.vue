@@ -67,8 +67,8 @@
     </Multiselect>
     <div v-else class="multiselect-single-label-readonly">
         <wwText :text="valueLabel"></wwText>
-        <wwElement style="opacity:0; pointer-events: none;" v-if="internalValue" v-bind="content.clearIconElement" />
-        <wwElement style="opacity:0; pointer-events: none;" v-bind="content.caretIconElement" />
+        <wwElement style="opacity: 0; pointer-events: none" v-if="internalValue" v-bind="content.clearIconElement" />
+        <wwElement style="opacity: 0; pointer-events: none" v-bind="content.caretIconElement" />
     </div>
 </template>
 
@@ -127,6 +127,8 @@ export default {
                 required: this.content.required,
                 disabled: this.content.disabled,
                 placeholder: 'placeholder',
+                noOptionsText: this.content.noOptionsText,
+                noResultsText: this.content.noResultsText,
                 canClear: this.content.clearIcon,
                 canDeselect: this.content.canDeselect,
                 caret: this.content.caretIcon,

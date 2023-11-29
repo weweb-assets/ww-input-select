@@ -6,16 +6,7 @@ export default {
         },
         icon: 'select',
         customStylePropertiesOrder: [
-            [
-                'dropdownBackgroundColor',
-                'optionBackgroundPointed',
-                'optionBackgroundSelected',
-                'optionBackgroundSelectedPointed',
-                'dropdownBorderWidth',
-                'dropdownBorderColor',
-                'dropdownBorderRadius',
-                'dropdownMaxHeight',
-            ],
+            ['dropdownBorderWidth', 'dropdownBorderColor', 'dropdownBorderRadius', 'dropdownMaxHeight'],
             ['searchFontFamily', 'searchFontSize', 'searchFontColor'],
         ],
         customSettingsPropertiesOrder: [
@@ -25,7 +16,7 @@ export default {
             'readonly',
             'disabled',
             'initialValue',
-            'placeholder',
+            ['placeholder', 'noResultsText', 'noOptionsText'],
             ['options'],
             ['hintFields', 'labelField', 'valueField'],
             [
@@ -114,6 +105,26 @@ export default {
                 tooltip: 'A string that defines the placeholder: `"placeholder"`',
             },
             /* wwEditor:end */
+        },
+        noOptionsText: {
+            label: {
+                en: 'No options text',
+                fr: 'No options text',
+            },
+            type: 'Text',
+            section: 'settings',
+            multiLang: true,
+            bindable: true,
+        },
+        noResultsText: {
+            label: {
+                en: 'No results text',
+                fr: 'No results text',
+            },
+            type: 'Text',
+            section: 'settings',
+            multiLang: true,
+            bindable: true,
         },
         disabled: {
             label: {
