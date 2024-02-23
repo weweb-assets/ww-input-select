@@ -219,8 +219,11 @@ export default {
             this.setCurrentSelection(value);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value } });
         },
-        'content.options'() {
-            this.init();
+        'content.options': {
+            deep: true,
+            handler() {
+                this.init();
+            },
         },
         'content.layoutType'() {
             this.init();
