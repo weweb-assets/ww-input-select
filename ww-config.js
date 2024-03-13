@@ -172,6 +172,7 @@ export default {
                 en: 'Searchable',
                 fr: 'Recherche',
             },
+            bindable: true,
             type: 'OnOff',
             defaultValue: true,
             section: 'settings',
