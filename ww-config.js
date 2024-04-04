@@ -88,6 +88,12 @@ export default {
             defaultValue: false,
             bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the input is required: `true | false`',
+            },
+            /* wwEditor:end */
         },
         placeholder: {
             label: {
@@ -115,6 +121,12 @@ export default {
             section: 'settings',
             multiLang: true,
             bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the no options text: `"no options text"`',
+            },
+            /* wwEditor:end */
         },
         noResultsText: {
             label: {
@@ -125,6 +137,12 @@ export default {
             section: 'settings',
             multiLang: true,
             bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the no results text: `"no results text"`',
+            },
+            /* wwEditor:end */
         },
         disabled: {
             label: {
@@ -164,7 +182,14 @@ export default {
             },
             type: 'OnOff',
             defaultValue: false,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the user can unselect: `true | false`',
+            },
+            /* wwEditor:end */
         },
         searchable: {
             hidden: content => !content.advanced,
@@ -172,9 +197,17 @@ export default {
                 en: 'Searchable',
                 fr: 'Recherche',
             },
+            bindable: true,
             type: 'OnOff',
             defaultValue: true,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the input is searchable: `true | false`',
+            },
+            /* wwEditor:end */
         },
         searchFontFamily: {
             label: {
@@ -225,7 +258,14 @@ export default {
             },
             type: 'OnOff',
             defaultValue: true,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the dropdown closes on select: `true | false`',
+            },
+            /* wwEditor:end */
         },
         infiniteScroll: {
             hidden: content => !content.advanced,
@@ -235,7 +275,14 @@ export default {
             },
             type: 'OnOff',
             defaultValue: false,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the dropdown uses infinite scroll: `true | false`',
+            },
+            /* wwEditor:end */
         },
         loadingRingColor: {
             hidden: content => !content.advanced || !content.infiniteScroll,
@@ -244,7 +291,17 @@ export default {
             },
             type: 'Color',
             defaultValue: '#099af2',
+            bindable: true,
             section: 'settings',
+            classes: true,
+            states: true,
+            responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the loading ring color: `#000000`',
+            },
+            /* wwEditor:end */
         },
         limitedOptions: {
             hidden: content => !content.advanced,
@@ -255,6 +312,12 @@ export default {
             type: 'OnOff',
             defaultValue: false,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the options are limited: `true | false`',
+            },
+            /* wwEditor:end */
         },
         limit: {
             hidden: content => !content.advanced || !content.limitedOptions,
@@ -269,7 +332,14 @@ export default {
                 step: 1,
             },
             defaultValue: 20,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the options limit: `10`',
+            },
+            /* wwEditor:end */
         },
         clearIcon: {
             label: {
@@ -277,7 +347,14 @@ export default {
             },
             type: 'OnOff',
             defaultValue: false,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the clear icon is enabled: `true | false`',
+            },
+            /* wwEditor:end */
         },
         caretIcon: {
             label: {
@@ -285,7 +362,14 @@ export default {
             },
             type: 'OnOff',
             defaultValue: true,
+            bindable: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean that defines if the caret icon is enabled: `true | false`',
+            },
+            /* wwEditor:end */
         },
         initialValue: {
             label: {
