@@ -225,6 +225,17 @@ export default {
                 this.init();
             },
         },
+        'content.advanced'(advanced) {
+            if (!advanced) {
+                this.$emit('update:content:effect', {
+                    searchable: false,
+                    closeOnSelect: false,
+                    canDeselect: false,
+                    infiniteScroll: false,
+                    limitedOptions: false,
+                });
+            }
+        },
         'content.layoutType'() {
             this.init();
         },

@@ -171,7 +171,7 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'A boolean that defines if the user can create options: `true | false`',
+                tooltip: 'A boolean that defines if the advanced options are activated : `true | false`',
             },
             /* wwEditor:end */
         },
