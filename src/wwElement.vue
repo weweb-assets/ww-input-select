@@ -219,8 +219,11 @@ export default {
             this.setCurrentSelection(value);
             this.$emit('trigger-event', { name: 'initValueChange', event: { value } });
         },
-        'content.options'() {
-            this.init();
+        'content.options': {
+            deep: true,
+            handler() {
+                this.init();
+            },
         },
         'content.layoutType'() {
             this.init();
@@ -273,6 +276,12 @@ export default {
             });
         },
         /* wwEditor:end */
+        'content.limit'() {
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
+        },
     },
     created() {
         this.init();
