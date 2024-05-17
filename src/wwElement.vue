@@ -122,20 +122,20 @@ export default {
         },
         selectProps() {
             return {
-                closeOnSelect: this.content.closeOnSelect,
-                searchable: this.content.searchable,
+                closeOnSelect: this.content.advanced ? this.content.closeOnSelect : false,
+                searchable: this.content.advanced ? this.content.searchable : false,
                 required: this.content.required,
                 disabled: this.content.disabled,
                 placeholder: 'placeholder',
                 noOptionsText: this.content.noOptionsText,
                 noResultsText: this.content.noResultsText,
                 canClear: this.content.clearIcon,
-                canDeselect: this.content.canDeselect,
+                canDeselect: this.content.advanced ? this.content.canDeselect : false,
                 caret: this.content.caretIcon,
                 name: this.wwElementState.name,
                 options: this.options,
-                infinite: this.content.infiniteScroll,
-                limit: this.content.limitedOptions ? this.content.limit : -1,
+                infinite: this.content.advanced ? this.content.infiniteScroll : false,
+                limit: this.content.limitedOptions && this.content.advanced ? this.content.limit : -1,
                 resolveOnLoad: false,
                 locale: this.currentLang,
             };
@@ -224,17 +224,6 @@ export default {
             handler() {
                 this.init();
             },
-        },
-        'content.advanced'(advanced) {
-            if (!advanced) {
-                this.$emit('update:content:effect', {
-                    searchable: false,
-                    closeOnSelect: false,
-                    canDeselect: false,
-                    infiniteScroll: false,
-                    limitedOptions: false,
-                });
-            }
         },
         'content.layoutType'() {
             this.init();
