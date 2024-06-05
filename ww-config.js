@@ -163,7 +163,7 @@ export default {
         advanced: {
             type: 'OnOff',
             label: {
-                en: 'Advanced options',
+                en: 'Display advanced options',
             },
             defaultValue: false,
             bindable: true,
@@ -171,7 +171,7 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'A boolean that defines if the advanced options are activated : `true | false`',
+                tooltip: 'A boolean that defines if the advanced options are displayed : `true | false`',
             },
             /* wwEditor:end */
         },
