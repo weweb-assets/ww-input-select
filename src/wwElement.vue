@@ -314,11 +314,11 @@ export default {
             const labelField = this.content.labelField || DEFAULT_LABEL_FIELD;
             const valueField = this.content.valueField || DEFAULT_VALUE_FIELD;
 
-            let label = wwLib.resolveObjectPropertyPath(option, labelField);
-            const value = wwLib.resolveObjectPropertyPath(option, valueField);
+            let label = wwLib.wwUtils.resolveObjectPropertyPath(option, labelField);
+            const value = wwLib.wwUtils.resolveObjectPropertyPath(option, valueField);
 
             if (typeof label !== 'object') {
-                label = wwLib.resolveObjectPropertyPath(option, wwLib.wwLang.getText(labelField));
+                label = wwLib.wwUtils.resolveObjectPropertyPath(option, wwLib.wwLang.getText(labelField));
             }
 
             if (this.content.layoutType === 'free')
@@ -332,10 +332,10 @@ export default {
                 ? {
                       label,
                       value,
-                      image: wwLib.resolveObjectPropertyPath(option, 'image'),
+                      image: wwLib.wwUtils.resolveObjectPropertyPath(option, 'image'),
                       style: {
-                          backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
-                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || '#000000',
+                          backgroundColor: wwLib.wwUtils.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
+                          color: wwLib.wwUtils.resolveObjectPropertyPath(option, 'textColor') || '#000000',
                       },
                       data: option,
                   }
