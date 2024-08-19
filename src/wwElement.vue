@@ -234,6 +234,12 @@ export default {
         'content.valueField'() {
             this.init();
         },
+        currentLang() {
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.init();
+            });
+        },
         isReadonly: {
             immediate: true,
             handler(value) {
