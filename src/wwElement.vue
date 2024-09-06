@@ -384,16 +384,17 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
-    min-height: inherit;
-    max-height: inherit;
 
     &.is-active {
         box-shadow: unset;
     }
 
     /* wwEditor:start */
-    &.editing {
-        pointer-events: none;
+    &.editing::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
     }
     /* wwEditor:end */
 }
