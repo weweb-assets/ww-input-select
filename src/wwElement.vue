@@ -384,6 +384,7 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
+    width: initial; /* to avoid the width 100% from the library */
 
     &.is-active {
         box-shadow: unset;
