@@ -60,7 +60,7 @@
 
         <!-- Clear icon shown when the input has at least one selected options -->
         <template #clear>
-            <div @mousedown.stop>
+            <div @mousedown.stop :style="{ zIndex: 2 }">
                 <wwElement v-bind="content.clearIconElement" @click="clear" />
             </div>
         </template>
