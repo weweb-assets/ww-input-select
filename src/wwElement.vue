@@ -125,7 +125,12 @@ export default {
                 closeOnSelect: this.content.closeOnSelect,
                 searchable: this.content.searchable,
                 required: this.content.required,
+                /* wwEditor:start */
+                disabled: this.content.disabled || this.isEditing,
+                /* wwEditor:end */
+                /* wwFront:start */
                 disabled: this.content.disabled,
+                /* wwFront:end */
                 placeholder: 'placeholder',
                 noOptionsText: this.content.noOptionsText,
                 noResultsText: this.content.noResultsText,
@@ -389,15 +394,6 @@ export default {
     &.is-active {
         box-shadow: unset;
     }
-
-    /* wwEditor:start */
-    &.editing::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-    }
-    /* wwEditor:end */
 }
 .ww-input-select:deep(.multiselect-wrapper) {
     cursor: var(--component-cursor);
@@ -410,6 +406,7 @@ export default {
     color: var(--search-font-color);
     padding: 0px !important;
 }
+
 .ww-input-select:deep(.multiselect-single-label) {
     position: relative !important;
     line-height: inherit !important;
