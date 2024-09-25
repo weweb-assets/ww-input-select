@@ -33,7 +33,7 @@ export default {
         ],
     },
     options: {
-        noBorderRadiusClipping: true,
+        displayAllowedValues: ['flex', 'inline-flex'],
     },
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },

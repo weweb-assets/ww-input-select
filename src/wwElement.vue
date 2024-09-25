@@ -60,7 +60,7 @@
 
         <!-- Clear icon shown when the input has at least one selected options -->
         <template #clear>
-            <div @mousedown.stop>
+            <div @mousedown.stop :style="{ zIndex: 2 }">
                 <wwElement v-bind="content.clearIconElement" @click="clear" />
             </div>
         </template>
@@ -125,7 +125,12 @@ export default {
                 closeOnSelect: this.content.closeOnSelect,
                 searchable: this.content.searchable,
                 required: this.content.required,
+                /* wwEditor:start */
+                disabled: this.content.disabled || this.isEditing,
+                /* wwEditor:end */
+                /* wwFront:start */
                 disabled: this.content.disabled,
+                /* wwFront:end */
                 placeholder: 'placeholder',
                 noOptionsText: this.content.noOptionsText,
                 noResultsText: this.content.noResultsText,
@@ -384,18 +389,11 @@ export default {
 
     --ms-border-width: 0px;
     position: relative;
-    min-height: inherit;
-    max-height: inherit;
+    width: initial; /* to avoid the width 100% from the library */
 
     &.is-active {
         box-shadow: unset;
     }
-
-    /* wwEditor:start */
-    &.editing {
-        pointer-events: none;
-    }
-    /* wwEditor:end */
 }
 .ww-input-select:deep(.multiselect-wrapper) {
     cursor: var(--component-cursor);
@@ -408,6 +406,7 @@ export default {
     color: var(--search-font-color);
     padding: 0px !important;
 }
+
 .ww-input-select:deep(.multiselect-single-label) {
     position: relative !important;
     line-height: inherit !important;
