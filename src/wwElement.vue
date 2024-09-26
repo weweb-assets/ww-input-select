@@ -11,6 +11,8 @@
         :classes="{ containerOpen: 'is-open', containerOpenTop: 'is-open-top' }"
         v-bind="selectProps"
         @close="checkIsOpen"
+        @focus.capture="interceptFocus"
+        @focusin.capture="interceptFocus"
     >
         <!-- Placeholder -->
         <template #placeholder>
@@ -49,13 +51,15 @@
                     :flexboxElement="content.flexboxElement"
                     :imageElement="content.imageElement"
                     :textElement="content.textElement"
+                    @mousedown="isEditing && $event.stopPropagation()"
+                    @click="isEditing && $event.stopPropagation()"
                 />
             </wwLayoutItemContext>
         </template>
 
         <!-- Small triangle displayed on the right of the input -->
         <template #caret>
-            <wwElement v-bind="content.caretIconElement" />
+            <wwElement v-bind="content.caretIconElement" @mousedown="isEditing && $event.stopPropagation()" />
         </template>
 
         <!-- Clear icon shown when the input has at least one selected options -->
@@ -125,12 +129,7 @@ export default {
                 closeOnSelect: this.content.closeOnSelect,
                 searchable: this.content.searchable,
                 required: this.content.required,
-                /* wwEditor:start */
-                disabled: this.content.disabled || this.isEditing,
-                /* wwEditor:end */
-                /* wwFront:start */
                 disabled: this.content.disabled,
-                /* wwFront:end */
                 placeholder: 'placeholder',
                 noOptionsText: this.content.noOptionsText,
                 noResultsText: this.content.noResultsText,
@@ -375,6 +374,13 @@ export default {
         clear() {
             if (!this.isEditing) this.internalValue = '';
         },
+        interceptFocus(event) {
+            if (!this.isEditing) return;
+            if (event.target.classList.contains('multiselect-wrapper')) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        },
     },
 };
 </script>
@@ -442,7 +448,11 @@ export default {
 .ww-input-select:not(.editing):deep(.multiselect-placeholder-el) {
     pointer-events: none;
 }
+.ww-input-select.editing:deep(.multiselect-wrapper) {
+    pointer-events: none;
+}
 /* wwEditor:end */
+
 /* wwFront:start */
 .ww-input-select:deep(.multiselect-placeholder-el) {
     pointer-events: none;
