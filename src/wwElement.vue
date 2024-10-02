@@ -1,13 +1,12 @@
 <template>
     <div class="ww-select">
-        <!-- <wwElement class="ww-select__dropdown" v-bind="content.dropdown" v-show="isOpen" /> -->
         <wwLayout class="ww-select__trigger" path="_trigger" />
         <wwLayout class="ww-select__dropdown" path="_dropdown" />
     </div>
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, provide, watch } from 'vue';
 
 export default {
     props: {
@@ -19,17 +18,15 @@ export default {
         wwElementState: { type: Object, required: true },
     },
     setup(props) {
+        const selectType = computed(() => props.content.selectType);
+
         const initValue = computed(() =>
-            props.content.selectType === 'single'
+            selectType.value === 'single'
                 ? props.content.initValueSingle || null
                 : Array.isArray(props.content.initValueMulti)
                 ? props.content.initValueMulti
                 : []
         );
-
-        console.log('props', props.content);
-
-        console.log('init value', initValue.value);
 
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -40,20 +37,48 @@ export default {
         const isOpen = ref(true);
         const isDisabled = computed(() => props.content.disabled);
         const isReadonly = computed(() => props.content.readonly);
-        const isMultiple = computed(() => props.content.multiple);
+        const canUnselect = computed(() => props.content.canUnselect);
+        const options = ref([]);
 
-        const toggleDropdown = () => {
-            if (!isDisabled.value && !isReadonly.value) {
-                // isOpen.value = !isOpen.value;
+        const registerOption = option => {
+            options.value.push(option);
+        };
+
+        const unregisterOption = optionValue => {
+            const index = options.value.findIndex(opt => opt.value === optionValue);
+            if (index !== -1) {
+                options.value.splice(index, 1);
             }
         };
 
-        watch(
-            () => props.content.value,
-            newValue => {
-                selectedValue.value = newValue;
-            }
-        );
+        const selectedOptions = computed(() => options.value.filter(option => option.isSelected));
+
+        const data = ref({
+            selectValue: variableValue,
+            selectedOptions: selectedOptions,
+            selectType,
+            isOpen,
+            selectOptions: options,
+        });
+
+        const toggleDropdown = () => {
+            if (!isDisabled.value && !isReadonly.value) isOpen.value = !isOpen.value;
+        };
+
+        watch(selectType, () => {
+            setValue(initValue.value);
+        });
+
+        provide('_wwSelectType', selectType);
+        provide('_wwSelectValue', variableValue);
+        provide('_wwSelectSetValue', setValue);
+        provide('_wwSelectIsDisabled', isDisabled);
+        provide('_wwSelectIsReadonly', isReadonly);
+        provide('_wwSelectCanUnselect', canUnselect);
+        provide('registerOption', registerOption);
+        provide('unregisterOption', unregisterOption);
+
+        wwLib.wwElement.useRegisterElementLocalContext('select', data, {});
 
         return {
             toggleDropdown,
