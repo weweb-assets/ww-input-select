@@ -1,9 +1,7 @@
 <template>
-    <div class="ww-select" :class="{ 'ww-select--open': isOpen }">
+    <div class="ww-select">
         <div class="ww-select__trigger" @click="toggleDropdown">trigger</div>
-        <div v-if="isOpen" class="ww-select__dropdown">
-            <!-- Implement dropdown content here -->
-        </div>
+        <wwElement class="ww-select__dropdown" v-bind="content.dropdown" v-show="isOpen" />
     </div>
 </template>
 
@@ -38,8 +36,6 @@ export default {
                 selectedValue.value = newValue;
             }
         );
-
-        // Implement other methods like handleSelect, handleUnselect, etc.
 
         return {
             isOpen,

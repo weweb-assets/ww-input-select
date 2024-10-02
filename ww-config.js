@@ -182,5 +182,13 @@ export default {
             },
             /* wwEditor:end */
         },
+        dropdown: {
+            defaultValue: [
+                {
+                    isWwObject: true,
+                    type: 'f0751328-1cf9-44bd-9a4b-133d93b96762',
+                },
+            ],
+        },
     },
 };
