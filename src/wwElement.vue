@@ -17,7 +17,7 @@ export default {
         wwElementState: { type: Object, required: true },
     },
     setup(props) {
-        const isOpen = ref(false);
+        const isOpen = ref(true);
         const selectedValue = ref(props.content.value);
 
         const isDisabled = computed(() => props.content.disabled);
@@ -26,7 +26,7 @@ export default {
 
         const toggleDropdown = () => {
             if (!isDisabled.value && !isReadonly.value) {
-                isOpen.value = !isOpen.value;
+                // isOpen.value = !isOpen.value;
             }
         };
 
