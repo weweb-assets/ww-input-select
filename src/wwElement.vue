@@ -12,15 +12,32 @@ import { ref, computed, watch } from 'vue';
 export default {
     props: {
         content: { type: Object, required: true },
+        uid: { type: String, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
     setup(props) {
-        const isOpen = ref(true);
-        const selectedValue = ref(props.content.value);
+        const initValue = computed(() =>
+            props.content.selectType === 'single'
+                ? props.content.initValueSingle || null
+                : Array.isArray(props.content.initValueMulti)
+                ? props.content.initValueMulti
+                : []
+        );
 
+        console.log('props', props.content);
+
+        console.log('init value', initValue.value);
+
+        const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'value',
+            defaultValue: initValue,
+        });
+
+        const isOpen = ref(true);
         const isDisabled = computed(() => props.content.disabled);
         const isReadonly = computed(() => props.content.readonly);
         const isMultiple = computed(() => props.content.multiple);
@@ -39,11 +56,6 @@ export default {
         );
 
         return {
-            isOpen,
-            selectedValue,
-            isDisabled,
-            isReadonly,
-            isMultiple,
             toggleDropdown,
         };
     },

@@ -38,27 +38,8 @@ export default {
             },
             /* wwEditor:end */
         },
-        value: {
-            type: 'Text',
-            label: 'Initial value',
-            settings: true,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                validations: [
-                    {
-                        type: 'array',
-                    },
-                    {
-                        type: 'string',
-                    },
-                ],
-                tooltip: 'A string value: \n\n`"myValue"`, or an array of values: \n\n`["myValue1", "myValue2"]`',
-            },
-            /* wwEditor:end */
-        },
         selectType: {
-            label: 'Select type',
+            label: 'Type',
             type: 'TextSelect',
             options: {
                 options: [
@@ -73,6 +54,7 @@ export default {
                 ],
             },
             bindable: true,
+            defaultValue: 'single',
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -81,10 +63,46 @@ export default {
             },
             /* wwEditor:end */
         },
+        initValueSingle: {
+            type: 'Text',
+            label: 'Initial value (single)',
+            bindable: true,
+            defaultValue: null,
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [
+                    {
+                        type: 'array',
+                    },
+                    {
+                        type: 'string',
+                    },
+                ],
+                tooltip: 'A string value: \n\n`"myValue"`, or an array of values: \n\n`["myValue1", "myValue2"]`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType !== 'single',
+        },
+        initValueMulti: {
+            type: 'Array',
+            label: 'Initial value (Multi)',
+            bindable: true,
+            defaultValue: [],
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [
+                    {
+                        type: 'array',
+                    },
+                ],
+                tooltip: 'An array of values: \n\n`["myValue1", "myValue2"]`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType !== 'multiple',
+        },
         disabled: {
             label: { en: 'Disabled' },
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
@@ -97,7 +115,6 @@ export default {
         required: {
             label: { en: 'Required' },
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
@@ -110,7 +127,6 @@ export default {
         readonly: {
             label: { en: 'Read-only' },
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
@@ -123,7 +139,6 @@ export default {
         canUnselect: {
             label: { en: 'Can unselect' },
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
@@ -136,14 +151,12 @@ export default {
         forceOpenInEditor: {
             label: { en: 'Force open in editor' },
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
             editorOnly: true,
         },
         loadOnScroll: {
             label: { en: 'Load on scroll' },
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
             bindable: true,
             /* wwEditor:start */
