@@ -15,10 +15,7 @@ export default {
     properties: {
         items: {
             bindable: 'repeatable',
-            label: {
-                en: 'Items',
-                fr: 'Items',
-            },
+            label: 'Choices',
             type: 'Info',
             options: {
                 text: {
@@ -57,18 +54,6 @@ export default {
                     },
                 ],
                 tooltip: 'A string value: \n\n`"myValue"`, or an array of values: \n\n`["myValue1", "myValue2"]`',
-            },
-            /* wwEditor:end */
-        },
-        name: {
-            type: 'Text',
-            label: 'Radio name',
-            settings: true,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'string',
-                tooltip: 'A string value for the radio name: \n\n`"myRadioName"`',
             },
             /* wwEditor:end */
         },
@@ -168,26 +153,16 @@ export default {
             },
             /* wwEditor:end */
         },
-        options: {
-            label: { en: 'Options' },
-            type: 'Array',
-            section: 'settings',
-            bindable: true,
-            defaultValue: [],
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'array',
-                tooltip:
-                    'An array of option objects: \n\n`[{ label: "Option 1", value: "1" }, { label: "Option 2", value: "2" }]`',
-            },
-            /* wwEditor:end */
-        },
         dropdown: {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
                 type: 'f0751328-1cf9-44bd-9a4b-133d93b96762',
             },
+        },
+        _trigger: {
+            hidden: true,
+            defaultValue: [],
         },
         _dropdown: {
             hidden: true,
