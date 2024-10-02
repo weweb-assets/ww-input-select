@@ -183,6 +183,7 @@ export default {
             /* wwEditor:end */
         },
         dropdown: {
+            hidden: true,
             defaultValue: [
                 {
                     isWwObject: true,
