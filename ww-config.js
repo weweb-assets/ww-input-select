@@ -189,5 +189,9 @@ export default {
                 type: 'f0751328-1cf9-44bd-9a4b-133d93b96762',
             },
         },
+        _dropdown: {
+            hidden: true,
+            defaultValue: [],
+        },
     },
 };

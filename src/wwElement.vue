@@ -1,7 +1,8 @@
 <template>
     <div class="ww-select">
         <div class="ww-select__trigger" @click="toggleDropdown">trigger</div>
-        <wwElement class="ww-select__dropdown" v-bind="content.dropdown" v-show="isOpen" />
+        <!-- <wwElement class="ww-select__dropdown" v-bind="content.dropdown" v-show="isOpen" /> -->
+        <wwLayout class="ww-select__dropdown" path="_dropdown" />
     </div>
 </template>
 
