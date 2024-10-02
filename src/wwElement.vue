@@ -423,7 +423,7 @@ export default {
 .multiselect-single-label-readonly {
     position: relative;
     line-height: inherit;
-    width: 100%;
+    width: initial;
     transition: none;
     display: flex;
     flex-direction: row;
