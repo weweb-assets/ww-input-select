@@ -7,6 +7,10 @@ export default {
     inherit: {
         type: 'ww-layout',
     },
+    options: {
+        autoByContent: true,
+        displayAllowedValues: ['flex', 'grid', 'inline-flex', 'inline-grid'],
+    },
     states: ['readonly'],
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },
