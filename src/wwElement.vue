@@ -1,7 +1,7 @@
 <template>
     <div class="ww-select">
         <wwLayout class="ww-select__trigger" path="_trigger" />
-        <wwLayout class="ww-select__dropdown" path="_dropdown" />
+        <wwLayout class="ww-select__dropdown" path="_dropdown" v-if="isOpen" />
     </div>
 </template>
 
@@ -49,6 +49,18 @@ export default {
             }
         });
 
+        function toggleDropdown() {
+            if (!isDisabled.value && !isReadonly.value) isOpen.value = !isOpen.value;
+        }
+
+        function openDropdown() {
+            if (!isDisabled.value && !isReadonly.value) isOpen.value = true;
+        }
+
+        function closeDropdown() {
+            if (!isDisabled.value && !isReadonly.value) isOpen.value = false;
+        }
+
         const data = ref({
             selectValue: variableValue,
             selectValueDetails,
@@ -57,11 +69,36 @@ export default {
             selectOptions: options,
         });
 
-        const toggleDropdown = () => {
-            if (!isDisabled.value && !isReadonly.value) isOpen.value = !isOpen.value;
+        const methods = {
+            toggleDropdown: {
+                description: 'Toggle the dropdown',
+                method: toggleDropdown,
+                editor: { label: 'Toggle', elementName: 'Select', icon: 'select' },
+            },
+            openDropdown: {
+                description: 'Open the dropdown',
+                method: openDropdown,
+                editor: { label: 'Open', elementName: 'Select', icon: 'select' },
+            },
+            closeDropdown: {
+                description: 'Close the dropdown',
+                method: closeDropdown,
+                editor: { label: 'Close', elementName: 'Select', icon: 'select' },
+            },
         };
 
         watch(selectType, () => setValue(initValue.value));
+        /* wwEditor:start */
+        const forceOpenInEditor = computed(() => props.wwEditorState.sidepanelContent.forceOpenInEditor);
+        watch(
+            forceOpenInEditor,
+            forceOpenInEditor => {
+                if (forceOpenInEditor) openDropdown();
+                else closeDropdown();
+            },
+            { immediate: true }
+        );
+        /* wwEditor:end */
 
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
@@ -71,10 +108,11 @@ export default {
         provide('_wwSelectCanUnselect', canUnselect);
         provide('_wwRegisterOption', registerOption);
         provide('_wwUnregisterOption', unregisterOption);
+        provide('_wwSelectDropdownMethods', { closeDropdown });
 
-        wwLib.wwElement.useRegisterElementLocalContext('select', data, {});
+        wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
 
-        return { toggleDropdown };
+        return { isOpen };
     },
 };
 </script>
@@ -82,18 +120,14 @@ export default {
 <style lang="scss" scoped>
 .ww-select {
     position: relative;
-    // Add more styles as needed
 }
 
 .ww-select__trigger {
-    cursor: pointer;
-    // Add more styles as needed
 }
 
 .ww-select__dropdown {
     position: absolute;
     top: 100%;
     left: 0;
-    // Add more styles as needed
 }
 </style>

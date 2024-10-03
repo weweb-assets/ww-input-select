@@ -166,11 +166,18 @@ export default {
             },
             /* wwEditor:end */
         },
+        trigger: {
+            hidden: true,
+            defaultValue: {
+                isWwObject: true,
+                type: '061bdf96-de5d-4a01-a95c-4eb30b9b10aa',
+            },
+        },
         dropdown: {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
-                type: 'f0751328-1cf9-44bd-9a4b-133d93b96762',
+                type: 'a23203a7-1238-4b5d-94c4-e19dd3b22516',
             },
         },
         _trigger: {
