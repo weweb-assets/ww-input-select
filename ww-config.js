@@ -180,13 +180,5 @@ export default {
                 type: 'a23203a7-1238-4b5d-94c4-e19dd3b22516',
             },
         },
-        _trigger: {
-            hidden: true,
-            defaultValue: [],
-        },
-        _dropdown: {
-            hidden: true,
-            defaultValue: [],
-        },
     },
 };

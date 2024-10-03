@@ -1,7 +1,7 @@
 <template>
     <div class="ww-select">
-        <wwLayout class="ww-select__trigger" path="_trigger" />
-        <wwLayout class="ww-select__dropdown" path="_dropdown" v-if="isOpen" />
+        <wwElement class="ww-select__trigger" v-bind="trigger" />
+        <wwElement class="ww-select__dropdown" v-bind="dropdown" v-if="isOpen" />
     </div>
 </template>
 
