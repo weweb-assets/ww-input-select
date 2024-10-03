@@ -19,13 +19,8 @@ export default {
     },
     setup(props) {
         const selectType = computed(() => props.content.selectType);
-
         const initValue = computed(() =>
-            selectType.value === 'single'
-                ? props.content.initValueSingle || null
-                : Array.isArray(props.content.initValueMulti)
-                ? props.content.initValueMulti
-                : []
+            selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
         );
 
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
@@ -40,22 +35,23 @@ export default {
         const canUnselect = computed(() => props.content.canUnselect);
         const options = ref([]);
 
-        const registerOption = option => {
-            options.value.push(option);
-        };
-
+        const registerOption = option => options.value.push(option);
         const unregisterOption = optionValue => {
-            const index = options.value.findIndex(opt => opt.value === optionValue);
-            if (index !== -1) {
-                options.value.splice(index, 1);
-            }
+            options.value = options.value.filter(opt => opt.value !== optionValue);
         };
 
-        const selectedOptions = computed(() => options.value.filter(option => option.isSelected));
+        const selectValueDetails = computed(() => {
+            if (selectType.value === 'single') {
+                return options.value.find(option => option.value === variableValue.value) || null;
+            } else {
+                const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
+                return options.value.filter(option => selectedValues.includes(option.value));
+            }
+        });
 
         const data = ref({
             selectValue: variableValue,
-            selectedOptions: selectedOptions,
+            selectValueDetails,
             selectType,
             isOpen,
             selectOptions: options,
@@ -65,9 +61,7 @@ export default {
             if (!isDisabled.value && !isReadonly.value) isOpen.value = !isOpen.value;
         };
 
-        watch(selectType, () => {
-            setValue(initValue.value);
-        });
+        watch(selectType, () => setValue(initValue.value));
 
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
@@ -75,14 +69,12 @@ export default {
         provide('_wwSelectIsDisabled', isDisabled);
         provide('_wwSelectIsReadonly', isReadonly);
         provide('_wwSelectCanUnselect', canUnselect);
-        provide('registerOption', registerOption);
-        provide('unregisterOption', unregisterOption);
+        provide('_wwRegisterOption', registerOption);
+        provide('_wwUnregisterOption', unregisterOption);
 
         wwLib.wwElement.useRegisterElementLocalContext('select', data, {});
 
-        return {
-            toggleDropdown,
-        };
+        return { toggleDropdown };
     },
 };
 </script>
