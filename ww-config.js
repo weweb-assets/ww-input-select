@@ -3,6 +3,16 @@ export default {
         label: 'Select',
         icon: 'select',
         bubble: true,
+        customStylePropertiesOrder: [
+            'choices',
+            'selectType',
+            'initValueSingle',
+            'initValueMulti',
+            'initialState',
+            ['disabled', 'required', 'readonly', 'canUnselect'],
+            ['advanced', 'teleport', 'teleportLocation', 'loadOnScroll'],
+            ['forceOpenInEditor'],
+        ],
     },
     inherit: {
         type: 'ww-layout',
@@ -17,15 +27,15 @@ export default {
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
     ],
     properties: {
-        items: {
-            bindable: 'repeatable',
-            label: 'Choices',
-            type: 'Info',
-            options: {
-                text: {
-                    en: 'Elements to repeat',
-                },
+        choices: {
+            label: {
+                en: 'Choices',
             },
+            type: 'ObjectList',
+            options: {
+                useSchema: true,
+            },
+            bindable: true,
             defaultValue: [],
             /* wwEditor:start */
             bindingValidation: {
@@ -37,8 +47,7 @@ export default {
                         type: 'object',
                     },
                 ],
-                tooltip:
-                    'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...] || ["string1", "string2", ...] || [1, 2, ...]`',
+                tooltip: 'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...]`',
             },
             /* wwEditor:end */
         },
@@ -140,6 +149,23 @@ export default {
             },
             /* wwEditor:end */
         },
+        forceOpenInEditor: {
+            label: { en: 'Force open in editor' },
+            type: 'OnOff',
+            defaultValue: false,
+            editorOnly: true,
+        },
+        initialState: {
+            label: { en: 'Initial state' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'closed', label: 'Closed' },
+                    { value: 'open', label: 'Open' },
+                ],
+            },
+            defaultValue: 'closed',
+        },
         canUnselect: {
             label: { en: 'Can unselect' },
             type: 'OnOff',
@@ -152,12 +178,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        forceOpenInEditor: {
-            label: { en: 'Force open in editor' },
-            type: 'OnOff',
-            defaultValue: false,
-            editorOnly: true,
-        },
         loadOnScroll: {
             label: { en: 'Load on scroll' },
             type: 'OnOff',
@@ -169,6 +189,26 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+        },
+        advanced: {
+            label: { en: 'Advanced' },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+        },
+        teleport: {
+            label: { en: 'Teleport' },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            hidden: content => content.advanced === false,
+        },
+        teleportLocation: {
+            label: { en: 'Teleport location' },
+            type: 'Text',
+            defaultValue: 'body',
+            bindable: true,
+            hidden: content => content.teleport === false && content.advanced === false,
         },
         trigger: {
             hidden: true,

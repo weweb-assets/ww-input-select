@@ -1,14 +1,40 @@
 <template>
     <div class="ww-select">
-        <wwElement class="ww-select__trigger" v-bind="content.trigger" />
-        <div class="ww-select__dropdown" v-show="isOpen">
-            <wwElement v-bind="content.dropdown" />
-        </div>
+        <wwElement
+            class="ww-select__trigger"
+            ref="triggerElement"
+            v-bind="content.trigger"
+            @click="toggleDropdown"
+            @keydown="handleTriggerKeydown"
+            role="combobox"
+            :aria-haspopup="selectType === 'single' ? 'listbox' : 'true'"
+            :aria-expanded="isOpen"
+            :aria-controls="dropdownId"
+            :aria-activedescendant="activeDescendant"
+            :tabindex="isDisabled ? -1 : 0"
+            :aria-disabled="isDisabled"
+        />
+        <Teleport :to="content.teleportLocation || 'body'" :disabled="!content.teleport || isEditing">
+            <div
+                class="ww-select__dropdown"
+                ref="dropdownElement"
+                :style="floatingStyles"
+                v-show="isOpen"
+                :id="dropdownId"
+                :role="selectType === 'single' ? 'listbox' : 'group'"
+                :aria-multiselectable="selectType === 'multiple'"
+                :aria-label="content.ariaLabel || 'Select options'"
+            >
+                <wwElement v-bind="content.dropdown" />
+            </div>
+        </Teleport>
     </div>
 </template>
 
 <script>
-import { ref, computed, provide, watch } from 'vue';
+import { ref, computed, provide, watch, nextTick } from 'vue';
+import useDropdownFloating from './useFloating';
+import useAccessibility from './useAccessibility';
 
 export default {
     props: {
@@ -20,6 +46,19 @@ export default {
         wwElementState: { type: Object, required: true },
     },
     setup(props) {
+        const isEditing = computed(() => {
+            /* wwEditor:start */
+            return props.wwEditorState.isEditing;
+            /* wwEditor:end */
+            // eslint-disable-next-line no-unreachable
+            return false;
+        });
+
+        const triggerElement = ref(null);
+        const dropdownElement = ref(null);
+        const triggerElementRef = computed(() => triggerElement.value?.componentRef?.$el);
+        const { floatingStyles, syncFloating } = useDropdownFloating(triggerElementRef, dropdownElement);
+
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
@@ -31,7 +70,8 @@ export default {
             defaultValue: initValue,
         });
 
-        const isOpen = ref(true);
+        const isOpen = ref(false);
+        const choices = computed(() => props.content.choices);
         const isDisabled = computed(() => props.content.disabled);
         const isReadonly = computed(() => props.content.readonly);
         const canUnselect = computed(() => props.content.canUnselect);
@@ -56,14 +96,29 @@ export default {
         }
 
         function openDropdown() {
-            if (!isDisabled.value && !isReadonly.value) isOpen.value = true;
+            if (!isDisabled.value && !isReadonly.value) {
+                isOpen.value = true;
+                nextTick(() => syncFloating());
+            }
         }
 
         function closeDropdown() {
-            if (!isDisabled.value && !isReadonly.value) isOpen.value = false;
+            if (!isDisabled.value && !isReadonly.value) {
+                isOpen.value = false;
+                resetFocus();
+            }
         }
 
+        const { dropdownId, handleTriggerKeydown, activeDescendant, resetFocus } = useAccessibility({
+            options,
+            isOpen,
+            toggleDropdown,
+            openDropdown,
+            closeDropdown,
+        });
+
         const data = ref({
+            choices,
             selectValue: variableValue,
             selectValueDetails,
             selectType,
@@ -90,8 +145,15 @@ export default {
         };
 
         watch(selectType, () => setValue(initValue.value));
+
+        const forceOpenInEditor = computed(() => {
+            /* wwEditor:start */
+            return props.wwEditorState.sidepanelContent.forceOpenInEditor;
+            /* wwEditor:end */
+            return false;
+        });
+
         /* wwEditor:start */
-        const forceOpenInEditor = computed(() => props.wwEditorState.sidepanelContent.forceOpenInEditor);
         watch(
             forceOpenInEditor,
             forceOpenInEditor => {
@@ -101,6 +163,16 @@ export default {
             { immediate: true }
         );
         /* wwEditor:end */
+
+        const initialState = computed(() => props.content.initialState);
+        watch(
+            initialState,
+            () => {
+                if (initialState.value && initialState.value === 'open') openDropdown();
+                else if (!forceOpenInEditor.value) closeDropdown();
+            },
+            { immediate: true }
+        );
 
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
@@ -114,22 +186,16 @@ export default {
 
         wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
 
-        return { isOpen };
+        return {
+            isEditing,
+            isOpen,
+            triggerElement,
+            dropdownElement,
+            floatingStyles,
+            dropdownId,
+            activeDescendant,
+            handleTriggerKeydown,
+        };
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.ww-select {
-    position: relative;
-}
-
-.ww-select__trigger {
-}
-
-.ww-select__dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-}
-</style>
