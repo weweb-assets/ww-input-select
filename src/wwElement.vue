@@ -1,9 +1,8 @@
 <template>
     <div class="ww-select">
-        <wwElement
+        <div
             class="ww-select__trigger"
             ref="triggerElement"
-            v-bind="content.trigger"
             @click="toggleDropdown"
             @keydown="handleTriggerKeydown"
             role="combobox"
@@ -13,8 +12,10 @@
             :aria-activedescendant="activeDescendant"
             :tabindex="isDisabled ? -1 : 0"
             :aria-disabled="isDisabled"
-        />
-        <Teleport :to="content.teleportLocation || 'body'" :disabled="!content.teleport || isEditing">
+        >
+            <wwElement v-bind="content.trigger" />
+        </div>
+        <Teleport defer :to="content.teleportLocation || 'body'" :disabled="!content.teleport || isEditing">
             <div
                 class="ww-select__dropdown"
                 ref="dropdownElement"
@@ -56,8 +57,7 @@ export default {
 
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
-        const triggerElementRef = computed(() => triggerElement.value?.componentRef?.$el);
-        const { floatingStyles, syncFloating } = useDropdownFloating(triggerElementRef, dropdownElement);
+        const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
 
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>

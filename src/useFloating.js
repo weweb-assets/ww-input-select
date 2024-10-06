@@ -22,6 +22,7 @@ export default function useDropdownFloating(reference, floating) {
         placement,
         middleware,
         whileElementsMounted: autoUpdate,
+        strategy: 'fixed',
     });
 
     watch(dropdownConfig, () => update, { deep: true, immediate: true });
@@ -31,6 +32,10 @@ export default function useDropdownFloating(reference, floating) {
     }
 
     provide('_wwSelectUpdateDropdownConfig', updateDropdownConfig);
+
+    watch(floatingStyles, styles => {
+        console.log('styles', styles);
+    });
 
     return {
         floatingStyles,
