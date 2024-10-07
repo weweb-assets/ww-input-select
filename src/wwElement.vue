@@ -15,20 +15,18 @@
         >
             <wwElement v-bind="content.trigger" />
         </div>
-        <Teleport defer :to="content.teleportLocation || 'body'" :disabled="!content.teleport || isEditing">
-            <div
-                class="ww-select__dropdown"
-                ref="dropdownElement"
-                :style="floatingStyles"
-                v-show="isOpen"
-                :id="dropdownId"
-                :role="selectType === 'single' ? 'listbox' : 'group'"
-                :aria-multiselectable="selectType === 'multiple'"
-                :aria-label="'Select options'"
-            >
-                <wwElement v-bind="content.dropdown" />
-            </div>
-        </Teleport>
+        <div
+            class="ww-select__dropdown"
+            ref="dropdownElement"
+            :style="floatingStyles"
+            v-show="isOpen"
+            :id="dropdownId"
+            :role="selectType === 'single' ? 'listbox' : 'group'"
+            :aria-multiselectable="selectType === 'multiple'"
+            :aria-label="'Select options'"
+        >
+            <wwElement v-bind="content.dropdown" />
+        </div>
     </div>
 </template>
 
