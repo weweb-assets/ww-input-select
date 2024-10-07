@@ -190,26 +190,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        advanced: {
-            label: { en: 'Advanced' },
-            type: 'OnOff',
-            defaultValue: false,
-            bindable: true,
-        },
-        teleport: {
-            label: { en: 'Teleport' },
-            type: 'OnOff',
-            defaultValue: false,
-            bindable: true,
-            hidden: content => content.advanced === false,
-        },
-        teleportLocation: {
-            label: { en: 'Teleport location' },
-            type: 'Text',
-            defaultValue: 'body',
-            bindable: true,
-            hidden: content => content.teleport === false && content.advanced === false,
-        },
         trigger: {
             hidden: true,
             defaultValue: {
