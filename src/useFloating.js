@@ -1,8 +1,9 @@
-import { ref, computed, watch, provide } from 'vue';
+import { ref, computed, watch, provide, onMounted, onBeforeUnmount } from 'vue';
 import { useFloating, autoUpdate, flip, offset, shift } from '@floating-ui/vue';
 
-export default function useDropdownFloating(reference, floating) {
+export default function useDropdownFloating(triggerElement, dropdownElement) {
     const dropdownConfig = ref({});
+    const virtualElement = ref(null);
 
     const placement = computed(() => {
         const { side = 'bottom', align = 'start' } = dropdownConfig.value;
@@ -18,23 +19,55 @@ export default function useDropdownFloating(reference, floating) {
         shift({ padding: parseFloat(dropdownConfig.value.boundOffset) || 0 }),
     ]);
 
-    const { floatingStyles, update } = useFloating(reference, floating, {
+    const updateVirtualElement = () => {
+        if (triggerElement.value) {
+            const rect = triggerElement.value.getBoundingClientRect();
+            virtualElement.value = {
+                getBoundingClientRect() {
+                    return rect;
+                },
+                contextElement: triggerElement.value,
+            };
+        }
+    };
+
+    const { floatingStyles, update } = useFloating(virtualElement, dropdownElement, {
         placement,
         middleware,
-        whileElementsMounted: autoUpdate,
         strategy: 'fixed',
     });
 
-    watch(dropdownConfig, () => update, { deep: true, immediate: true });
+    const cleanup = ref(null);
+
+    onMounted(() => {
+        updateVirtualElement();
+        cleanup.value = autoUpdate(triggerElement.value, dropdownElement.value, () => {
+            updateVirtualElement();
+            update();
+        });
+    });
+
+    onBeforeUnmount(() => {
+        if (cleanup.value) {
+            cleanup.value();
+        }
+    });
+
+    watch(dropdownConfig, () => update(), { deep: true, immediate: true });
 
     function updateDropdownConfig(config) {
         dropdownConfig.value = config;
+    }
+
+    function syncFloating() {
+        updateVirtualElement();
+        update();
     }
 
     provide('_wwSelectUpdateDropdownConfig', updateDropdownConfig);
 
     return {
         floatingStyles,
-        syncFloating: update,
+        syncFloating,
     };
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="ww-select">
+    <div class="ww-select" :key="componentKey">
         <div
             class="ww-select__trigger"
             ref="triggerElement"
@@ -24,7 +24,7 @@
                 :id="dropdownId"
                 :role="selectType === 'single' ? 'listbox' : 'group'"
                 :aria-multiselectable="selectType === 'multiple'"
-                :aria-label="content.ariaLabel || 'Select options'"
+                :aria-label="'Select options'"
             >
                 <wwElement v-bind="content.dropdown" />
             </div>
@@ -47,6 +47,8 @@ export default {
         wwElementState: { type: Object, required: true },
     },
     setup(props) {
+        const componentKey = ref(0);
+
         const isEditing = computed(() => {
             /* wwEditor:start */
             return props.wwEditorState.isEditing;
@@ -145,6 +147,20 @@ export default {
         };
 
         watch(selectType, () => setValue(initValue.value));
+        watch(
+            props.content,
+            () => {
+                componentKey.value++;
+            },
+            { deep: true }
+        );
+        watch(isOpen, newValue => {
+            if (newValue) {
+                nextTick(() => {
+                    syncFloating();
+                });
+            }
+        });
 
         const forceOpenInEditor = computed(() => {
             /* wwEditor:start */
@@ -154,6 +170,12 @@ export default {
         });
 
         /* wwEditor:start */
+        watch(isEditing, () => {
+            componentKey.value++;
+            nextTick(() => {
+                syncFloating();
+            });
+        });
         watch(
             forceOpenInEditor,
             forceOpenInEditor => {
@@ -187,6 +209,7 @@ export default {
         wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
 
         return {
+            componentKey,
             isEditing,
             isOpen,
             triggerElement,
@@ -195,6 +218,8 @@ export default {
             dropdownId,
             activeDescendant,
             handleTriggerKeydown,
+            isDisabled,
+            selectType,
         };
     },
 };
