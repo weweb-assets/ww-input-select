@@ -33,10 +33,6 @@ export default function useDropdownFloating(reference, floating) {
 
     provide('_wwSelectUpdateDropdownConfig', updateDropdownConfig);
 
-    watch(floatingStyles, styles => {
-        console.log('styles', styles);
-    });
-
     return {
         floatingStyles,
         syncFloating: update,
