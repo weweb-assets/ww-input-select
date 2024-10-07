@@ -149,16 +149,23 @@ export default {
             props.content,
             () => {
                 componentKey.value++;
+                nextTick(() => syncFloating());
             },
             { deep: true }
         );
         watch(isOpen, newValue => {
-            if (newValue) {
-                nextTick(() => {
-                    syncFloating();
-                });
-            }
+            if (newValue) nextTick(() => syncFloating());
         });
+        watch(
+            variableValue,
+            () => {
+                () => {
+                    componentKey.value++;
+                    nextTick(() => syncFloating());
+                };
+            },
+            { deep: true }
+        );
 
         const forceOpenInEditor = computed(() => {
             /* wwEditor:start */
