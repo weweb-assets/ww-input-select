@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { ref, computed, provide, watch, nextTick } from 'vue';
+import { ref, computed, provide, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import useDropdownFloating from './useFloating';
 import useAccessibility from './useAccessibility';
 
@@ -98,7 +98,9 @@ export default {
         function openDropdown() {
             if (!isDisabled.value && !isReadonly.value) {
                 isOpen.value = true;
-                nextTick(() => syncFloating());
+                nextTick(() => {
+                    syncFloating();
+                });
             }
         }
 
@@ -149,20 +151,26 @@ export default {
             props.content,
             () => {
                 componentKey.value++;
-                nextTick(() => syncFloating());
+                nextTick(() => {
+                    syncFloating();
+                });
             },
             { deep: true }
         );
         watch(isOpen, newValue => {
-            if (newValue) nextTick(() => syncFloating());
+            if (newValue) {
+                nextTick(() => {
+                    syncFloating();
+                });
+            }
         });
         watch(
             variableValue,
             () => {
-                () => {
-                    componentKey.value++;
-                    nextTick(() => syncFloating());
-                };
+                componentKey.value++;
+                nextTick(() => {
+                    syncFloating();
+                });
             },
             { deep: true }
         );
@@ -212,6 +220,16 @@ export default {
         provide('_wwSelectDropdownMethods', { closeDropdown });
 
         wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
+
+        onMounted(() => {
+            nextTick(() => {
+                syncFloating();
+            });
+        });
+
+        onBeforeUnmount(() => {
+            // Any cleanup if needed
+        });
 
         return {
             componentKey,

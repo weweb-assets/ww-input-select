@@ -1,4 +1,4 @@
-import { ref, computed, watch, provide } from 'vue';
+import { ref, computed, watch, provide, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { useFloating, autoUpdate, flip, offset, shift } from '@floating-ui/vue';
 
 export default function useDropdownFloating(triggerElement, dropdownElement) {
@@ -21,7 +21,6 @@ export default function useDropdownFloating(triggerElement, dropdownElement) {
     const { floatingStyles, update } = useFloating(triggerElement, dropdownElement, {
         placement,
         middleware,
-        whileElementsMounted: autoUpdate,
         strategy: 'fixed',
     });
 
@@ -33,8 +32,45 @@ export default function useDropdownFloating(triggerElement, dropdownElement) {
 
     provide('_wwSelectUpdateDropdownConfig', updateDropdownConfig);
 
+    let cleanup = null;
+    let resizeObserver = null;
+    let mutationObserver = null;
+
+    const syncFloating = () => {
+        nextTick(() => {
+            if (triggerElement.value && dropdownElement.value) update();
+        });
+    };
+
+    onMounted(() => {
+        if (triggerElement.value && dropdownElement.value) {
+            cleanup = autoUpdate(triggerElement.value, dropdownElement.value, syncFloating);
+
+            resizeObserver = new ResizeObserver(syncFloating);
+            resizeObserver.observe(triggerElement.value);
+
+            mutationObserver = new MutationObserver(syncFloating);
+            mutationObserver.observe(triggerElement.value, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                characterData: true,
+            });
+        }
+    });
+
+    onBeforeUnmount(() => {
+        if (cleanup) cleanup();
+        if (resizeObserver) {
+            resizeObserver.disconnect();
+        }
+        if (mutationObserver) {
+            mutationObserver.disconnect();
+        }
+    });
+
     return {
         floatingStyles,
-        syncFloating: update,
+        syncFloating,
     };
 }
