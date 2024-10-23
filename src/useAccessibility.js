@@ -1,30 +1,36 @@
 import { ref, provide } from 'vue';
 
-export default function useAccessibility({ options, isOpen, toggleDropdown, openDropdown, closeDropdown }) {
+export default function useAccessibility({
+    options,
+    isOpen,
+    methods /* toggleDropdown, openDropdown, closeDropdown, updateValue */,
+}) {
     const dropdownId = `ww-select-dropdown-${wwLib.wwUtils.getUid()}`;
     const activeDescendant = ref('');
     const focusedOptionIndex = ref(0);
+    const activeOptionValue = ref('');
 
     const handleTriggerKeydown = event => {
         switch (event.key) {
             case 'ArrowDown':
             case 'ArrowUp':
                 event.preventDefault();
-                if (!isOpen.value) {
-                    openDropdown();
-                } else {
-                    navigateOptions(event.key === 'ArrowDown' ? 1 : -1);
-                }
+                if (!isOpen.value) methods.openDropdown();
+                else navigateOptions(event.key === 'ArrowDown' ? 1 : -1);
                 break;
             case 'Enter':
-            case ' ':
                 event.preventDefault();
-                toggleDropdown();
+                if (isOpen.value) {
+                    if (activeOptionValue.value) methods.updateValue(activeOptionValue.value);
+                } else {
+                    methods.openDropdown();
+                }
                 break;
             case 'Escape':
+                event.preventDefault();
                 if (isOpen.value) {
-                    event.preventDefault();
-                    closeDropdown();
+                    methods.closeDropdown();
+                    resetFocus();
                 }
                 break;
         }
@@ -35,6 +41,7 @@ export default function useAccessibility({ options, isOpen, toggleDropdown, open
         if (optionsCount === 0) return;
         focusedOptionIndex.value = (focusedOptionIndex.value + direction + optionsCount) % optionsCount;
         const focusedOption = options.value[focusedOptionIndex.value];
+        activeOptionValue.value = focusedOption.value;
         activeDescendant.value = `ww-select-option-${focusedOption.value}`;
     };
 

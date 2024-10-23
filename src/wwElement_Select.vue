@@ -31,9 +31,10 @@
 </template>
 
 <script>
-import { ref, computed, provide, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, provide, watch, nextTick, onMounted } from 'vue';
 import useDropdownFloating from './useFloating';
 import useAccessibility from './useAccessibility';
+import useSearch from './useSearch';
 
 export default {
     props: {
@@ -70,29 +71,44 @@ export default {
             defaultValue: initValue,
         });
 
+        const options = ref([]);
         const isOpen = ref(false);
-        const choices = computed(() => props.content.choices);
+        const selectData = computed(() => props.content.choices);
         const isDisabled = computed(() => props.content.disabled);
         const isReadonly = computed(() => props.content.readonly);
         const canUnselect = computed(() => props.content.canUnselect);
-        const options = ref([]);
+        const optionsFilter = ref(null);
 
-        const registerOption = option => options.value.push(option);
-        const unregisterOption = optionValue => {
-            options.value = options.value.filter(opt => opt.value !== optionValue);
+        const updateFilter = filter => {
+            optionsFilter.value = filter;
         };
 
-        const selectValueDetails = computed(() => {
+        const registerOption = option => {
+            if (option.value) options.value.push(option);
+        };
+        const unregisterOption = option => {
+            options.value = options.value.filter(opt => opt.value !== option.value);
+        };
+
+        const updateValue = value => {
             if (selectType.value === 'single') {
-                return options.value.find(option => option.value === variableValue.value) || null;
+                setValue(value);
             } else {
-                const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
-                return options.value.filter(option => selectedValues.includes(option.value));
+                const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
+                const valueIndex = currentValue.indexOf(value);
+
+                if (valueIndex === -1 && currentValue.length < (props.content.limit || 0)) currentValue.push(value);
+                else currentValue.splice(valueIndex, 1);
+
+                setValue(currentValue);
             }
-        });
+
+            if (props.content.closeOnSelect) closeDropdown();
+        };
 
         function toggleDropdown() {
-            if (!isDisabled.value && !isReadonly.value) isOpen.value = !isOpen.value;
+            if (isOpen.value) this.closeDropdown();
+            else this.openDropdown();
         }
 
         function openDropdown() {
@@ -106,26 +122,45 @@ export default {
 
         function closeDropdown() {
             if (!isDisabled.value && !isReadonly.value) {
-                isOpen.value = false;
+                resetSearch();
                 resetFocus();
+                isOpen.value = false;
             }
         }
 
         const { dropdownId, handleTriggerKeydown, activeDescendant, resetFocus } = useAccessibility({
             options,
             isOpen,
-            toggleDropdown,
-            openDropdown,
-            closeDropdown,
+            methods: { toggleDropdown, openDropdown, closeDropdown, updateValue },
+        });
+
+        const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch();
+
+        const selectValueDetails = computed(() => {
+            if (selectType.value === 'single') {
+                return options.value.find(option => option.value === variableValue.value) || null;
+            } else {
+                const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
+                return options.value.filter(option => selectedValues.includes(option.value));
+            }
+        });
+
+        const mergedOptions = computed(() => {
+            if ((props.content.choices || []).length === 0) return options.value;
+            const optionsSet = new Set(options.value.map(option => option.value));
+            return [...options.value, ...selectData.value.filter(option => !optionsSet.has(option.value))];
         });
 
         const data = ref({
-            choices,
-            selectValue: variableValue,
-            selectValueDetails,
-            selectType,
+            options: mergedOptions.value,
+            value: variableValue,
+            valueDetails: selectValueDetails,
+            type: selectType,
             isOpen,
-            selectOptions: options,
+            search: {
+                hasSearch,
+                filter: optionsFilter.value,
+            },
         });
 
         const methods = {
@@ -143,6 +178,11 @@ export default {
                 description: 'Close the dropdown',
                 method: closeDropdown,
                 editor: { label: 'Close', elementName: 'Select', icon: 'select' },
+            },
+            resetSearch: {
+                description: 'Reset the search input value',
+                method: resetSearch,
+                editor: { label: 'Reset search', elementName: 'Select search', icon: 'select' },
             },
         };
 
@@ -209,15 +249,20 @@ export default {
             { immediate: true }
         );
 
+        provide('_wwSelectData', selectData);
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
         provide('_wwSelectSetValue', setValue);
         provide('_wwSelectIsDisabled', isDisabled);
         provide('_wwSelectIsReadonly', isReadonly);
         provide('_wwSelectCanUnselect', canUnselect);
+        provide('_wwSelectOptionsFilter', optionsFilter);
+        provide('_wwSelectUpdateValue', updateValue);
+        provide('_wwSelectUpdateFilter', updateFilter);
         provide('_wwRegisterOption', registerOption);
         provide('_wwUnregisterOption', unregisterOption);
         provide('_wwSelectDropdownMethods', { closeDropdown });
+        provide('_wwSelectUseSearch', { updateHasSearch, updateSearchElement });
 
         wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
 
@@ -225,10 +270,6 @@ export default {
             nextTick(() => {
                 syncFloating();
             });
-        });
-
-        onBeforeUnmount(() => {
-            // Any cleanup if needed
         });
 
         return {
@@ -240,9 +281,9 @@ export default {
             floatingStyles,
             dropdownId,
             activeDescendant,
-            handleTriggerKeydown,
             isDisabled,
             selectType,
+            handleTriggerKeydown,
         };
     },
 };

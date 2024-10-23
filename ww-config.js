@@ -9,8 +9,8 @@ export default {
             'initValueSingle',
             'initValueMulti',
             'initialState',
-            ['disabled', 'required', 'readonly', 'canUnselect'],
-            ['advanced', 'teleport', 'teleportLocation', 'loadOnScroll'],
+            ['disabled', 'required', 'readonly', 'limit', 'canUnselect', 'closeOnSelect'],
+            ['advanced', 'loadOnScroll', 'blockInteractionsWhenOpen'],
             ['forceOpenInEditor'],
         ],
     },
@@ -29,7 +29,7 @@ export default {
     properties: {
         choices: {
             label: {
-                en: 'Choices',
+                en: 'Data',
             },
             type: 'ObjectList',
             options: {
@@ -149,6 +149,19 @@ export default {
             },
             /* wwEditor:end */
         },
+        limit: {
+            label: { en: 'Values limit' },
+            type: 'Number',
+            defaultValue: null,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number value: \n\n`1`, `2`, `3`, etc.',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType !== 'multiple',
+        },
         forceOpenInEditor: {
             label: { en: 'Force open in editor' },
             type: 'OnOff',
@@ -178,8 +191,32 @@ export default {
             },
             /* wwEditor:end */
         },
+        closeOnSelect: {
+            label: { en: 'Close on select' },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            /* wwEditor:end */
+        },
         loadOnScroll: {
             label: { en: 'Load on scroll' },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            /* wwEditor:end */
+        },
+        blockInteractionsWhenOpen: {
+            label: { en: 'Block interactions when open' },
             type: 'OnOff',
             defaultValue: false,
             bindable: true,
