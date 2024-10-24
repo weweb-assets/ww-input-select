@@ -73,7 +73,7 @@ export default {
 
         const options = ref([]);
         const isOpen = ref(false);
-        const selectData = computed(() => props.content.choices);
+        const rawData = computed(() => props.content.choices || []);
         const isDisabled = computed(() => props.content.disabled);
         const isReadonly = computed(() => props.content.readonly);
         const canUnselect = computed(() => props.content.canUnselect);
@@ -145,14 +145,8 @@ export default {
             }
         });
 
-        const mergedOptions = computed(() => {
-            if ((props.content.choices || []).length === 0) return options.value;
-            const optionsSet = new Set(options.value.map(option => option.value));
-            return [...options.value, ...selectData.value.filter(option => !optionsSet.has(option.value))];
-        });
-
         const data = ref({
-            options: mergedOptions.value,
+            options,
             value: variableValue,
             valueDetails: selectValueDetails,
             type: selectType,
@@ -249,7 +243,8 @@ export default {
             { immediate: true }
         );
 
-        provide('_wwSelectData', selectData);
+        provide('_wwSelectRawData', rawData);
+        provide('_wwSelectOptions', options);
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
         provide('_wwSelectSetValue', setValue);
