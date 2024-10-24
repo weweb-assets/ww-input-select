@@ -146,8 +146,10 @@ export default {
         });
 
         const mergedOptions = computed(() => {
-            return (rawData.value || []).map((item, index) => {
-                return { ...item, wewebOption: options.value[index] };
+            const safeRawData = Array.isArray(rawData.value) ? rawData.value : [];
+            return safeRawData.map((item, index) => {
+                const wewebOption = options.value[index] || {};
+                return { ...item, wewebOption };
             });
         });
 
