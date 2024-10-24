@@ -74,9 +74,9 @@ export default {
         const options = ref([]);
         const isOpen = ref(false);
         const rawData = computed(() => props.content.choices || []);
-        const isDisabled = computed(() => props.content.disabled);
-        const isReadonly = computed(() => props.content.readonly);
-        const canUnselect = computed(() => props.content.canUnselect);
+        const isDisabled = computed(() => props.content.disabled || false);
+        const isReadonly = computed(() => props.content.readonly || false);
+        const canUnselect = computed(() => props.content.canUnselect || false);
         const optionsFilter = ref(null);
 
         const updateFilter = filter => {
@@ -106,47 +106,53 @@ export default {
             if (props.content.closeOnSelect) closeDropdown();
         };
 
-        function toggleDropdown() {
-            if (isOpen.value) this.closeDropdown();
-            else this.openDropdown();
-        }
-
         function openDropdown() {
-            if (!isDisabled.value && !isReadonly.value) {
-                isOpen.value = true;
-                nextTick(() => {
-                    syncFloating();
-                });
-            }
+            if (isDisabled.value || isReadonly.value) return;
+
+            isOpen.value = true;
+            nextTick(() => {
+                syncFloating();
+            });
         }
 
         function closeDropdown() {
-            if (!isDisabled.value && !isReadonly.value) {
-                resetSearch();
-                resetFocus();
-                isOpen.value = false;
-            }
+            if (isDisabled.value || isReadonly.value) return;
+
+            resetSearch();
+            resetFocus();
+            isOpen.value = false;
+        }
+
+        function toggleDropdown() {
+            if (isOpen.value) closeDropdown();
+            else openDropdown();
         }
 
         const { dropdownId, handleTriggerKeydown, activeDescendant, resetFocus } = useAccessibility({
             options,
             isOpen,
-            methods: { toggleDropdown, openDropdown, closeDropdown, updateValue },
+            methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
         });
 
         const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch();
 
         const selectValueDetails = computed(() => {
             if (selectType.value === 'single') {
-                return options.value.find(option => option.value === variableValue.value) || null;
+                return options.value.find(option => option.value === variableValue.value) || variableValue.value;
             } else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
-                return options.value.filter(option => selectedValues.includes(option.value));
+                return options.value.filter(option => selectedValues.includes(option.value)) || variableValue.value;
             }
         });
 
+        const mergedOptions = computed(() => {
+            return (rawData.value || []).map((item, index) => {
+                return { ...item, wewebOption: options.value[index] };
+            });
+        });
+
         const data = ref({
-            options,
+            options: mergedOptions,
             value: variableValue,
             valueDetails: selectValueDetails,
             type: selectType,
@@ -158,11 +164,6 @@ export default {
         });
 
         const methods = {
-            toggleDropdown: {
-                description: 'Toggle the dropdown',
-                method: toggleDropdown,
-                editor: { label: 'Toggle', elementName: 'Select', icon: 'select' },
-            },
             openDropdown: {
                 description: 'Open the dropdown',
                 method: openDropdown,
@@ -172,6 +173,11 @@ export default {
                 description: 'Close the dropdown',
                 method: closeDropdown,
                 editor: { label: 'Close', elementName: 'Select', icon: 'select' },
+            },
+            toggleDropdown: {
+                description: 'Toggle the dropdown',
+                method: toggleDropdown,
+                editor: { label: 'Toggle', elementName: 'Select', icon: 'select' },
             },
             resetSearch: {
                 description: 'Reset the search input value',
@@ -184,7 +190,6 @@ export default {
         watch(
             props.content,
             () => {
-                componentKey.value++;
                 nextTick(() => {
                     syncFloating();
                 });
@@ -201,7 +206,6 @@ export default {
         watch(
             variableValue,
             () => {
-                componentKey.value++;
                 nextTick(() => {
                     syncFloating();
                 });
@@ -243,8 +247,7 @@ export default {
             { immediate: true }
         );
 
-        provide('_wwSelectRawData', rawData);
-        provide('_wwSelectOptions', options);
+        provide('_wwSelectOptions', mergedOptions);
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
         provide('_wwSelectSetValue', setValue);
