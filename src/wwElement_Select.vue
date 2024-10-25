@@ -78,16 +78,20 @@ export default {
         const isReadonly = computed(() => props.content.readonly || false);
         const canUnselect = computed(() => props.content.canUnselect || false);
         const optionsFilter = ref(null);
-
-        const updateFilter = filter => {
-            optionsFilter.value = filter;
-        };
+        const optionProperties = ref({});
+        const searchBy = ref([]);
 
         const registerOption = option => {
             if (option.value) options.value.push(option);
         };
         const unregisterOption = option => {
             options.value = options.value.filter(opt => opt.value !== option.value);
+        };
+        const registerOptionProperties = object => {
+            if (object) optionProperties.value = object;
+        };
+        const updateSearch = filter => {
+            optionsFilter.value = filter;
         };
 
         const updateValue = value => {
@@ -134,7 +138,9 @@ export default {
             methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
         });
 
-        const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch();
+        const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch(optionsFilter, {
+            updateSearch,
+        });
 
         const selectValueDetails = computed(() => {
             if (selectType.value === 'single') {
@@ -145,16 +151,8 @@ export default {
             }
         });
 
-        const mergedOptions = computed(() => {
-            const safeRawData = Array.isArray(rawData.value) ? rawData.value : [];
-            return safeRawData.map((item, index) => {
-                const wewebOption = options.value[index] || {};
-                return { ...item, wewebOption };
-            });
-        });
-
         const data = ref({
-            options: mergedOptions,
+            options,
             value: variableValue,
             valueDetails: selectValueDetails,
             type: selectType,
@@ -249,7 +247,8 @@ export default {
             { immediate: true }
         );
 
-        provide('_wwSelectOptions', mergedOptions);
+        provide('_wwRawData', rawData);
+        provide('_wwSelectOptions', options);
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
         provide('_wwSelectSetValue', setValue);
@@ -257,10 +256,12 @@ export default {
         provide('_wwSelectIsReadonly', isReadonly);
         provide('_wwSelectCanUnselect', canUnselect);
         provide('_wwSelectOptionsFilter', optionsFilter);
+        provide('_wwSelectOptionProperties', optionProperties);
         provide('_wwSelectUpdateValue', updateValue);
-        provide('_wwSelectUpdateFilter', updateFilter);
+        provide('_wwSelectUpdateSearch', updateSearch);
         provide('_wwRegisterOption', registerOption);
         provide('_wwUnregisterOption', unregisterOption);
+        provide('_wwRegisterOptionProperties', registerOptionProperties);
         provide('_wwSelectDropdownMethods', { closeDropdown });
         provide('_wwSelectUseSearch', { updateHasSearch, updateSearchElement });
 
