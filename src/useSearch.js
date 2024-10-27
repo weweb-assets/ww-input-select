@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-export default function useSearch(optionsFilter, { updateSearch }) {
+export default function useSearch(searchState, { updateSearch }) {
     const hasSearch = ref(false);
     const searchElement = ref(null);
 
@@ -15,7 +15,7 @@ export default function useSearch(optionsFilter, { updateSearch }) {
     function resetSearch() {
         if (searchElement.value) {
             searchElement.value.value = '';
-            updateSearch({ ...optionsFilter, value: '' });
+            updateSearch({ ...searchState, value: '' });
         }
     }
 

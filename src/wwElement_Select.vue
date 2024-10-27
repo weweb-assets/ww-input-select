@@ -81,7 +81,7 @@ export default {
         const canUnselect = computed(() => props.content.canUnselect || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
-        const optionsFilter = ref(null);
+        const searchState = ref(null);
         const optionProperties = ref({});
 
         const registerOption = option => {
@@ -97,7 +97,7 @@ export default {
         };
 
         const updateSearch = filter => {
-            optionsFilter.value = filter;
+            searchState.value = filter;
         };
 
         const updateValue = value => {
@@ -107,8 +107,11 @@ export default {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
                 const valueIndex = currentValue.indexOf(value);
 
-                if (valueIndex === -1 && currentValue.length < (props.content.limit || 0)) currentValue.push(value);
-                else currentValue.splice(valueIndex, 1);
+                if (valueIndex === -1) {
+                    if (!props.content.limit || currentValue.length < props.content.limit) currentValue.push(value);
+                } else {
+                    currentValue.splice(valueIndex, 1);
+                }
 
                 setValue(currentValue);
             }
@@ -120,9 +123,7 @@ export default {
             if (isDisabled.value || isReadonly.value) return;
 
             isOpen.value = true;
-            nextTick(() => {
-                syncFloating();
-            });
+            nextTick(debounce(syncFloating, 300));
         }
 
         function closeDropdown() {
@@ -155,7 +156,7 @@ export default {
             methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
         });
 
-        const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch(optionsFilter, {
+        const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch(searchState, {
             updateSearch,
         });
 
@@ -215,8 +216,9 @@ export default {
             newHasSearch => {
                 if (newHasSearch) {
                     data.value.search = {
-                        value: computed(() => optionsFilter.value?.value || ''),
-                        searchBy: computed(() => optionsFilter.value?.searchBy || []),
+                        value: computed(() => searchState.value?.value || ''),
+                        searchBy: computed(() => searchState.value?.searchBy || []),
+                        searchMatches: computed(() => searchState.value?.searchMatches || []),
                     };
                 } else {
                     delete data.value.search;
@@ -263,7 +265,7 @@ export default {
         provide('_wwSelectIsDisabled', isDisabled);
         provide('_wwSelectIsReadonly', isReadonly);
         provide('_wwSelectCanUnselect', canUnselect);
-        provide('_wwSelectOptionsFilter', optionsFilter);
+        provide('_wwSelectSearchState', searchState);
         provide('_wwSelectOptionProperties', optionProperties);
         provide('_wwSelectUpdateValue', updateValue);
         provide('_wwRegisterOption', registerOption);
