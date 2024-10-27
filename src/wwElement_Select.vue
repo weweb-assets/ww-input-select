@@ -61,6 +61,7 @@ export default {
             /* wwEditor:end */
             return false;
         });
+        const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
         );
@@ -72,7 +73,6 @@ export default {
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
         const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
-        const selectType = computed(() => props.content.selectType);
         const options = ref([]);
         const isOpen = ref(false);
         const rawData = computed(() => props.content.choices || []);
