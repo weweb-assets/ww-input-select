@@ -9,7 +9,7 @@ export default {
             'initValueSingle',
             'initValueMulti',
             'initialState',
-            ['disabled', 'required', 'readonly', 'limit', 'canUnselect', 'closeOnSelect'],
+            ['disabled', 'required', 'readonly', 'limit', 'canUnselect', 'closeOnSelect', 'closeOnClickOutside'],
             ['advanced', 'loadOnScroll', 'blockInteractionsWhenOpen'],
             ['forceOpenInEditor'],
         ],
@@ -240,6 +240,18 @@ export default {
                 isWwObject: true,
                 type: 'a23203a7-1238-4b5d-94c4-e19dd3b22516',
             },
+        },
+        closeOnClickOutside: {
+            label: { en: 'Close on click outside' },
+            type: 'OnOff',
+            defaultValue: true,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            /* wwEditor:end */
         },
     },
 };
