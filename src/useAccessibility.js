@@ -50,12 +50,25 @@ export default function useAccessibility({
         focusedOptionIndex.value = 0;
     };
 
+    const setInitialFocus = value => {
+        const selectedIndex = options.value.findIndex(option => option.value === value);
+        if (selectedIndex !== -1) {
+            focusedOptionIndex.value = selectedIndex;
+            const focusedOption = options.value[selectedIndex];
+            activeOptionValue.value = focusedOption.value;
+            activeDescendant.value = `ww-select-option-${focusedOption.value}`;
+        }
+    };
+
     provide('_wwSelectActiveDescendant', activeDescendant);
     provide('_wwSelectFocusedOptionIndex', focusedOptionIndex);
+    provide('_wwSelectSetInitialFocus', setInitialFocus);
 
     return {
         dropdownId,
+        activeDescendant,
         handleTriggerKeydown,
         resetFocus,
+        setInitialFocus,
     };
 }

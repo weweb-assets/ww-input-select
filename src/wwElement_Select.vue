@@ -46,7 +46,8 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
-    setup(props) {
+    emits: ['trigger-event'],
+    setup(props, { emit }) {
         const componentKey = ref(0);
         const isEditing = computed(() => {
             /* wwEditor:start */
@@ -103,6 +104,7 @@ export default {
         const updateValue = value => {
             if (selectType.value === 'single') {
                 setValue(value);
+                emit('trigger-event', { name: 'change', event: { value } });
             } else {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
                 const valueIndex = currentValue.indexOf(value);
@@ -114,6 +116,7 @@ export default {
                 }
 
                 setValue(currentValue);
+                emit('trigger-event', { name: 'change', event: { value } });
             }
 
             if (props.content.closeOnSelect) closeDropdown();
@@ -150,7 +153,7 @@ export default {
             }
         }
 
-        const { dropdownId, handleTriggerKeydown, activeDescendant, resetFocus } = useAccessibility({
+        const { dropdownId, activeDescendant, handleTriggerKeydown, resetFocus, setInitialFocus } = useAccessibility({
             options,
             isOpen,
             methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
@@ -159,6 +162,15 @@ export default {
         const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch(searchState, {
             updateSearch,
         });
+
+        function handleInitialFocus() {
+            if (!variableValue.value) return;
+            if (selectType.value === 'single') {
+                setInitialFocus(variableValue.value);
+            } else if (Array.isArray(variableValue.value) && variableValue.value.length) {
+                setInitialFocus(variableValue.value[0]);
+            }
+        }
 
         const selectedOptionDetails = computed(() => {
             const optionsMap = new Map(options.value.map(option => [option.value, option]));
@@ -183,19 +195,19 @@ export default {
             openDropdown: {
                 method: openDropdown,
                 /* wwEditor:start */
-                editor: { label: 'Open', elementName: 'Select', description: 'Open the dropdown', icon: 'select' },
+                editor: { label: 'Open', group: 'Select', description: 'Open the dropdown', icon: 'select' },
                 /* wwEditor:end */
             },
             closeDropdown: {
                 method: closeDropdown,
                 /* wwEditor:start */
-                editor: { label: 'Close', elementName: 'Select', description: 'Close the dropdown', icon: 'select' },
+                editor: { label: 'Close', group: 'Select', description: 'Close the dropdown', icon: 'select' },
                 /* wwEditor:end */
             },
             toggleDropdown: {
                 method: toggleDropdown,
                 /* wwEditor:start */
-                editor: { label: 'Toggle', elementName: 'Select', description: 'Toggle the dropdown', icon: 'select' },
+                editor: { label: 'Toggle', group: 'Select', description: 'Toggle the dropdown', icon: 'select' },
                 /* wwEditor:end */
             },
             resetSearch: {
@@ -203,7 +215,7 @@ export default {
                 /* wwEditor:start */
                 editor: {
                     label: 'Reset search',
-                    elementName: 'Select search',
+                    group: 'Select search',
                     description: 'Reset the search input value',
                     icon: 'select',
                 },
@@ -227,14 +239,25 @@ export default {
             { immediate: true }
         );
 
-        watch(selectType, () => setValue(initValue.value));
-
         watch(
             [isOpen, variableValue, () => props.content],
             () => {
                 nextTick(debounce(syncFloating, 300));
+                handleInitialFocus();
             },
             { deep: true }
+        );
+
+        watch(
+            [initValue, selectType],
+            () => {
+                if (initValue.value) {
+                    setValue(initValue.value);
+                    nextTick(debounce(handleInitialFocus, 300));
+                    emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
+                }
+            },
+            { immediate: true }
         );
 
         watch(
