@@ -122,11 +122,24 @@ export default {
             if (props.content.closeOnSelect) closeDropdown();
         };
 
+        const {
+            hasSearch,
+            updateHasSearch,
+            updateSearchElement,
+            resetSearch,
+            autoFocusSearch,
+            updateAutoFocusSearch,
+            focusSearch,
+        } = useSearch(searchState, {
+            updateSearch,
+        });
+
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
 
             isOpen.value = true;
             nextTick(debounce(syncFloating, 300));
+            if (autoFocusSearch.value) focusSearch();
         }
 
         function closeDropdown() {
@@ -157,10 +170,6 @@ export default {
             options,
             isOpen,
             methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
-        });
-
-        const { hasSearch, updateHasSearch, updateSearchElement, resetSearch } = useSearch(searchState, {
-            updateSearch,
         });
 
         function handleInitialFocus() {
@@ -295,7 +304,7 @@ export default {
         provide('_wwUnregisterOption', unregisterOption);
         provide('_wwRegisterOptionProperties', registerOptionProperties);
         provide('_wwSelectDropdownMethods', { closeDropdown });
-        provide('_wwSelectUseSearch', { updateHasSearch, updateSearchElement, updateSearch });
+        provide('_wwSelectUseSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
         provide('_wwUtils', { debounce });
 
         wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
