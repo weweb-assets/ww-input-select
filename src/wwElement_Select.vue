@@ -84,6 +84,9 @@ export default {
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
         const searchState = ref(null);
         const optionProperties = ref({});
+        const resizeObserver = ref(null);
+        const triggerWidth = ref(0);
+        const triggerHeight = ref(0);
 
         const registerOption = option => {
             if (option.value) options.value.push(option);
@@ -198,6 +201,7 @@ export default {
             value: variableValue,
             valueDetails: selectedOptionDetails,
             isOpen,
+            utils: { triggerWidth, triggerHeight },
         });
 
         const methods = {
@@ -289,6 +293,27 @@ export default {
         });
         /* wwEditor:end */
 
+        const observeTriggerWidth = () => {
+            if (!triggerElement.value) return;
+
+            if (resizeObserver.value) {
+                resizeObserver.value.disconnect();
+                resizeObserver.value = null;
+            }
+
+            resizeObserver.value = new ResizeObserver(
+                debounce(entries => {
+                    if (entries[0]) {
+                        const rect = triggerElement.value.getBoundingClientRect();
+                        triggerWidth.value = rect.width;
+                        triggerHeight.value = rect.height;
+                    }
+                }, 16)
+            );
+
+            resizeObserver.value.observe(triggerElement.value);
+        };
+
         provide('_wwRawData', rawData);
         provide('_wwSelectOptions', options);
         provide('_wwSelectType', selectType);
@@ -310,11 +335,18 @@ export default {
         wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
 
         onMounted(() => {
-            nextTick(debounce(syncFloating, 300));
+            nextTick(() => {
+                debounce(syncFloating, 300);
+                observeTriggerWidth();
+            });
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
         });
 
         onBeforeUnmount(() => {
+            if (resizeObserver.value) {
+                resizeObserver.value.disconnect();
+                resizeObserver.value = null;
+            }
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
         });
 
