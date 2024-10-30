@@ -4,7 +4,7 @@
             class="ww-select__trigger"
             ref="triggerElement"
             @click="toggleDropdown"
-            @keydown="handleTriggerKeydown"
+            @keydown="handleKeydown"
             role="combobox"
             :aria-haspopup="selectType === 'single' ? 'listbox' : 'true'"
             :aria-expanded="isOpen"
@@ -74,7 +74,8 @@ export default {
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
         const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
-        const options = ref([]);
+        const optionsMap = ref(new Map());
+        const options = computed(() => Array.from(optionsMap.value.values()));
         const isOpen = ref(false);
         const rawData = computed(() => props.content.choices || []);
         const isDisabled = computed(() => props.content.disabled || false);
@@ -88,12 +89,12 @@ export default {
         const triggerWidth = ref(0);
         const triggerHeight = ref(0);
 
-        const registerOption = option => {
-            if (option.value) options.value.push(option);
+        const registerOption = (id, option) => {
+            optionsMap.value.set(id, option);
         };
 
-        const unregisterOption = option => {
-            options.value = options.value.filter(opt => opt.value !== option.value);
+        const unregisterOption = id => {
+            optionsMap.value.delete(id);
         };
 
         const registerOptionProperties = object => {
@@ -141,7 +142,7 @@ export default {
             if (isDisabled.value || isReadonly.value) return;
 
             isOpen.value = true;
-            nextTick(debounce(syncFloating, 300));
+            nextTick(syncFloating);
             if (autoFocusSearch.value) focusSearch();
         }
 
@@ -169,7 +170,7 @@ export default {
             }
         }
 
-        const { dropdownId, activeDescendant, handleTriggerKeydown, resetFocus, setInitialFocus } = useAccessibility({
+        const { dropdownId, activeDescendant, handleKeydown, resetFocus, setInitialFocus } = useAccessibility({
             options,
             isOpen,
             methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
@@ -197,7 +198,7 @@ export default {
 
         const data = ref({
             type: selectType,
-            options,
+            options: options.value?.map(({ optionId, ...option }) => option) || [], // Hide optionId
             value: variableValue,
             valueDetails: selectedOptionDetails,
             isOpen,
@@ -231,6 +232,18 @@ export default {
                     group: 'Select search',
                     description: 'Reset the search input value',
                     icon: 'select',
+                },
+                /* wwEditor:end */
+            },
+            setValue: {
+                method: updateValue,
+                /* wwEditor:start */
+                editor: {
+                    label: 'Set value',
+                    group: 'Select',
+                    description: 'Set the value',
+                    icon: 'select',
+                    params: [{ name: 'Value', type: 'any', required: true }],
                 },
                 /* wwEditor:end */
             },
@@ -361,7 +374,7 @@ export default {
             activeDescendant,
             isDisabled,
             selectType,
-            handleTriggerKeydown,
+            handleKeydown,
         };
     },
 };

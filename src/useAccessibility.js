@@ -1,4 +1,4 @@
-import { ref, provide } from 'vue';
+import { ref, provide, watch } from 'vue';
 
 export default function useAccessibility({
     options,
@@ -10,7 +10,27 @@ export default function useAccessibility({
     const focusedOptionIndex = ref(0);
     const activeOptionValue = ref('');
 
-    const handleTriggerKeydown = event => {
+    watch(
+        options,
+        () => {
+            activeDescendant.value = '';
+            focusedOptionIndex.value = 0;
+            activeOptionValue.value = '';
+
+            if (options.value.length > 0) {
+                const selectedOption = options.value.find(option => option.isSelected);
+                if (selectedOption) {
+                    const selectedIndex = options.value.findIndex(option => option.value === selectedOption.value);
+                    focusedOptionIndex.value = selectedIndex;
+                    activeOptionValue.value = selectedOption.value;
+                    activeDescendant.value = `ww-select-option-${selectedOption.value}`;
+                }
+            }
+        },
+        { immediate: true, deep: true }
+    );
+
+    const handleKeydown = event => {
         switch (event.key) {
             case 'ArrowDown':
             case 'ArrowUp':
@@ -20,9 +40,9 @@ export default function useAccessibility({
                 break;
             case 'Enter':
                 event.preventDefault();
-                if (isOpen.value) {
-                    if (activeOptionValue.value) methods.updateValue(activeOptionValue.value);
-                } else {
+                if (isOpen.value && activeOptionValue.value) {
+                    methods.updateValue(activeOptionValue.value);
+                } else if (!isOpen.value) {
                     methods.openDropdown();
                 }
                 break;
@@ -39,10 +59,16 @@ export default function useAccessibility({
     const navigateOptions = direction => {
         const optionsCount = options.value.length;
         if (optionsCount === 0) return;
-        focusedOptionIndex.value = (focusedOptionIndex.value + direction + optionsCount) % optionsCount;
+
+        if (!isOpen.value) {
+            focusedOptionIndex.value = 0;
+        } else {
+            focusedOptionIndex.value = (focusedOptionIndex.value + direction + optionsCount) % optionsCount;
+        }
+
         const focusedOption = options.value[focusedOptionIndex.value];
         activeOptionValue.value = focusedOption.value;
-        activeDescendant.value = `ww-select-option-${focusedOption.value}`;
+        activeDescendant.value = focusedOption.optionId;
     };
 
     const resetFocus = () => {
@@ -56,18 +82,19 @@ export default function useAccessibility({
             focusedOptionIndex.value = selectedIndex;
             const focusedOption = options.value[selectedIndex];
             activeOptionValue.value = focusedOption.value;
-            activeDescendant.value = `ww-select-option-${focusedOption.value}`;
+            activeDescendant.value = focusedOption.optionId;
         }
     };
 
     provide('_wwSelectActiveDescendant', activeDescendant);
     provide('_wwSelectFocusedOptionIndex', focusedOptionIndex);
     provide('_wwSelectSetInitialFocus', setInitialFocus);
+    provide('_wwHandleKeydown', handleKeydown);
 
     return {
         dropdownId,
         activeDescendant,
-        handleTriggerKeydown,
+        handleKeydown,
         resetFocus,
         setInitialFocus,
     };
