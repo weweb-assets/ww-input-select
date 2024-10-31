@@ -83,6 +83,7 @@ export default {
         const canUnselect = computed(() => props.content.canUnselect || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
+        const manualToggle = computed(() => props.content.manualToggle || false);
         const searchState = ref(null);
         const optionProperties = ref({});
         const resizeObserver = ref(null);
@@ -155,6 +156,7 @@ export default {
         }
 
         function toggleDropdown() {
+            if (manualToggle.value) return;
             if (isOpen.value) closeDropdown();
             else openDropdown();
         }
@@ -375,6 +377,7 @@ export default {
             isDisabled,
             selectType,
             handleKeydown,
+            toggleDropdown,
         };
     },
 };

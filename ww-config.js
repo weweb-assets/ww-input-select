@@ -10,7 +10,7 @@ export default {
             'initValueMulti',
             'initialState',
             ['disabled', 'required', 'readonly', 'limit', 'canUnselect', 'closeOnSelect', 'closeOnClickOutside'],
-            ['advanced', 'loadOnScroll', 'blockInteractionsWhenOpen'],
+            ['advanced', 'loadOnScroll', 'blockInteractionsWhenOpen', 'manualToggle'],
             ['forceOpenInEditor'],
         ],
     },
@@ -200,6 +200,18 @@ export default {
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            /* wwEditor:end */
+        },
+        manualToggle: {
+            label: { en: 'Manual toggle' },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'Control the dropdown open state manually. A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
         },
