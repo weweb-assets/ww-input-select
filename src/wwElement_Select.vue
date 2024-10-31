@@ -156,7 +156,7 @@ export default {
         }
 
         function toggleDropdown() {
-            if (manualToggle.value) return;
+            if (isEditing.value || manualToggle.value) return;
             if (isOpen.value) closeDropdown();
             else openDropdown();
         }
@@ -187,24 +187,35 @@ export default {
             }
         }
 
-        const selectedOptionDetails = computed(() => {
-            const optionsMap = new Map(options.value.map(option => [option.value, option]));
+        const selectionDetails = computed(() => {
+            const optionsMap = new Map(options.value.map(({ optionId, ...option }) => [option.value, option])); // Hide optionId
+            const obj = opt => ({
+                value: opt.value,
+                label: opt.label,
+                disabled: opt.disabled || false,
+                data: opt.data || {},
+            });
 
             if (selectType.value === 'single') {
-                return optionsMap.get(variableValue.value) || null;
+                const option = optionsMap.get(variableValue.value);
+                if (!option) return null;
+                return obj(option);
             } else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
-                return selectedValues.map(value => optionsMap.get(value)).filter(Boolean);
+                return selectedValues
+                    .map(value => {
+                        const option = optionsMap.get(value);
+                        if (!option) return null;
+                        return obj(option);
+                    })
+                    .filter(Boolean);
             }
         });
 
         const data = ref({
-            type: selectType,
             options: options.value?.map(({ optionId, ...option }) => option) || [], // Hide optionId
-            value: variableValue,
-            valueDetails: selectedOptionDetails,
-            isOpen,
-            utils: { triggerWidth, triggerHeight },
+            active: { value: variableValue, details: selectionDetails },
+            utils: { type: selectType, isOpen, triggerWidth, triggerHeight },
         });
 
         const methods = {
@@ -247,6 +258,12 @@ export default {
                     icon: 'select',
                     params: [{ name: 'Value', type: 'any', required: true }],
                 },
+                /* wwEditor:end */
+            },
+            resetValue: {
+                method: () => setValue(initValue.value || null),
+                /* wwEditor:start */
+                editor: { label: 'Reset value', group: 'Select', description: 'Reset the value', icon: 'select' },
                 /* wwEditor:end */
             },
         };

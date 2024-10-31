@@ -3,23 +3,17 @@ export default {
         label: 'Select',
         icon: 'select',
         bubble: true,
-        customStylePropertiesOrder: [
-            'choices',
-            'selectType',
-            'initValueSingle',
-            'initValueMulti',
+        customStylePropertiesOrder: ['choices', 'selectType', 'initValueSingle', 'initValueMulti', 'forceOpenInEditor'],
+        customSettingsPropertiesOrder: [
             'initialState',
-            [
-                'disabled',
-                'required',
-                'readonly',
-                'limit',
-                'canUnselect',
-                'closeOnSelect',
-                'closeOnClickOutside',
-                'manualToggle',
-            ],
-            ['forceOpenInEditor'],
+            'disabled',
+            'required',
+            'readonly',
+            'limit',
+            'canUnselect',
+            'closeOnSelect',
+            'closeOnClickOutside',
+            'manualToggle',
         ],
     },
     inherit: {
@@ -37,7 +31,7 @@ export default {
     properties: {
         choices: {
             label: {
-                en: 'Data',
+                en: 'Options',
             },
             type: 'ObjectList',
             options: {
@@ -132,6 +126,7 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         required: {
             label: { en: 'Required' },
@@ -144,6 +139,7 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         readonly: {
             label: { en: 'Read-only' },
@@ -156,6 +152,7 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         limit: {
             label: { en: 'Values limit' },
@@ -169,6 +166,7 @@ export default {
             },
             /* wwEditor:end */
             hidden: content => content.selectType !== 'multiple',
+            section: 'settings',
         },
         forceOpenInEditor: {
             label: { en: 'Force open in editor' },
@@ -186,6 +184,7 @@ export default {
                 ],
             },
             defaultValue: 'closed',
+            section: 'settings',
         },
         canUnselect: {
             label: { en: 'Can unselect' },
@@ -198,6 +197,7 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         closeOnSelect: {
             label: { en: 'Close on select' },
@@ -210,6 +210,7 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         manualToggle: {
             label: { en: 'Manual toggle' },
@@ -222,6 +223,7 @@ export default {
                 tooltip: 'Control the dropdown open state manually. A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         trigger: {
             hidden: true,
@@ -248,6 +250,7 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
     },
 };
