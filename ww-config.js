@@ -203,30 +203,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        loadOnScroll: {
-            label: { en: 'Load on scroll' },
-            type: 'OnOff',
-            defaultValue: false,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip: 'A boolean value: \n\n`true` or `false`',
-            },
-            /* wwEditor:end */
-        },
-        blockInteractionsWhenOpen: {
-            label: { en: 'Block interactions when open' },
-            type: 'OnOff',
-            defaultValue: false,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip: 'A boolean value: \n\n`true` or `false`',
-            },
-            /* wwEditor:end */
-        },
         trigger: {
             hidden: true,
             defaultValue: {
