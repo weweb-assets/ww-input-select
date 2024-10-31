@@ -1,72 +1,15 @@
 import { ref, provide, watch } from 'vue';
 
-export default function useAccessibility({
-    options,
-    isOpen,
-    methods /* toggleDropdown, openDropdown, closeDropdown, updateValue */,
-}) {
+export default function useAccessibility({ options, isOpen, methods: { openDropdown, closeDropdown, updateValue } }) {
     const dropdownId = `ww-select-dropdown-${wwLib.wwUtils.getUid()}`;
+
     const activeDescendant = ref('');
     const focusedOptionIndex = ref(0);
     const activeOptionValue = ref('');
 
-    watch(
-        options,
-        () => {
-            activeDescendant.value = '';
-            focusedOptionIndex.value = 0;
-            activeOptionValue.value = '';
-
-            if (options.value.length > 0) {
-                const selectedOption = options.value.find(option => option.isSelected);
-                if (selectedOption) {
-                    const selectedIndex = options.value.findIndex(option => option.value === selectedOption.value);
-                    focusedOptionIndex.value = selectedIndex;
-                    activeOptionValue.value = selectedOption.value;
-                    activeDescendant.value = `ww-select-option-${selectedOption.value}`;
-                }
-            }
-        },
-        { immediate: true, deep: true }
-    );
-
-    const handleKeydown = event => {
-        switch (event.key) {
-            case 'ArrowDown':
-            case 'ArrowUp':
-                event.preventDefault();
-                if (!isOpen.value) methods.openDropdown();
-                else navigateOptions(event.key === 'ArrowDown' ? 1 : -1);
-                break;
-            case 'Enter':
-                event.preventDefault();
-                if (isOpen.value && activeOptionValue.value) {
-                    methods.updateValue(activeOptionValue.value);
-                } else if (!isOpen.value) {
-                    methods.openDropdown();
-                }
-                break;
-            case 'Escape':
-                event.preventDefault();
-                if (isOpen.value) {
-                    methods.closeDropdown();
-                    resetFocus();
-                }
-                break;
-        }
-    };
-
-    const navigateOptions = direction => {
-        const optionsCount = options.value.length;
-        if (optionsCount === 0) return;
-
-        if (!isOpen.value) {
-            focusedOptionIndex.value = 0;
-        } else {
-            focusedOptionIndex.value = (focusedOptionIndex.value + direction + optionsCount) % optionsCount;
-        }
-
-        const focusedOption = options.value[focusedOptionIndex.value];
+    const updateFocusedOption = index => {
+        const focusedOption = options.value[index];
+        focusedOptionIndex.value = index;
         activeOptionValue.value = focusedOption.value;
         activeDescendant.value = focusedOption.optionId;
     };
@@ -74,15 +17,76 @@ export default function useAccessibility({
     const resetFocus = () => {
         activeDescendant.value = '';
         focusedOptionIndex.value = 0;
+        activeOptionValue.value = '';
+    };
+
+    watch(
+        options,
+        () => {
+            resetFocus();
+
+            if (options.value.length > 0) {
+                const selectedOption = options.value.find(option => option.isSelected);
+                if (selectedOption) {
+                    const selectedIndex = options.value.findIndex(option => option.value === selectedOption.value);
+                    updateFocusedOption(selectedIndex);
+                }
+            }
+        },
+        { immediate: true, deep: true }
+    );
+
+    const navigateOptions = direction => {
+        const optionsCount = options.value.length;
+        if (optionsCount === 0) return;
+
+        let newIndex;
+        if (!isOpen.value) {
+            newIndex = 0;
+        } else if (activeDescendant.value === '') {
+            newIndex = direction > 0 ? 0 : optionsCount - 1;
+        } else {
+            newIndex = (focusedOptionIndex.value + direction + optionsCount) % optionsCount;
+        }
+
+        updateFocusedOption(newIndex);
+    };
+
+    const handleKeydown = event => {
+        const keyHandlers = {
+            ArrowDown: () => {
+                event.preventDefault();
+                !isOpen.value ? openDropdown() : navigateOptions(1);
+            },
+            ArrowUp: () => {
+                event.preventDefault();
+                !isOpen.value ? openDropdown() : navigateOptions(-1);
+            },
+            Enter: () => {
+                event.preventDefault();
+                if (isOpen.value && activeOptionValue.value) {
+                    updateValue(activeOptionValue.value);
+                } else if (!isOpen.value) {
+                    openDropdown();
+                }
+            },
+            Escape: () => {
+                event.preventDefault();
+                if (isOpen.value) {
+                    closeDropdown();
+                    resetFocus();
+                }
+            },
+        };
+
+        const handler = keyHandlers[event.key];
+        if (handler) handler();
     };
 
     const setInitialFocus = value => {
         const selectedIndex = options.value.findIndex(option => option.value === value);
         if (selectedIndex !== -1) {
-            focusedOptionIndex.value = selectedIndex;
-            const focusedOption = options.value[selectedIndex];
-            activeOptionValue.value = focusedOption.value;
-            activeDescendant.value = focusedOption.optionId;
+            updateFocusedOption(selectedIndex);
         }
     };
 
