@@ -256,7 +256,7 @@ export default {
                     group: 'Select',
                     description: 'Set the value',
                     icon: 'select',
-                    params: [{ name: 'Value', type: 'any', required: true }],
+                    args: [{ name: 'Value', type: 'any', required: true }],
                 },
                 /* wwEditor:end */
             },
