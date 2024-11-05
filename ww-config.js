@@ -194,7 +194,11 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'A boolean value: \n\n`true` or `false`',
+                tooltip:
+                    'Whether clicking or selecting already active option will unselect that option. A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Whether clicking or selecting already active option will unselect that option.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -207,7 +211,11 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'A boolean value: \n\n`true` or `false`',
+                tooltip:
+                    'Whether the select dropdown closes when an option is selected. A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Whether the select dropdown closes when an option is selected.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -220,7 +228,12 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'Control the dropdown open state manually. A boolean value: \n\n`true` or `false`',
+                tooltip:
+                    'If set to On, the select will not be opened by clicking on the trigger. You can use the `Toggle` method to open and close the select. A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip:
+                    'If set to On, the select will not be opened by clicking on the trigger. You can use the `Toggle` method to open and close the select.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -247,7 +260,11 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
-                tooltip: 'A boolean value: \n\n`true` or `false`',
+                tooltip:
+                    'Whether the select dropdown closes when clicking outside the dropdown. A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Whether the select dropdown closes when clicking outside the dropdown.',
             },
             /* wwEditor:end */
             section: 'settings',
