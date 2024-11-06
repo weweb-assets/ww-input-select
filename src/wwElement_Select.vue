@@ -127,6 +127,18 @@ export default {
             if (props.content.closeOnSelect) closeDropdown();
         };
 
+        function removeSpecificValue(valueToRemove) {
+            if (selectType.value !== 'multiple') return;
+
+            const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
+            const valueIndex = currentValue.indexOf(valueToRemove);
+
+            if (valueIndex !== -1) {
+                currentValue.splice(valueIndex, 1);
+                setValue(currentValue);
+            }
+        }
+
         const {
             hasSearch,
             updateHasSearch,
@@ -256,7 +268,32 @@ export default {
                     group: 'Select',
                     description: 'Set the value',
                     icon: 'select',
-                    args: [{ name: 'Value', type: 'any', required: true }],
+                    args: [
+                        {
+                            name: 'Value',
+                            type: 'any',
+                            required: true,
+                        },
+                    ],
+                },
+                /* wwEditor:end */
+            },
+            removeSpecificValue: {
+                method: removeSpecificValue,
+                /* wwEditor:start */
+                editor: {
+                    label: 'Remove specific value',
+                    keywords: ['Multiple'],
+                    group: 'Select',
+                    description: 'Remove a specific value from the multiple select',
+                    icon: 'select',
+                    args: [
+                        {
+                            name: 'Value to remove',
+                            type: 'any',
+                            required: true,
+                        },
+                    ],
                 },
                 /* wwEditor:end */
             },
@@ -319,13 +356,14 @@ export default {
             componentKey.value++;
             nextTick(debounce(syncFloating, 300));
         });
+
         watch(forceOpenInEditor, () => {
             if (forceOpenInEditor.value) openDropdown();
             else closeDropdown();
         });
         /* wwEditor:end */
 
-        const observeTriggerWidth = () => {
+        const observeTriggerSize = () => {
             if (!triggerElement.value) return;
 
             if (resizeObserver.value) {
@@ -346,7 +384,7 @@ export default {
             resizeObserver.value.observe(triggerElement.value);
         };
 
-        provide('_wwRawData', rawData);
+        provide('_wwSelectRawData', rawData);
         provide('_wwSelectOptions', options);
         provide('_wwSelectType', selectType);
         provide('_wwSelectValue', variableValue);
@@ -357,19 +395,46 @@ export default {
         provide('_wwSelectSearchState', searchState);
         provide('_wwSelectOptionProperties', optionProperties);
         provide('_wwSelectUpdateValue', updateValue);
-        provide('_wwRegisterOption', registerOption);
-        provide('_wwUnregisterOption', unregisterOption);
-        provide('_wwRegisterOptionProperties', registerOptionProperties);
+        provide('_wwSelectRegisterOption', registerOption);
+        provide('_wwSelectUnregisterOption', unregisterOption);
+        provide('_wwSelectRegisterOptionProperties', registerOptionProperties);
         provide('_wwSelectDropdownMethods', { closeDropdown });
         provide('_wwSelectUseSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
-        provide('_wwUtils', { debounce });
+        provide('_wwSelectUtils', { debounce });
 
-        wwLib.wwElement.useRegisterElementLocalContext('select', data, methods);
+        const markdown = `### Select local informations
+
+#### options
+Array of all available options in the dropdown. Each option contains:
+- \`value\`: Option's value
+- \`label\`: Display text
+- \`disabled\`: Boolean indicating if option is disabled
+- \`data\`: Data from the repeat context (optional)
+
+#### active
+Information about currently selected option(s):
+- \`value\`: Current selection (single value or array for multiple select)
+- \`details\`: Detailed information about selected option(s)
+
+#### utils
+Component state information:
+- \`type\`: Select type ('single' or 'multiple')
+- \`isOpen\`: Boolean indicating if dropdown is open
+- \`triggerWidth\`: Width of trigger element
+- \`triggerHeight\`: Height of trigger element
+
+#### search (optional)
+Present when search is enabled:
+- \`value\`: Current search input value
+- \`searchBy\`: Fields to search by
+- \`searchMatches\`: Options matching search criteria`;
+
+        wwLib.wwElement.useRegisterElementLocalContext('select', data, methods, markdown);
 
         onMounted(() => {
             nextTick(() => {
                 debounce(syncFloating, 300);
-                observeTriggerWidth();
+                observeTriggerSize();
             });
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
         });
