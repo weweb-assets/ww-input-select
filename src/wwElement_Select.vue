@@ -90,6 +90,7 @@ export default {
         const resizeObserver = ref(null);
         const triggerWidth = ref(0);
         const triggerHeight = ref(0);
+        const shouldCloseDropdown = ref(true);
 
         const registerOption = (id, option) => {
             optionsMap.value.set(id, option);
@@ -131,6 +132,15 @@ export default {
         function removeSpecificValue(valueToRemove) {
             if (selectType.value !== 'multiple') return;
 
+            /* This is a workaround to prevent the dropdown from closing when removing a value.
+             * The issue is that the click event that triggers this function also bubbles up
+             * and triggers closeDropdown (through handleClickOutside).
+             * Since we can't access the event object to call stopPropagation(),
+             * we use this flag + timeout pattern to temporarily prevent the dropdown from closing.
+             * If a better solution is found (like being able to pass the event), this should be refactored.
+             */
+            shouldCloseDropdown.value = false;
+
             const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
             const valueIndex = currentValue.indexOf(valueToRemove);
 
@@ -138,6 +148,10 @@ export default {
                 currentValue.splice(valueIndex, 1);
                 setValue(currentValue);
             }
+
+            setTimeout(() => {
+                shouldCloseDropdown.value = true;
+            }, 200);
         }
 
         const {
@@ -161,6 +175,7 @@ export default {
         }
 
         function closeDropdown() {
+            if (!shouldCloseDropdown.value) return;
             if (isDisabled.value || isReadonly.value) return;
 
             resetSearch();
