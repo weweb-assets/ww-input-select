@@ -1,6 +1,11 @@
 import { ref, provide, watch } from 'vue';
 
-export default function useAccessibility({ options, isOpen, methods: { openDropdown, closeDropdown, updateValue } }) {
+export default function useAccessibility({
+    elementRef,
+    options,
+    isOpen,
+    methods: { openDropdown, closeDropdown, updateValue },
+}) {
     const dropdownId = `ww-select-dropdown-${wwLib.wwUtils.getUid()}`;
 
     const activeDescendant = ref('');
@@ -14,10 +19,24 @@ export default function useAccessibility({ options, isOpen, methods: { openDropd
         activeDescendant.value = focusedOption.optionId;
     };
 
+    const focusFromOptionId = optionId => {
+        if (optionId === null) {
+            resetFocus();
+            return;
+        }
+
+        const index = options.value.findIndex(option => option.optionId === optionId);
+        updateFocusedOption(index);
+    };
+
     const resetFocus = () => {
         activeDescendant.value = '';
         focusedOptionIndex.value = 0;
         activeOptionValue.value = '';
+    };
+
+    const focusSelectElement = () => {
+        elementRef.value?.focus();
     };
 
     watch(
@@ -93,7 +112,9 @@ export default function useAccessibility({ options, isOpen, methods: { openDropd
     provide('_wwSelectActiveDescendant', activeDescendant);
     provide('_wwSelectFocusedOptionIndex', focusedOptionIndex);
     provide('_wwSelectSetInitialFocus', setInitialFocus);
+    provide('_wwSelectFocusFromOptionId', focusFromOptionId);
     provide('_wwHandleKeydown', handleKeydown);
+    provide('_wwSelectFocusSelectElement', focusSelectElement);
 
     return {
         dropdownId,

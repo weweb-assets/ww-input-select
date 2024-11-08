@@ -62,6 +62,7 @@ export default {
             /* wwEditor:end */
             return false;
         });
+
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
@@ -178,13 +179,15 @@ export default {
                 closeOnClickOutside.value &&
                 isOpen.value &&
                 !triggerElement.value.contains(event.target) &&
-                !dropdownElement.value.contains(event.target)
+                !dropdownElement.value.contains(event.target) &&
+                !isEditing.value
             ) {
                 closeDropdown();
             }
         }
 
         const { dropdownId, activeDescendant, handleKeydown, resetFocus, setInitialFocus } = useAccessibility({
+            elementRef: triggerElement,
             options,
             isOpen,
             methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
@@ -249,17 +252,6 @@ export default {
                 editor: { label: 'Toggle', group: 'Select', description: 'Toggle the dropdown', icon: 'select' },
                 /* wwEditor:end */
             },
-            resetSearch: {
-                method: resetSearch,
-                /* wwEditor:start */
-                editor: {
-                    label: 'Reset search',
-                    group: 'Select search',
-                    description: 'Reset the search input value',
-                    icon: 'select',
-                },
-                /* wwEditor:end */
-            },
             setValue: {
                 method: updateValue,
                 /* wwEditor:start */
@@ -276,6 +268,12 @@ export default {
                         },
                     ],
                 },
+                /* wwEditor:end */
+            },
+            resetValue: {
+                method: () => setValue(initValue.value || null),
+                /* wwEditor:start */
+                editor: { label: 'Reset value', group: 'Select', description: 'Reset the value', icon: 'select' },
                 /* wwEditor:end */
             },
             removeSpecificValue: {
@@ -297,10 +295,15 @@ export default {
                 },
                 /* wwEditor:end */
             },
-            resetValue: {
-                method: () => setValue(initValue.value || null),
+            resetSearch: {
+                method: resetSearch,
                 /* wwEditor:start */
-                editor: { label: 'Reset value', group: 'Select', description: 'Reset the value', icon: 'select' },
+                editor: {
+                    label: 'Reset search',
+                    group: 'Select search',
+                    description: 'Reset the search input value',
+                    icon: 'select',
+                },
                 /* wwEditor:end */
             },
         };
@@ -321,14 +324,12 @@ export default {
             { immediate: true }
         );
 
-        watch(
-            [isOpen, variableValue, () => props.content],
-            () => {
-                nextTick(debounce(syncFloating, 300));
-                handleInitialFocus();
-            },
-            { deep: true }
-        );
+        watch(isOpen, () => {
+            nextTick(debounce(syncFloating, 300));
+            handleInitialFocus();
+        });
+
+        watch(variableValue, () => nextTick(debounce(syncFloating, 300)), { deep: true });
 
         watch(
             [initValue, selectType],
