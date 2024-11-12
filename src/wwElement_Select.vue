@@ -1,5 +1,5 @@
 <template>
-    <div class="ww-select" :key="componentKey">
+    <div class="ww-select" :key="componentKey" data-ww-flag="ww-select">
         <div
             class="ww-select__trigger"
             ref="triggerElement"
@@ -340,11 +340,17 @@ export default {
         );
 
         watch(isOpen, () => {
-            nextTick(debounce(syncFloating, 300));
+            nextTick(syncFloating);
             handleInitialFocus();
         });
 
-        watch(variableValue, () => nextTick(debounce(syncFloating, 300)), { deep: true });
+        watch(
+            variableValue,
+            () => {
+                nextTick(syncFloating);
+            },
+            { deep: true }
+        );
 
         watch(
             [initValue, selectType],

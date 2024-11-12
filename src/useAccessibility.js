@@ -113,7 +113,6 @@ export default function useAccessibility({
     provide('_wwSelectFocusedOptionIndex', focusedOptionIndex);
     provide('_wwSelectSetInitialFocus', setInitialFocus);
     provide('_wwSelectFocusFromOptionId', focusFromOptionId);
-    provide('_wwHandleKeydown', handleKeydown);
     provide('_wwSelectFocusSelectElement', focusSelectElement);
 
     return {
