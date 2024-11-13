@@ -36,6 +36,9 @@ import useDropdownFloating from './useFloating';
 import useAccessibility from './useAccessibility';
 import useSearch from './useSearch';
 import { debounce } from './utils';
+/* wwEditor:start */
+import useEditorHint from './editor/useEditorHint';
+/* wwEditor:end */
 
 export default {
     props: {
@@ -48,6 +51,10 @@ export default {
     },
     emits: ['trigger-event'],
     setup(props, { emit }) {
+        /* wwEditor:start */
+        useEditorHint();
+        /* wwEditor:end */
+
         const componentKey = ref(0);
         const isEditing = computed(() => {
             /* wwEditor:start */
