@@ -130,6 +130,7 @@ export default {
             },
             bindable: true,
             defaultValue: 'single',
+            section: 'settings',
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -141,6 +142,7 @@ export default {
         /* wwEditor:start */
         selectTypeWarning: {
             type: 'InfoBox',
+            section: 'settings',
             options: {
                 title: 'Select type',
                 content:
