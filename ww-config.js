@@ -3,9 +3,17 @@ export default {
         label: 'Select',
         icon: 'select',
         bubble: true,
-        customStylePropertiesOrder: ['choices', 'selectType', 'initValueSingle', 'initValueMulti', 'forceOpenInEditor'],
+        customStylePropertiesOrder: [
+            'choices',
+            'mappingLabel',
+            'mappingValue',
+            'initValueSingle',
+            'initValueMulti',
+            'forceOpenInEditor',
+        ],
         customSettingsPropertiesOrder: [
             'initialState',
+            'selectType',
             'disabled',
             'required',
             'readonly',
@@ -53,6 +61,20 @@ export default {
             },
             /* wwEditor:end */
         },
+        mappingLabel: {
+            label: 'Item label',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+        },
+        mappingValue: {
+            label: 'Item value',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+        },
         selectType: {
             label: 'Type',
             type: 'TextSelect',
@@ -75,6 +97,9 @@ export default {
                 type: 'string',
                 enum: ['single', 'multiple'],
                 tooltip: 'A string value, either "single" or "multiple"',
+            },
+            propertyHelp: {
+                tooltip: `The select configuration and layout are strongly tied to the select type. Changing the type requires understanding how to adjust the layout (specifically the options displayed in the trigger) to match the new type.`,
             },
             /* wwEditor:end */
         },

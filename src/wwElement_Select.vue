@@ -98,6 +98,8 @@ export default {
         const triggerWidth = ref(0);
         const triggerHeight = ref(0);
         const shouldCloseDropdown = ref(true);
+        const mappingLabel = computed(() => props.content.mappingLabel);
+        const mappingValue = computed(() => props.content.mappingValue);
 
         const registerOption = (id, option) => {
             optionsMap.value.set(id, option);
@@ -413,6 +415,8 @@ export default {
             resizeObserver.value.observe(triggerElement.value);
         };
 
+        provide('_wwSelectMappingLabel', mappingLabel);
+        provide('_wwSelectMappingValue', mappingValue);
         provide('_wwSelectRawData', rawData);
         provide('_wwSelectOptions', options);
         provide('_wwSelectType', selectType);
