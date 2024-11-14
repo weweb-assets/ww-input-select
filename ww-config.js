@@ -2,7 +2,6 @@ export default {
     editor: {
         label: 'Select',
         icon: 'select',
-        bubble: true,
         customStylePropertiesOrder: [
             'choices',
             'mappingLabel',
@@ -13,7 +12,6 @@ export default {
         ],
         customSettingsPropertiesOrder: [
             'initialState',
-            'selectType',
             'disabled',
             'required',
             'readonly',
@@ -22,6 +20,8 @@ export default {
             'closeOnSelect',
             'closeOnClickOutside',
             'manualToggle',
+            'selectType',
+            'selectTypeWarning',
         ],
     },
     inherit: {
@@ -75,34 +75,7 @@ export default {
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
             }),
         },
-        selectType: {
-            label: 'Type',
-            type: 'TextSelect',
-            options: {
-                options: [
-                    {
-                        value: 'single',
-                        label: 'Single',
-                    },
-                    {
-                        value: 'multiple',
-                        label: 'Multiple',
-                    },
-                ],
-            },
-            bindable: true,
-            defaultValue: 'single',
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'string',
-                enum: ['single', 'multiple'],
-                tooltip: 'A string value, either "single" or "multiple"',
-            },
-            propertyHelp: {
-                tooltip: `The select configuration and layout are strongly tied to the select type. Changing the type requires understanding how to adjust the layout (specifically the options displayed in the trigger) to match the new type.`,
-            },
-            /* wwEditor:end */
-        },
+
         initValueSingle: {
             type: 'Text',
             label: 'Initial value (single)',
@@ -140,6 +113,41 @@ export default {
             /* wwEditor:end */
             hidden: content => content.selectType !== 'multiple',
         },
+        selectType: {
+            label: 'Type',
+            type: 'TextSelect',
+            options: {
+                options: [
+                    {
+                        value: 'single',
+                        label: 'Single',
+                    },
+                    {
+                        value: 'multiple',
+                        label: 'Multiple',
+                    },
+                ],
+            },
+            bindable: true,
+            defaultValue: 'single',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                enum: ['single', 'multiple'],
+                tooltip: 'A string value, either "single" or "multiple"',
+            },
+            /* wwEditor:end */
+        },
+        /* wwEditor:start */
+        selectTypeWarning: {
+            type: 'InfoBox',
+            options: {
+                title: 'Select type',
+                content:
+                    'The select configuration and layout are strongly tied to the select type. Changing the type requires understanding how to adjust the layout (specifically the options displayed in the trigger) to match the new type.',
+            },
+        },
+        /* wwEditor:end */
         disabled: {
             label: { en: 'Disabled' },
             type: 'OnOff',
