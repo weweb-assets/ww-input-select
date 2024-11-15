@@ -62,20 +62,31 @@ export default {
             /* wwEditor:end */
         },
         mappingLabel: {
-            label: 'Item label',
+            label: 'Laber per item',
             type: 'Formula',
             options: content => ({
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
             }),
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip:
+                    'The label of the current option item. This will not automatically show this label on the screen, its purpose is accessibility and allowing easy bounding of the choice label. <br/> <br/> This will be executed for each item in the options to return the label. ',
+            },
+            /* wwEditor:end */
         },
         mappingValue: {
-            label: 'Item value',
+            label: 'Value per item',
             type: 'Formula',
             options: content => ({
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
             }),
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip:
+                    'The value of the current option item. This will be used to identify the option in the Select. <br/> <br/> This will be executed for each item in the options to return the value.',
+            },
+            /* wwEditor:end */
         },
-
         initValueSingle: {
             type: 'Text',
             label: 'Initial value (single)',
