@@ -62,7 +62,7 @@ export default {
             /* wwEditor:end */
         },
         mappingLabel: {
-            label: 'Laber per item',
+            label: 'Label per item',
             type: 'Formula',
             options: content => ({
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
