@@ -241,13 +241,16 @@ export default {
                 return obj(option);
             } else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
-                return selectedValues
-                    .map(value => {
-                        const option = optionsMap.get(value);
-                        if (!option) return null;
-                        return obj(option);
-                    })
-                    .filter(Boolean);
+                return selectedValues.map(value => {
+                    const option = optionsMap.get(value);
+                    if (!option)
+                        return {
+                            value,
+                            isInOptions: false,
+                            info: 'This value is not in the defined options',
+                        };
+                    return obj(option);
+                });
             }
         });
 
@@ -366,13 +369,17 @@ export default {
         watch(
             [initValue, selectType],
             () => {
-                if (initValue.value) {
+                if (initValue.value || (Array.isArray(initValue.value) && initValue.value.length)) {
                     setValue(initValue.value);
                     nextTick(debounce(handleInitialFocus, 300));
                     emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
+                } else {
+                    setValue(null);
+                    emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
                 }
             },
-            { immediate: true }
+            { immediate: true },
+            { deep: true }
         );
 
         watch(
