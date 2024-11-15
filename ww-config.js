@@ -111,7 +111,11 @@ export default {
             type: 'Array',
             label: 'Initial value (Multi)',
             bindable: true,
-            defaultValue: [],
+            options: {
+                item: {
+                    type: 'Generic',
+                },
+            },
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
