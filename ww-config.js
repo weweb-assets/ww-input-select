@@ -112,8 +112,11 @@ export default {
             label: 'Initial value (Multi)',
             bindable: true,
             options: {
+                movable: true,
+                expandable: true,
                 item: {
-                    type: 'Generic',
+                    type: 'Text',
+                    defaultValue: 'Selected option',
                 },
             },
             /* wwEditor:start */
