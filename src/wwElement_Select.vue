@@ -251,8 +251,10 @@ export default {
             }
         });
 
+        const _options = computed(() => options.value?.map(({ optionId, ...option }) => option) || ref([])); // Hide optionId
+
         const data = ref({
-            options: options.value?.map(({ optionId, ...option }) => option) || [], // Hide optionId
+            options: _options,
             active: { value: variableValue, details: selectionDetails },
             utils: { type: selectType, isOpen, triggerWidth, triggerHeight },
         });
@@ -442,6 +444,7 @@ Array of all available options in the dropdown. Each option contains:
 - \`value\`: Option's value
 - \`label\`: Display text
 - \`disabled\`: Boolean indicating if option is disabled
+- \`isSelected\`: Boolean indicating if option is selected
 - \`data\`: Data from the repeat context (optional)
 
 #### active

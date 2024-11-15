@@ -12,6 +12,8 @@ export default {
         ],
         customSettingsPropertiesOrder: [
             'initialState',
+            'selectType',
+            'selectTypeWarning',
             'disabled',
             'required',
             'readonly',
@@ -20,8 +22,6 @@ export default {
             'closeOnSelect',
             'closeOnClickOutside',
             'manualToggle',
-            'selectType',
-            'selectTypeWarning',
         ],
     },
     inherit: {
