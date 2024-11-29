@@ -295,14 +295,14 @@ export default {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
-                type: '061bdf96-de5d-4a01-a95c-4eb30b9b10aa',
+                type: 'e4e4b973-cb52-4c75-a43e-9490dfcc1883',
             },
         },
         dropdown: {
             hidden: true,
             defaultValue: {
                 isWwObject: true,
-                type: 'a23203a7-1238-4b5d-94c4-e19dd3b22516',
+                type: '6f921d5b-125e-4567-b445-82164f70907a',
             },
         },
         closeOnClickOutside: {
