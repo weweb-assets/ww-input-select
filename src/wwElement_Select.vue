@@ -424,25 +424,23 @@ export default {
             resizeObserver.value.observe(triggerElement.value);
         };
 
-        provide('_wwSelectMappingLabel', mappingLabel);
-        provide('_wwSelectMappingValue', mappingValue);
-        provide('_wwSelectRawData', rawData);
-        provide('_wwSelectOptions', options);
-        provide('_wwSelectType', selectType);
-        provide('_wwSelectValue', variableValue);
-        provide('_wwSelectSetValue', setValue);
-        provide('_wwSelectIsDisabled', isDisabled);
-        provide('_wwSelectIsReadonly', isReadonly);
-        provide('_wwSelectCanUnselect', canUnselect);
-        provide('_wwSelectSearchState', searchState);
-        provide('_wwSelectOptionProperties', optionProperties);
-        provide('_wwSelectUpdateValue', updateValue);
-        provide('_wwSelectRegisterOption', registerOption);
-        provide('_wwSelectUnregisterOption', unregisterOption);
-        provide('_wwSelectRegisterOptionProperties', registerOptionProperties);
-        provide('_wwSelectDropdownMethods', { closeDropdown });
-        provide('_wwSelectUseSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
-        provide('_wwSelectUtils', { debounce });
+        provide('_wwSelect:mappingLabel', mappingLabel);
+        provide('_wwSelect:mappingValue', mappingValue);
+        provide('_wwSelect:rawData', rawData);
+        provide('_wwSelect:options', options);
+        provide('_wwSelect:type', selectType);
+        provide('_wwSelect:value', variableValue);
+        provide('_wwSelect:setValue', setValue);
+        provide('_wwSelect:isDisabled', isDisabled);
+        provide('_wwSelect:isReadonly', isReadonly);
+        provide('_wwSelect:canUnselect', canUnselect);
+        provide('_wwSelect:searchState', searchState);
+        provide('_wwSelect:optionProperties', optionProperties);
+        provide('_wwSelect:updateValue', updateValue);
+        provide('_wwSelect:registerOption', registerOption);
+        provide('_wwSelect:unregisterOption', unregisterOption);
+        provide('_wwSelect:registerOptionProperties', registerOptionProperties);
+        provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
 
         const markdown = `### Select local informations
 
