@@ -13,7 +13,7 @@
             :tabindex="isDisabled ? -1 : 0"
             :aria-disabled="isDisabled"
         >
-            <wwElement v-bind="content.trigger" />
+            <SelectTriger :content="content" />
         </div>
         <div
             class="ww-select__dropdown"
@@ -24,13 +24,23 @@
             :role="selectType === 'single' ? 'listbox' : 'group'"
             :aria-multiselectable="selectType === 'multiple'"
             :aria-label="'Select options'"
+            inherit-component-style
         >
-            <wwElement v-bind="content.dropdown" />
+            <SelectDropdown :content="content" :wwEditorState="wwEditorState">
+                <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
+                <!-- List mode -->
+                <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
+            </SelectDropdown>
         </div>
     </div>
 </template>
 
 <script>
+import InputSelectTrigger from './wwElement_Trigger.vue';
+import InputSelectDropdown from './wwElement_Dropdown.vue';
+import InputSelectOption from './wwElement_Option.vue';
+import InputSelectOptionList from './wwElement_OptionsList.vue';
+import InputSelectSearch from './wwElement_Search.vue';
 import { ref, computed, provide, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import useDropdownFloating from './useFloating';
 import useAccessibility from './useAccessibility';
@@ -41,6 +51,13 @@ import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
 
 export default {
+    components: {
+        SelectTriger: InputSelectTrigger,
+        SelectDropdown: InputSelectDropdown,
+        SelectOption: InputSelectOption,
+        SelectOptionList: InputSelectOptionList,
+        SelectSearch: InputSelectSearch,
+    },
     props: {
         content: { type: Object, required: true },
         uid: { type: String, required: true },
@@ -100,8 +117,13 @@ export default {
         const shouldCloseDropdown = ref(true);
         const mappingLabel = computed(() => props.content.mappingLabel);
         const mappingValue = computed(() => props.content.mappingValue);
+        const showSearch = computed(() => props.content.showSearch);
+
+        console.log('showSearch', showSearch);
+        console.log('props.content', props.content);
 
         const registerOption = (id, option) => {
+            console.log('registerOption', id, option);
             optionsMap.value.set(id, option);
         };
 
@@ -110,10 +132,12 @@ export default {
         };
 
         const registerOptionProperties = object => {
+            console.log('registerOptionProperties', object);
             if (object) optionProperties.value = object;
         };
 
         const updateSearch = filter => {
+            console.log('updateSearch', filter);
             searchState.value = filter;
         };
 
@@ -353,6 +377,10 @@ export default {
             { immediate: true }
         );
 
+        watch(showSearch, () => {
+            updateHasSearch(showSearch);
+        });
+
         watch(isOpen, () => {
             nextTick(syncFloating);
             handleInitialFocus();
@@ -424,6 +452,35 @@ export default {
             resizeObserver.value.observe(triggerElement.value);
         };
 
+        // Local context is an object with select and selectTrigger keys
+        const currentLocalContext = ref({});
+        const registerLocalContext = (key) => ({ data, methods, markdown }) => {
+            const selectLocalContext = currentLocalContext.value;
+            const newLocalContext = {
+                data: {
+                    ...selectLocalContext.data,
+                    [key]: data,
+                },
+                methods: {
+                    ...selectLocalContext.methods,
+                    [key]: methods,
+                },
+                markdown: {
+                    ...selectLocalContext.markdown,
+                    [key]: markdown,
+                },
+            }
+            wwLib.wwElement.useRegisterElementLocalContext(
+                'select',
+                newLocalContext.data,
+                newLocalContext.methods,
+                newLocalContext.markdown
+            );
+            currentLocalContext.value = newLocalContext;
+        };
+        const registerTriggerLocalContext = registerLocalContext('selectTrigger');
+        const registerSelectLocalContext = registerLocalContext('select');
+
         provide('_wwSelect:mappingLabel', mappingLabel);
         provide('_wwSelect:mappingValue', mappingValue);
         provide('_wwSelect:rawData', rawData);
@@ -440,6 +497,7 @@ export default {
         provide('_wwSelect:registerOption', registerOption);
         provide('_wwSelect:unregisterOption', unregisterOption);
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);
+        provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
         provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
 
         const markdown = `### Select local informations
@@ -470,7 +528,11 @@ Present when search is enabled:
 - \`searchBy\`: Fields to search by
 - \`searchMatches\`: Options matching search criteria`;
 
-        wwLib.wwElement.useRegisterElementLocalContext('select', data, methods, markdown);
+        registerSelectLocalContext({
+            data,
+            methods,
+            markdown,
+        });
 
         onMounted(() => {
             nextTick(() => {
@@ -488,7 +550,17 @@ Present when search is enabled:
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
         });
 
+        watch(
+            optionProperties,
+            value => {
+                console.log('WATCHED optionProperties', value);
+                emit('update:sidepanel-content', { path: 'optionProperties', value });
+            },
+            { immediate: true, deep: true }
+        );
+
         return {
+            showSearch,
             componentKey,
             isEditing,
             isOpen,
@@ -505,3 +577,14 @@ Present when search is enabled:
     },
 };
 </script>
+
+<style lang="scss" scoped>
+// dropdown width is
+
+.ww-select__trigger {
+    width: 100%;
+}
+
+.ww-select__dropdown {
+}
+</style>

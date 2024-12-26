@@ -25,12 +25,13 @@ export default function useDropdownFloating(triggerElement, dropdownElement) {
     });
 
     function updateDropdownConfig(config) {
+        console.log('updateDropdownConfig', config);
         dropdownConfig.value = config;
     }
 
     watch(dropdownConfig, update, { deep: true, immediate: true });
 
-    provide('_wwSelectUpdateDropdownConfig', updateDropdownConfig);
+    provide('_wwSelect:updateDropdownConfig', updateDropdownConfig);
 
     let cleanup = null;
     let resizeObserver = null;
