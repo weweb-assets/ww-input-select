@@ -20,20 +20,53 @@ export default {
             'initValueSingle',
             'initValueMulti',
             'forceOpenInEditor',
+            'showEmptyStateInEditor',
+            [
+                'dropdownTitle',
+                'dropdownPaddingX',
+                'dropdownPaddingY',
+                'dropdownBorderColor',
+                'dropdownBorderWidth',
+                'dropdownBorderRadius',
+                'dropdownBgColor',
+                'dropdownWidth',
+                'side',
+                'align',
+                'offsetX',
+                'offsetY',
+                'boundOffset',
+            ],
         ],
         customSettingsPropertiesOrder: [
-            'placeholder',
-            'initialState',
-            'selectType',
-            'selectTypeWarning',
-            'disabled',
-            'required',
-            'readonly',
-            'limit',
-            'canUnselect',
-            'closeOnSelect',
-            'closeOnClickOutside',
-            'manualToggle',
+            [
+                'triggerTitle',
+                'placeholder',
+                'initialState',
+                'selectType',
+                'selectTypeWarning',
+            ],
+            [
+                'optionsTitle',
+                'disabled',
+                'required',
+                'readonly',
+                'limit',
+                'canUnselect',
+                'closeOnSelect',
+                'closeOnClickOutside',
+                'manualToggle',
+                'selectOnClick',
+                'virtualScroll',
+                'virtualScrollBuffer',
+                'virtualScrollMinItemSize',
+                'virtualScrollSizeDependencies',
+            ],
+            [
+                'searchTitle',
+                'showSearch',
+                'searchBy',
+                'autoFocus',
+            ]
         ],
     },
     inherit: {
@@ -59,7 +92,7 @@ export default {
                 useSchema: true,
             },
             bindable: true,
-            defaultValue: [{"label":"Alexy","value":"alexy"},{"label":"Carlier","value":"carlier"}],
+            defaultValue: [{ "label": "Alexy", "value": "alexy" }, { "label": "Carlier", "value": "carlier" }],
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
@@ -331,6 +364,15 @@ export default {
         },
 
         // >>>>>>>>>>> TRIGGER <<<<<<<<<<
+        triggerTitle: {
+            section: 'settings',
+            hidden: content => content.customMenu,
+            type: 'Title',
+            label: {
+                en: 'Trigger',
+            },
+            editorOnly: true,
+        },
         placeholder: {
             label: {
                 en: 'Placeholder',
@@ -375,6 +417,121 @@ export default {
         },
 
         // >>>>>>>>>>> DROPDOWN <<<<<<<<<<
+        dropdownTitle: {
+            hidden: content => content.customMenu,
+            type: 'Title',
+            label: {
+                en: 'Dropdown',
+            },
+            editorOnly: true,
+        },
+        dropdownPaddingX: {
+            label: { en: 'Padding X' },
+            type: 'Length',
+            label: { en: 'Dropdown padding X' },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 10, max: 50 },
+                    { value: 'em', label: 'em', min: 1, max: 50 },
+                    { value: 'rem', label: 'rem', min: 1, max: 50 },
+                ],
+            },
+            classes: true,
+            states: true,
+            responsive: true,
+            bindable: true,
+            defaultValue: '8px',
+        },
+        dropdownPaddingY: {
+            label: { en: 'Padding X' },
+            type: 'Length',
+            label: { en: 'Dropdown padding Y' },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 10, max: 50 },
+                    { value: 'em', label: 'em', min: 1, max: 50 },
+                    { value: 'rem', label: 'rem', min: 1, max: 50 },
+                ],
+            },
+            classes: true,
+            states: true,
+            responsive: true,
+            bindable: true,
+            defaultValue: '8px',
+        },
+        dropdownBorderColor: {
+            type: 'Color',
+            label: {
+                en: 'Dropdown border color',
+            },
+            bindable: true,
+            options: {
+                nullable: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '#099af2',
+        },
+        dropdownBorderWidth: {
+            type: 'Length',
+            label: {
+                en: 'Dropdown border width',
+            },
+            bindable: true,
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 10 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '1px',
+        },
+        dropdownBorderRadius: {
+            type: 'Length',
+            label: {
+                en: 'Dropdown border radius',
+            },
+            bindable: true,
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 0, max: 50 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '4px',
+        },
+        dropdownBgColor: {
+            type: 'Color',
+            label: {
+                en: 'Dropdown background color',
+            },
+            bindable: true,
+            options: {
+                nullable: true,
+            },
+            classes: true,
+            states: true,
+        },
+        dropdownWidth: {
+            type: 'Length',
+            label: {
+                en: 'Dropdown width',
+            },
+            bindable: true,
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 100, max: 500 },
+                    { value: '%', label: '%', min: 10, max: 100 },
+                ],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '100%',
+        },
         items: {
             bindable: 'repeatable',
             label: {
@@ -487,6 +644,15 @@ export default {
         },
 
         // >>>>>>>>>>> OPTION LIST <<<<<<<<<<
+        optionsTitle: {
+            section: 'settings',
+            hidden: content => content.customMenu,
+            type: 'Title',
+            label: {
+                en: 'Options',
+            },
+            editorOnly: true,
+        },
         virtualScroll: {
             label: { en: 'Virtual scroll' },
             type: 'OnOff',
@@ -681,6 +847,15 @@ export default {
         },
 
         // >>>>>>>>>>> SEARCH <<<<<<<<<<
+        searchTitle: {
+            section: 'settings',
+            hidden: content => content.customMenu,
+            type: 'Title',
+            label: {
+                en: 'Search',
+            },
+            editorOnly: true,
+        },
         showSearch: {
             label: { en: 'Search' },
             type: 'OnOff',
@@ -696,6 +871,7 @@ export default {
         },
         searchBy: {
             label: 'Search by',
+            section: 'settings',
             bindable: true,
             type: 'Array',
             options: (_, sidepanelContent) => {
@@ -722,6 +898,7 @@ export default {
         },
         autoFocus: {
             label: 'Auto focus',
+            section: 'settings',
             type: 'OnOff',
             defaultValue: true,
             bindable: true,
@@ -734,9 +911,14 @@ export default {
         },
         inputElement: {
             hidden: true,
+            section: 'settings',
             defaultValue: {
                 isWwObject: true,
+                name: 'Search input',
                 type: 'deb10a01-5eef-4aa1-9017-1b51c2ad6fd0',
+            },
+            navigator: {
+                group: 'Dropdown',
             },
         },
     },

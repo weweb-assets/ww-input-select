@@ -18,7 +18,7 @@
         <div
             class="ww-select__dropdown"
             ref="dropdownElement"
-            :style="floatingStyles"
+            :style="[floatingStyles, dropdownStyles]"
             v-show="isOpen"
             :id="dropdownId"
             :role="selectType === 'single' ? 'listbox' : 'group'"
@@ -432,6 +432,7 @@ export default {
         /* wwEditor:end */
 
         const observeTriggerSize = () => {
+            console.log('observeTriggerSize', triggerElement.value);
             if (!triggerElement.value) return;
 
             if (resizeObserver.value) {
@@ -441,6 +442,7 @@ export default {
 
             resizeObserver.value = new ResizeObserver(
                 debounce(entries => {
+                    console.log('resizeObserver', entries);
                     if (entries[0]) {
                         const rect = triggerElement.value.getBoundingClientRect();
                         triggerWidth.value = rect.width;
@@ -534,6 +536,22 @@ Present when search is enabled:
             markdown,
         });
 
+        // Styles
+        const dropdownStyles = computed(() => {
+            return {
+                'padding-top': props.content.dropdownPaddingY || 0,
+                'padding-bottom': props.content.dropdownPaddingY || 0,
+                'padding-left': props.content.dropdownPaddingX || 0,
+                'padding-right': props.content.dropdownPaddingX || 0,
+                'border-color': props.content.dropdownBorderColor || 'transparent',
+                'border-width': props.content.dropdownBorderWidth || 0,
+                'border-radius': props.content.dropdownBorderRadius || 0,
+                'background-color': props.content.dropdownBgColor || 'transparent',
+                'width': props.content.dropdownWidth || 'auto',
+                'border-style': 'solid',
+            };
+        });
+
         onMounted(() => {
             nextTick(() => {
                 debounce(syncFloating, 300);
@@ -573,6 +591,7 @@ Present when search is enabled:
             selectType,
             handleKeydown,
             toggleDropdown,
+            dropdownStyles,
         };
     },
 };

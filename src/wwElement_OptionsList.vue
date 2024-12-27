@@ -21,7 +21,7 @@
             </template>
         </DynamicScroller>
 
-        <wwSimpleLayout inherit-component-style v-else-if="!virtualScroll && filteredOptions.length > 0">
+        <div class="flex flex-col" v-else-if="!virtualScroll && filteredOptions.length > 0">
             <wwLayoutItemContext
                 v-for="(item, index) in filteredOptions"
                 :key="index"
@@ -29,10 +29,9 @@
                 :index="index"
                 :data="item"
             >
-                {{JSON.stringify(item)}}
                 <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
             </wwLayoutItemContext>
-        </wwSimpleLayout>
+        </div>
 
         <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor">
             <wwElement v-bind="content.emptyStateContainer" />
