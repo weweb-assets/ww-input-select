@@ -1,5 +1,5 @@
 <template>
-    <button class="ww-input-select__trigger" @click="selectParentElement">
+    <button class="ww-input-select__trigger" @click="selectParentElement" type="button">
         <wwLayout class="ww-select-trigger" path="triggerContainer" />
     </button>
 </template>
