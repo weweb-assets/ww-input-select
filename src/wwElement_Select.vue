@@ -244,6 +244,30 @@ export default {
             }
         }
 
+        const observeTriggerSize = () => {
+            console.log('observeTriggerSize', triggerElement.value, resizeObserver.value);
+            if (!triggerElement.value) return;
+
+            if (resizeObserver.value) {
+                console.log('disconnecting resize observer');
+                resizeObserver.value.disconnect();
+                resizeObserver.value = null;
+            }
+
+            resizeObserver.value = new ResizeObserver(
+                debounce(entries => {
+                    console.log('resize', entries);
+                    if (entries[0]) {
+                        const rect = triggerElement.value.getBoundingClientRect();
+                        triggerWidth.value = rect.width;
+                        triggerHeight.value = rect.height;
+                    }
+                }, 16)
+            );
+
+            resizeObserver.value.observe(triggerElement.value);
+        };
+
         const selectionDetails = computed(() => {
             const optionsMap = new Map(options.value.map(({ optionId, ...option }) => [option.value, option])); // Hide optionId
             const obj = opt => ({
@@ -423,28 +447,11 @@ export default {
             if (forceOpenInEditor.value) openDropdown();
             else closeDropdown();
         });
+
+        watch(triggerElement, () => { // Observe trigger element size when updated
+            observeTriggerSize();
+        });
         /* wwEditor:end */
-
-        const observeTriggerSize = () => {
-            if (!triggerElement.value) return;
-
-            if (resizeObserver.value) {
-                resizeObserver.value.disconnect();
-                resizeObserver.value = null;
-            }
-
-            resizeObserver.value = new ResizeObserver(
-                debounce(entries => {
-                    if (entries[0]) {
-                        const rect = triggerElement.value.getBoundingClientRect();
-                        triggerWidth.value = rect.width;
-                        triggerHeight.value = rect.height;
-                    }
-                }, 16)
-            );
-
-            resizeObserver.value.observe(triggerElement.value);
-        };
 
         // Local context is an object with select and selectTrigger keys
         const currentLocalContext = ref({});
@@ -555,6 +562,7 @@ Present when search is enabled:
         });
 
         onBeforeUnmount(() => {
+            console.log('unmounting', resizeObserver.value);
             if (resizeObserver.value) {
                 resizeObserver.value.disconnect();
                 resizeObserver.value = null;
@@ -585,6 +593,7 @@ Present when search is enabled:
             handleKeydown,
             toggleDropdown,
             dropdownStyles,
+            resizeObserver
         };
     },
 };
