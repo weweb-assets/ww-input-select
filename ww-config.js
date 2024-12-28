@@ -93,7 +93,7 @@ export default {
                 useSchema: true,
             },
             bindable: true,
-            defaultValue: [{ "label": "Alexy", "value": "alexy" }, { "label": "Carlier", "value": "carlier" }],
+            defaultValue: [{ "label": "Item 1", "value": "one" }, { "label": "Item 2", "value": "two" }, { "label": "Item 3", "value": "three" }],
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
@@ -426,6 +426,23 @@ export default {
             },
             editorOnly: true,
         },
+        dropdownZIndex: {
+            type: 'Number',
+            label: {
+                en: 'Dropdown z-index',
+            },
+            bindable: true,
+            defaultValue: 2,
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'number' }],
+                tooltip: 'The z-index of the dropdown that leads to be on top of other elements.',
+            },
+            propertyHelp: {
+                tooltip: 'The z-index of the dropdown.',
+            },
+            /* wwEditor:end */
+        },
         dropdownPaddingX: {
             label: { en: 'Padding X' },
             type: 'Length',
@@ -471,7 +488,7 @@ export default {
             },
             classes: true,
             states: true,
-            defaultValue: '#099af2',
+            defaultValue: '#E5E7EB',
         },
         dropdownBorderWidth: {
             type: 'Length',
@@ -514,6 +531,7 @@ export default {
             },
             classes: true,
             states: true,
+            defaultValue: '#FFFFFF',
         },
         dropdownWidth: {
             type: 'Length',
@@ -531,7 +549,11 @@ export default {
             },
             classes: true,
             states: true,
-            defaultValue: '100%',
+            defaultValue: {
+                "code": "context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+\"px\"",
+                "__wwtype": "f",
+                "defaultValue": "100%"
+            },
         },
         dropdownMaxHeight: {
             type: 'Length',
@@ -878,7 +900,7 @@ export default {
         showSearch: {
             label: { en: 'Search' },
             type: 'OnOff',
-            defaultValue: true,
+            defaultValue: false,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {

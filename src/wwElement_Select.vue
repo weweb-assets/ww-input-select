@@ -550,6 +550,7 @@ Present when search is enabled:
                 'border-style': 'solid',
                 'max-height': props.content.dropdownMaxHeight || 'auto',
                 'overflow-y': 'auto',
+                'z-index': props.content.dropdownZIndex || 2,
             };
         });
 
@@ -593,7 +594,8 @@ Present when search is enabled:
             handleKeydown,
             toggleDropdown,
             dropdownStyles,
-            resizeObserver
+            resizeObserver,
+            options
         };
     },
 };
