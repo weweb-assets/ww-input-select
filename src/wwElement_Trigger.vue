@@ -38,8 +38,6 @@ export default {
 
         registerTriggerLocalContext({ data, methods: {}, markdown });
 
-        console.log('data', data.value.placeholder);
-
         return {
             data,
             selectedLabel,
@@ -62,6 +60,10 @@ export default {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+}
+
+.ww-select-trigger {
     width: 100%;
 }
 </style>

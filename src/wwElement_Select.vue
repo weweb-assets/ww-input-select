@@ -119,11 +119,7 @@ export default {
         const mappingValue = computed(() => props.content.mappingValue);
         const showSearch = computed(() => props.content.showSearch);
 
-        console.log('showSearch', showSearch);
-        console.log('props.content', props.content);
-
         const registerOption = (id, option) => {
-            console.log('registerOption', id, option);
             optionsMap.value.set(id, option);
         };
 
@@ -132,12 +128,10 @@ export default {
         };
 
         const registerOptionProperties = object => {
-            console.log('registerOptionProperties', object);
             if (object) optionProperties.value = object;
         };
 
         const updateSearch = filter => {
-            console.log('updateSearch', filter);
             searchState.value = filter;
         };
 
@@ -256,7 +250,7 @@ export default {
                 value: opt.value,
                 label: opt.label,
                 disabled: opt.disabled || false,
-                data: opt.data || {},
+                data: opt._data || {},
             });
 
             if (selectType.value === 'single') {
@@ -432,7 +426,6 @@ export default {
         /* wwEditor:end */
 
         const observeTriggerSize = () => {
-            console.log('observeTriggerSize', triggerElement.value);
             if (!triggerElement.value) return;
 
             if (resizeObserver.value) {
@@ -442,7 +435,6 @@ export default {
 
             resizeObserver.value = new ResizeObserver(
                 debounce(entries => {
-                    console.log('resizeObserver', entries);
                     if (entries[0]) {
                         const rect = triggerElement.value.getBoundingClientRect();
                         triggerWidth.value = rect.width;
@@ -549,6 +541,8 @@ Present when search is enabled:
                 'background-color': props.content.dropdownBgColor || 'transparent',
                 'width': props.content.dropdownWidth || 'auto',
                 'border-style': 'solid',
+                'max-height': props.content.dropdownMaxHeight || 'auto',
+                'overflow-y': 'auto',
             };
         });
 
@@ -571,7 +565,6 @@ Present when search is enabled:
         watch(
             optionProperties,
             value => {
-                console.log('WATCHED optionProperties', value);
                 emit('update:sidepanel-content', { path: 'optionProperties', value });
             },
             { immediate: true, deep: true }
@@ -605,5 +598,6 @@ Present when search is enabled:
 }
 
 .ww-select__dropdown {
+    overflow: hidden;
 }
 </style>

@@ -39,8 +39,6 @@ export default {
         /* wwEditor:start */
         useEditorHint(emit);
         /* wwEditor:end */
-        console.log('search props', props);
-        const optionProperties = inject('_wwSelect:optionProperties', ref({}));
         const { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch } = inject(
             '_wwSelect:useSearch',
             {}
@@ -60,7 +58,6 @@ export default {
 
         // This event come from ww-input-basic => https://github.com/weweb-assets/ww-input-basic
         const handleInputChange = event => {
-            console.log('search event', event);
             if (event.type === 'change' && debounce) debouncedUpdateSearch(event?.value?.value, searchBy);
         };
 

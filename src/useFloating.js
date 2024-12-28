@@ -25,7 +25,6 @@ export default function useDropdownFloating(triggerElement, dropdownElement) {
     });
 
     function updateDropdownConfig(config) {
-        console.log('updateDropdownConfig', config);
         dropdownConfig.value = config;
     }
 

@@ -97,13 +97,6 @@ export default {
         );
 
         const handleClick = () => {
-            console.log(
-                'handleClick',
-                isInTrigger.value,
-                canInteract.value,
-                props.content.unselectOnClick,
-                props.content.selectOnClick
-            );
             if (isInTrigger.value && canInteract.value && props.content.unselectOnClick) {
                 unselect();
                 focusFromOptionId(null);

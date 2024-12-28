@@ -34,7 +34,6 @@ export default {
         watch(
             dropdownConfig,
             () => {
-                console.log('dropdownConfig', dropdownConfig.value);
                 updateDropdownConfig(dropdownConfig.value);
             },
             { immediate: true, deep: true }

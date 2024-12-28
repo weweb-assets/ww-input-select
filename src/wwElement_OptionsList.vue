@@ -21,7 +21,10 @@
             </template>
         </DynamicScroller>
 
-        <div class="flex flex-col" v-else-if="!virtualScroll && filteredOptions.length > 0">
+        <div 
+            v-else-if="!virtualScroll && filteredOptions.length > 0"
+            class="flex flex-col"
+        >
             <wwLayoutItemContext
                 v-for="(item, index) in filteredOptions"
                 :key="index"
@@ -103,8 +106,6 @@ export default {
         });
 
         const memoizedFilter = useMemoize((options, filterValue) => {
-            console.log('options', options);
-            console.log('filterValue', filterValue);
             const searchBy = searchState.value?.searchBy?.length ? searchState.value?.searchBy : Object.keys(options[0]);
             return options.filter(option => {
                 return searchBy.some(key => {
@@ -140,7 +141,6 @@ export default {
         watch(
             optionProperties,
             value => {
-                console.log('optionProperties', value);
                 emit('update:sidepanel-content', { path: 'optionProperties', value });
                 if (registerOptionProperties) registerOptionProperties(value);
             },

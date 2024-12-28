@@ -30,6 +30,7 @@ export default {
                 'dropdownBorderRadius',
                 'dropdownBgColor',
                 'dropdownWidth',
+                'dropdownMaxHeight',
                 'side',
                 'align',
                 'offsetX',
@@ -531,6 +532,24 @@ export default {
             classes: true,
             states: true,
             defaultValue: '100%',
+        },
+        dropdownMaxHeight: {
+            type: 'Length',
+            label: {
+                en: 'Dropdown max height',
+            },
+            bindable: true,
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 100, max: 500 },
+                    { value: '%', label: '%', min: 10, max: 100 },
+                ],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '300px',
         },
         items: {
             bindable: 'repeatable',
