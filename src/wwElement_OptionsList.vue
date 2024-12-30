@@ -127,8 +127,14 @@ export default {
         });
 
         const filteredOptions = computed(() => {
-            if (!searchState.value || !searchState.value.value) return options.value;
-            return memoizedFilter(options.value, searchState.value.value);
+            const searchValue = searchState.value?.value;
+            const addId = option => ({ ...option, id: `${option.value}` });
+            
+            if (!searchValue) {
+                return options.value.map(addId);
+            };
+
+            return memoizedFilter(options.value, searchState.value.value).map(addId);
         });
 
         watch(filteredOptions, () => {
