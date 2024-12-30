@@ -97,10 +97,10 @@ export default {
         );
 
         const handleClick = () => {
-            if (isInTrigger.value && canInteract.value && props.content.unselectOnClick) {
+            if (isSelected.value && canInteract.value && props.content.unselectOnClick) {
                 unselect();
                 focusFromOptionId(null);
-            } else if (!isInTrigger.value && canInteract.value && props.content.selectOnClick) {
+            } else if (!isSelected.value && canInteract.value && props.content.selectOnClick) {
                 updateValue(value.value);
                 focusFromOptionId(optionId);
                 focusSelectElement();

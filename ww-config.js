@@ -839,7 +839,6 @@ export default {
                 tooltip: 'Whether the option should be automatically selected when clicked.',
             },
             /* wwEditor:end */
-            hidden: (_, sidepanelContent) => sidepanelContent.isInTrigger,
         },
         unselectOnClick: {
             label: { en: 'Unselect on click' },
@@ -852,7 +851,6 @@ export default {
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',
             },
             /* wwEditor:end */
-            hidden: (_, sidepanelContent) => !sidepanelContent.isInTrigger,
         },
         optionChoiceElement: {
             hidden: true,
