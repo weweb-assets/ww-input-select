@@ -2,7 +2,7 @@
     <div>
         <DynamicScroller
             v-if="virtualScroll && filteredOptions.length > 0"
-            :items="filteredOptions"
+            :items="dynamicScrollerItems"
             :min-item-size="virtualScrollMinItemSize"
             :buffer="virtualScrollBuffer"
             :key="filteredOptions.length"
@@ -127,14 +127,13 @@ export default {
         });
 
         const filteredOptions = computed(() => {
-            const searchValue = searchState.value?.value;
-            const addId = option => ({ ...option, id: `${option.value}` });
-            
-            if (!searchValue) {
-                return options.value.map(addId);
-            };
+            if (!searchState.value || !searchState.value.value) return options.value;
+            let filtered = memoizedFilter(options.value, searchState.value.value);
+            return filtered;
+        });
 
-            return memoizedFilter(options.value, searchState.value.value).map(addId);
+        const dynamicScrollerItems = computed(() => {
+            return filteredOptions.value.map((item, index) => ({ ...item, id: `${item.value}` }));
         });
 
         watch(filteredOptions, () => {
