@@ -169,6 +169,7 @@ export default {
             virtualScrollMinItemSize,
             virtualScrollBuffer,
             showEmptyStateInEditor,
+            dynamicScrollerItems
         };
     },
 };

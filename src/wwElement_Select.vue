@@ -245,18 +245,15 @@ export default {
         }
 
         const observeTriggerSize = () => {
-            console.log('observeTriggerSize', triggerElement.value, resizeObserver.value);
             if (!triggerElement.value) return;
 
             if (resizeObserver.value) {
-                console.log('disconnecting resize observer');
                 resizeObserver.value.disconnect();
                 resizeObserver.value = null;
             }
 
             resizeObserver.value = new ResizeObserver(
                 debounce(entries => {
-                    console.log('resize', entries);
                     if (entries[0]) {
                         const rect = triggerElement.value.getBoundingClientRect();
                         triggerWidth.value = rect.width;
@@ -269,22 +266,22 @@ export default {
         };
 
         const selectionDetails = computed(() => {
-            const optionsMap = new Map(options.value.map(({ optionId, ...option }) => [option.value, option])); // Hide optionId
+            const _optionsMap = new Map(rawData.value.map(({...option }) => [option.value, option])); // Hide optionId
             const obj = opt => ({
                 value: opt.value,
                 label: opt.label,
                 disabled: opt.disabled || false,
-                data: opt._data || {},
+                data: opt || {},
             });
 
             if (selectType.value === 'single') {
-                const option = optionsMap.get(variableValue.value);
+                const option = _optionsMap.get(variableValue.value);
                 if (!option) return null;
                 return obj(option);
             } else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
                 return selectedValues.map(value => {
-                    const option = optionsMap.get(value);
+                    const option = _optionsMap.get(value);
                     if (!option)
                         return {
                             value,
@@ -563,7 +560,6 @@ Present when search is enabled:
         });
 
         onBeforeUnmount(() => {
-            console.log('unmounting', resizeObserver.value);
             if (resizeObserver.value) {
                 resizeObserver.value.disconnect();
                 resizeObserver.value = null;
