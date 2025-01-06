@@ -1,15 +1,22 @@
 <template>
-    <wwLayout
-        class="ww-select-option"
-        ref="optionRef"
-        @click="handleClick"
-        @keydown="handleKeyDown"
-        :role="isInTrigger ? null : 'option'"
-        :id="optionId"
-        :aria-selected="isSelected"
-        :aria-disabled="isOptionDisabled"
-        path="optionChoiceElement"
-    />
+    <wwLocalContext
+        :data="contextData"
+        :methods="contextMethods"
+        :markdown="contextMarkdown"
+        element-key="selectOption"
+    >
+        <wwLayout
+            class="ww-select-option"
+            ref="optionRef"
+            @click="handleClick"
+            @keydown="handleKeyDown"
+            :role="isInTrigger ? null : 'option'"
+            :id="optionId"
+            :aria-selected="isSelected"
+            :aria-disabled="isOptionDisabled"
+            path="optionChoiceElement"
+        />
+    </wwLocalContext>
 </template>
 
 <script>
@@ -119,8 +126,18 @@ export default {
             }
         };
 
+        let methods = {};
+        const data = ref({
+            isSelected: false,
+            isOptionDisabled: false,
+            label: '',
+            value: '',
+            _data: {},
+        });
+        let markdown = '';
+
         if (isInTrigger.value) {
-            const methods = {
+            methods = {
                 unselect: {
                     description: 'Unselect the current option',
                     method: unselect,
@@ -152,13 +169,6 @@ export default {
              * - These updates would cause the ref to update
              * - Which would trigger the computed properties again... and so on
              */
-            const data = ref({
-                isSelected: false,
-                isOptionDisabled: false,
-                label: '',
-                value: '',
-                _data: {},
-            });
 
             watch(
                 [isSelected, isOptionDisabled, label, value],
@@ -174,7 +184,7 @@ export default {
                 { immediate: true }
             );
 
-            const methods = {
+            methods = {
                 select: {
                     description: 'Select the current option',
                     method: select,
@@ -184,18 +194,27 @@ export default {
 
             onBeforeUnmount(() => unregisterOption(optionId));
 
-//             const markdown = `### Select Option local informations
+            markdown = `### Select Option local informations
 
-// - \`isSelected\`: Boolean indicating if the option is selected
-// - \`isOptionDisabled\`: Boolean indicating if the option is disabled
-// - \`label\`: The label of the option (will be overwritten if defined in the Select root element)
-// - \`value\`: The value of the option (will be overwritten if defined in the Select root element)`;
+            // - \`isSelected\`: Boolean indicating if the option is selected
+            // - \`isOptionDisabled\`: Boolean indicating if the option is disabled
+            // - \`label\`: The label of the option (will be overwritten if defined in the Select root element)
+            // - \`value\`: The value of the option (will be overwritten if defined in the Select root element)`;
 
-//             console.log('data', data.value);
+            //             console.log('data', data.value);
             //wwLib.wwElement.useRegisterElementLocalContext('selectOption_'+data.value.value, data, methods, markdown);
         }
 
-        return { optionRef, optionId, handleClick, handleKeyDown, option };
+        return {
+            optionRef,
+            optionId,
+            handleClick,
+            handleKeyDown,
+            option,
+            contextMethods: methods,
+            contextData: data,
+            contextMarkdown: markdown,
+        };
     },
 };
 </script>
