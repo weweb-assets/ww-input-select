@@ -461,7 +461,7 @@ export default {
                 },
                 methods: {
                     ...selectLocalContext.methods,
-                    [key]: methods,
+                    ...methods,
                 },
                 markdown: {
                     ...selectLocalContext.markdown,
@@ -591,7 +591,8 @@ Present when search is enabled:
             toggleDropdown,
             dropdownStyles,
             resizeObserver,
-            options
+            options,
+            currentLocalContext
         };
     },
 };
