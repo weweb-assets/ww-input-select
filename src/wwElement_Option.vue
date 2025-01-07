@@ -5,7 +5,8 @@
         :markdown="contextMarkdown"
         element-key="selectOption"
     >
-        <wwLayout
+        <wwElement
+            v-bind="content.optionChoiceElement"
             class="ww-select-option"
             ref="optionRef"
             @click="handleClick"
@@ -14,7 +15,6 @@
             :id="optionId"
             :aria-selected="isSelected"
             :aria-disabled="isOptionDisabled"
-            path="optionChoiceElement"
         />
     </wwLocalContext>
 </template>

@@ -1,6 +1,6 @@
 <template>
     <button class="ww-input-select__trigger" @click="selectParentElement" type="button">
-        <wwLayout class="ww-select-trigger" path="triggerContainer" />
+        <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" />
     </button>
 </template>
 

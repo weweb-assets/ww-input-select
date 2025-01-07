@@ -393,7 +393,7 @@ export default {
         },
         triggerContainer: {
             hidden: true,
-            defaultValue: [{
+            defaultValue: {
                 isWwObject: true,
                 type: 'ww-flexbox',
                 name: 'Trigger container',
@@ -411,7 +411,7 @@ export default {
                         },
                     ],
                 },
-            }],
+            },
             navigator: {
                 group: 'Trigger',
             },
@@ -854,7 +854,7 @@ export default {
         },
         optionChoiceElement: {
             hidden: true,
-            defaultValue: [{
+            defaultValue: {
                 isWwObject: true,
                 type: 'ww-flexbox',
                 name: 'Option container',
@@ -879,9 +879,9 @@ export default {
                         },
                     ],
                 },
-            }],
+            },
             navigator: {
-                group: 'Dropdown',
+                group: 'Option',
             },
         },
 
