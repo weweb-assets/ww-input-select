@@ -36,6 +36,7 @@ export default {
                 'offsetX',
                 'offsetY',
                 'boundOffset',
+                'dropdownZIndex',
             ],
         ],
         customSettingsPropertiesOrder: [
@@ -52,7 +53,7 @@ export default {
                 'required',
                 'readonly',
                 'limit',
-                'canUnselect',
+                'unselectOnClick',
                 'closeOnSelect',
                 'closeOnClickOutside',
                 'manualToggle',
@@ -262,20 +263,20 @@ export default {
             /* wwEditor:end */
             section: 'settings',
         },
-        limit: {
-            label: { en: 'Values limit' },
-            type: 'Number',
-            defaultValue: null,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'number',
-                tooltip: 'A number value: \n\n`1`, `2`, `3`, etc.',
-            },
-            /* wwEditor:end */
-            hidden: content => content.selectType !== 'multiple',
-            section: 'settings',
-        },
+        // limit: {
+        //     label: { en: 'Values limit' },
+        //     type: 'Number',
+        //     defaultValue: null,
+        //     bindable: true,
+        //     /* wwEditor:start */
+        //     bindingValidation: {
+        //         type: 'number',
+        //         tooltip: 'A number value: \n\n`1`, `2`, `3`, etc.',
+        //     },
+        //     /* wwEditor:end */
+        //     hidden: content => content.selectType !== 'multiple',
+        //     section: 'settings',
+        // },
         forceOpenInEditor: {
             label: { en: 'Force open in editor' },
             type: 'OnOff',
@@ -292,23 +293,6 @@ export default {
                 ],
             },
             defaultValue: 'closed',
-            section: 'settings',
-        },
-        canUnselect: {
-            label: { en: 'Can unselect' },
-            type: 'OnOff',
-            defaultValue: false,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip:
-                    'Whether clicking or selecting already active option will unselect that option. A boolean value: \n\n`true` or `false`',
-            },
-            propertyHelp: {
-                tooltip: 'Whether clicking or selecting already active option will unselect that option.',
-            },
-            /* wwEditor:end */
             section: 'settings',
         },
         closeOnSelect: {
@@ -846,6 +830,10 @@ export default {
             bindable: true,
             defaultValue: false,
             /* wwEditor:start */
+            section: 'settings',
+            navigator: {
+                group: 'Option',
+            },
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',

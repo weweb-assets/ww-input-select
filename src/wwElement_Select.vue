@@ -105,7 +105,7 @@ export default {
         const rawData = computed(() => props.content.choices || []);
         const isDisabled = computed(() => props.content.disabled || false);
         const isReadonly = computed(() => props.content.readonly || false);
-        const canUnselect = computed(() => props.content.canUnselect || false);
+        const canUnselect = computed(() => props.content.unselectOnClick || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
         const manualToggle = computed(() => props.content.manualToggle || false);
