@@ -32,6 +32,8 @@
                 <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
             </SelectDropdown>
         </div>
+
+        <input type="input" :value="variableValue" :required="content.required" tabindex="-1" class="fake-input"/>
     </div>
 </template>
 
@@ -592,7 +594,8 @@ Present when search is enabled:
             dropdownStyles,
             resizeObserver,
             options,
-            currentLocalContext
+            currentLocalContext,
+            variableValue,
         };
     },
 };
@@ -601,11 +604,29 @@ Present when search is enabled:
 <style lang="scss" scoped>
 // dropdown width is
 
+.ww-select {
+    position: relative;
+}
+
 .ww-select__trigger {
     width: 100%;
 }
 
 .ww-select__dropdown {
     overflow: hidden;
+}
+
+.fake-input {
+    background: rgba(0, 0, 0, 0);
+    border: 0;
+    bottom: -1px;
+    font-size: 0;
+    height: 1px;
+    left: 0;
+    outline: none;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
 }
 </style>
