@@ -75,7 +75,6 @@ export default {
             ],
             'formInfobox',
             ['fieldName', 'customValidation', 'validation'],
-            'initialState',
             {
                 title: 'Basic',
                 properties: ['selectType', 'selectTypeWarning', 'disabled', 'required'],
