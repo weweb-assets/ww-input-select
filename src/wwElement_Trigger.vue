@@ -1,6 +1,6 @@
 <template>
     <button class="ww-input-select__trigger" @click="selectParentElement" type="button">
-        <wwLayout class="ww-select-trigger" path="triggerContainer" />
+        <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" />
     </button>
 </template>
 
@@ -16,7 +16,6 @@ export default {
     },
     setup(props) {
         const registerTriggerLocalContext = inject('_wwSelect:registerTriggerLocalContext');
-        provide('_wwSelect:isInTrigger', ref(true));
 
         const options = inject('_wwSelect:options', ref(''));
         const selectValue = inject('_wwSelect:value', ref(''));

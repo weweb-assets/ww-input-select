@@ -32,6 +32,15 @@
                 <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
             </SelectDropdown>
         </div>
+
+        <input
+            type="input"
+            :name="content.fieldName"
+            :value="variableValue"
+            :required="content.required"
+            tabindex="-1"
+            class="fake-input"
+        />
     </div>
 </template>
 
@@ -41,10 +50,10 @@ import InputSelectDropdown from './wwElement_Dropdown.vue';
 import InputSelectOption from './wwElement_Option.vue';
 import InputSelectOptionList from './wwElement_OptionsList.vue';
 import InputSelectSearch from './wwElement_Search.vue';
-import { ref, computed, provide, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
-import useDropdownFloating from './useFloating';
-import useAccessibility from './useAccessibility';
-import useSearch from './useSearch';
+import { ref, computed, provide, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import useDropdownFloating from './select/useFloating';
+import useAccessibility from './select/useAccessibility';
+import useSearch from './select/useSearch';
 import { debounce } from './utils';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
@@ -71,6 +80,9 @@ export default {
         /* wwEditor:start */
         useEditorHint();
         /* wwEditor:end */
+        /* wwEditor:start */
+        const selectForm = inject('_wwForm:selectForm', () => {});
+        /* wwEditor:end */
 
         const componentKey = ref(0);
         const isEditing = computed(() => {
@@ -94,8 +106,21 @@ export default {
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'value',
+            type: selectType.value === 'single' ? 'any' : 'array',
             defaultValue: initValue,
         });
+
+        const fieldName = computed(() => props.content.fieldName || props.wwElementState.name);
+        const validation = computed(() => props.content.validation);
+        const customValidation = computed(() => props.content.customValidation);
+
+        const useForm = inject('_wwForm:useForm', () => {});
+        useForm(
+            variableValue,
+            { fieldName, validation, customValidation },
+            { elementState: props.wwElementState, emit, sidepanelFormPath: 'form' }
+        );
+
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
         const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
@@ -105,7 +130,7 @@ export default {
         const rawData = computed(() => props.content.choices || []);
         const isDisabled = computed(() => props.content.disabled || false);
         const isReadonly = computed(() => props.content.readonly || false);
-        const canUnselect = computed(() => props.content.canUnselect || false);
+        const canUnselect = computed(() => props.content.unselectOnClick || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
         const manualToggle = computed(() => props.content.manualToggle || false);
@@ -117,6 +142,7 @@ export default {
         const shouldCloseDropdown = ref(true);
         const mappingLabel = computed(() => props.content.mappingLabel);
         const mappingValue = computed(() => props.content.mappingValue);
+        const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
 
         const registerOption = (id, option) => {
@@ -266,7 +292,7 @@ export default {
         };
 
         const selectionDetails = computed(() => {
-            const _optionsMap = new Map(rawData.value.map(({...option }) => [option.value, option])); // Hide optionId
+            const _optionsMap = new Map(rawData.value.map(({ ...option }) => [option.value, option])); // Hide optionId
             const obj = opt => ({
                 value: opt.value,
                 label: opt.label,
@@ -445,42 +471,46 @@ export default {
             else closeDropdown();
         });
 
-        watch(triggerElement, () => { // Observe trigger element size when updated
+        watch(triggerElement, () => {
+            // Observe trigger element size when updated
             observeTriggerSize();
         });
         /* wwEditor:end */
 
         // Local context is an object with select and selectTrigger keys
         const currentLocalContext = ref({});
-        const registerLocalContext = (key) => ({ data, methods, markdown }) => {
-            const selectLocalContext = currentLocalContext.value;
-            const newLocalContext = {
-                data: {
-                    ...selectLocalContext.data,
-                    [key]: data,
-                },
-                methods: {
-                    ...selectLocalContext.methods,
-                    ...methods,
-                },
-                markdown: {
-                    ...selectLocalContext.markdown,
-                    [key]: markdown,
-                },
-            }
-            wwLib.wwElement.useRegisterElementLocalContext(
-                'select',
-                newLocalContext.data,
-                newLocalContext.methods,
-                newLocalContext.markdown
-            );
-            currentLocalContext.value = newLocalContext;
-        };
+        const registerLocalContext =
+            key =>
+            ({ data, methods, markdown }) => {
+                const selectLocalContext = currentLocalContext.value;
+                const newLocalContext = {
+                    data: {
+                        ...selectLocalContext.data,
+                        [key]: data,
+                    },
+                    methods: {
+                        ...selectLocalContext.methods,
+                        ...methods,
+                    },
+                    markdown: {
+                        ...selectLocalContext.markdown,
+                        [key]: markdown,
+                    },
+                };
+                wwLib.wwElement.useRegisterElementLocalContext(
+                    'select',
+                    newLocalContext.data,
+                    newLocalContext.methods,
+                    newLocalContext.markdown
+                );
+                currentLocalContext.value = newLocalContext;
+            };
         const registerTriggerLocalContext = registerLocalContext('selectTrigger');
         const registerSelectLocalContext = registerLocalContext('select');
 
         provide('_wwSelect:mappingLabel', mappingLabel);
         provide('_wwSelect:mappingValue', mappingValue);
+        provide('_wwSelect:mappingDisabled', mappingDisabled);
         provide('_wwSelect:rawData', rawData);
         provide('_wwSelect:options', options);
         provide('_wwSelect:type', selectType);
@@ -496,35 +526,36 @@ export default {
         provide('_wwSelect:unregisterOption', unregisterOption);
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);
         provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
+        provide('_wwSelect:dropdownMethods', { closeDropdown });
         provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
 
         const markdown = `### Select local informations
 
-#### options
-Array of all available options in the dropdown. Each option contains:
-- \`value\`: Option's value
-- \`label\`: Display text
-- \`disabled\`: Boolean indicating if option is disabled
-- \`isSelected\`: Boolean indicating if option is selected
-- \`data\`: Data from the repeat context (optional)
+            #### options
+            Array of all available options in the dropdown. Each option contains:
+            - \`value\`: Option's value
+            - \`label\`: Display text
+            - \`disabled\`: Boolean indicating if option is disabled
+            - \`isSelected\`: Boolean indicating if option is selected
+            - \`data\`: Data from the repeat context (optional)
 
-#### active
-Information about currently selected option(s):
-- \`value\`: Current selection (single value or array for multiple select)
-- \`details\`: Detailed information about selected option(s)
+            #### active
+            Information about currently selected option(s):
+            - \`value\`: Current selection (single value or array for multiple select)
+            - \`details\`: Detailed information about selected option(s)
 
-#### utils
-Component state information:
-- \`type\`: Select type ('single' or 'multiple')
-- \`isOpen\`: Boolean indicating if dropdown is open
-- \`triggerWidth\`: Width of trigger element
-- \`triggerHeight\`: Height of trigger element
+            #### utils
+            Component state information:
+            - \`type\`: Select type ('single' or 'multiple')
+            - \`isOpen\`: Boolean indicating if dropdown is open
+            - \`triggerWidth\`: Width of trigger element
+            - \`triggerHeight\`: Height of trigger element
 
-#### search (optional)
-Present when search is enabled:
-- \`value\`: Current search input value
-- \`searchBy\`: Fields to search by
-- \`searchMatches\`: Options matching search criteria`;
+            #### search (optional)
+            Present when search is enabled:
+            - \`value\`: Current search input value
+            - \`searchBy\`: Fields to search by
+            - \`searchMatches\`: Options matching search criteria`;
 
         registerSelectLocalContext({
             data,
@@ -535,19 +566,21 @@ Present when search is enabled:
         // Styles
         const dropdownStyles = computed(() => {
             return {
-                'padding-top': props.content.dropdownPaddingY || 0,
-                'padding-bottom': props.content.dropdownPaddingY || 0,
-                'padding-left': props.content.dropdownPaddingX || 0,
-                'padding-right': props.content.dropdownPaddingX || 0,
-                'border-color': props.content.dropdownBorderColor || 'transparent',
-                'border-width': props.content.dropdownBorderWidth || 0,
+                padding: props.content.dropdownPadding || 0,
+                'box-shadow': props.content.dropdownShadow || 'none',
                 'border-radius': props.content.dropdownBorderRadius || 0,
-                'background-color': props.content.dropdownBgColor || 'transparent',
-                'width': props.content.dropdownWidth || 'auto',
-                'border-style': 'solid',
-                'max-height': props.content.dropdownMaxHeight || 'auto',
-                'overflow-y': 'auto',
                 'z-index': props.content.dropdownZIndex || 2,
+                width: props.content.dropdownWidth || 'auto',
+                'background-color': props.content.dropdownBgColor || 'transparent',
+
+                ...(props.content.dropdownBorder
+                    ? {
+                          'border-top': props.content.dropdownBorderTop,
+                          'border-right': props.content.dropdownBorderRight,
+                          'border-bottom': props.content.dropdownBorderBottom,
+                          'border-left': props.content.dropdownBorderLeft,
+                      }
+                    : { border: props.content.dropdownBorderAll }),
             };
         });
 
@@ -592,7 +625,11 @@ Present when search is enabled:
             dropdownStyles,
             resizeObserver,
             options,
-            currentLocalContext
+            currentLocalContext,
+            variableValue,
+            /* wwEditor:start */
+            selectForm,
+            /* wwEditor:end */
         };
     },
 };
@@ -601,11 +638,29 @@ Present when search is enabled:
 <style lang="scss" scoped>
 // dropdown width is
 
+.ww-select {
+    position: relative;
+}
+
 .ww-select__trigger {
     width: 100%;
 }
 
 .ww-select__dropdown {
     overflow: hidden;
+}
+
+.fake-input {
+    background: rgba(0, 0, 0, 0);
+    border: 0;
+    bottom: -1px;
+    font-size: 0;
+    height: 1px;
+    left: 0;
+    outline: none;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
 }
 </style>

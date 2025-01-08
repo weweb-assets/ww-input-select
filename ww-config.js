@@ -17,25 +17,31 @@ export default {
             'choices',
             'mappingLabel',
             'mappingValue',
+            'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
             'forceOpenInEditor',
             'showEmptyStateInEditor',
             [
                 'dropdownTitle',
-                'dropdownPaddingX',
-                'dropdownPaddingY',
-                'dropdownBorderColor',
-                'dropdownBorderWidth',
-                'dropdownBorderRadius',
-                'dropdownBgColor',
-                'dropdownWidth',
-                'dropdownMaxHeight',
                 'side',
                 'align',
                 'offsetX',
                 'offsetY',
                 'boundOffset',
+                'dropdownBorder',
+                'dropdownBorderAll',
+                'dropdownBorderTop',
+                'dropdownBorderRight',
+                'dropdownBorderBottom',
+                'dropdownBorderLeft',
+                'dropdownBorderRadius',
+                'dropdownPadding',
+                'dropdownBgColor',
+                'dropdownWidth',
+                'dropdownMaxHeight',
+                'dropdownShadow',
+                'dropdownZIndex',
             ],
         ],
         customSettingsPropertiesOrder: [
@@ -52,7 +58,7 @@ export default {
                 'required',
                 'readonly',
                 'limit',
-                'canUnselect',
+                'unselectOnClick',
                 'closeOnSelect',
                 'closeOnClickOutside',
                 'manualToggle',
@@ -60,14 +66,30 @@ export default {
                 'virtualScroll',
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
-                'virtualScrollSizeDependencies',
             ],
             [
                 'searchTitle',
                 'showSearch',
                 'searchBy',
                 'autoFocus',
-            ]
+            ],
+            'formInfobox',
+            ['fieldName', 'customValidation', 'validation'],
+            {
+                title: 'Basic',
+                properties: ['selectType', 'selectTypeWarning', 'disabled', 'required'],
+            },
+            {
+                title: 'Advanced',
+                properties: [
+                    'readonly',
+                    'limit',
+                    'canUnselect',
+                    'closeOnSelect',
+                    'closeOnClickOutside',
+                    'manualToggle',
+                ],
+            },
         ],
     },
     inherit: {
@@ -139,6 +161,23 @@ export default {
             propertyHelp: {
                 tooltip:
                     'The value of the current option item. This will be used to identify the option in the Select. <br/> <br/> This will be executed for each item in the options to return the value.',
+            },
+            /* wwEditor:end */
+        },
+        mappingDisabled: {
+            label: 'Disabled condition per item',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+            defaultValue: {
+                "type": "f",
+                "code": "false"
+            },
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip:
+                    'The condition that determines if the option is disabled. This will be executed for each item in the options to return a boolean value.',
             },
             /* wwEditor:end */
         },
@@ -262,20 +301,20 @@ export default {
             /* wwEditor:end */
             section: 'settings',
         },
-        limit: {
-            label: { en: 'Values limit' },
-            type: 'Number',
-            defaultValue: null,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'number',
-                tooltip: 'A number value: \n\n`1`, `2`, `3`, etc.',
-            },
-            /* wwEditor:end */
-            hidden: content => content.selectType !== 'multiple',
-            section: 'settings',
-        },
+        // limit: {
+        //     label: { en: 'Values limit' },
+        //     type: 'Number',
+        //     defaultValue: null,
+        //     bindable: true,
+        //     /* wwEditor:start */
+        //     bindingValidation: {
+        //         type: 'number',
+        //         tooltip: 'A number value: \n\n`1`, `2`, `3`, etc.',
+        //     },
+        //     /* wwEditor:end */
+        //     hidden: content => content.selectType !== 'multiple',
+        //     section: 'settings',
+        // },
         forceOpenInEditor: {
             label: { en: 'Force open in editor' },
             type: 'OnOff',
@@ -292,23 +331,6 @@ export default {
                 ],
             },
             defaultValue: 'closed',
-            section: 'settings',
-        },
-        canUnselect: {
-            label: { en: 'Can unselect' },
-            type: 'OnOff',
-            defaultValue: false,
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip:
-                    'Whether clicking or selecting already active option will unselect that option. A boolean value: \n\n`true` or `false`',
-            },
-            propertyHelp: {
-                tooltip: 'Whether clicking or selecting already active option will unselect that option.',
-            },
-            /* wwEditor:end */
             section: 'settings',
         },
         closeOnSelect: {
@@ -393,7 +415,7 @@ export default {
         },
         triggerContainer: {
             hidden: true,
-            defaultValue: [{
+            defaultValue: {
                 isWwObject: true,
                 type: 'ww-flexbox',
                 name: 'Trigger container',
@@ -411,7 +433,7 @@ export default {
                         },
                     ],
                 },
-            }],
+            },
             navigator: {
                 group: 'Trigger',
             },
@@ -426,10 +448,85 @@ export default {
             },
             editorOnly: true,
         },
+        dropdownBorder: {
+            type: 'TextRadioGroup',
+            label: { en: 'Borders' },
+            options: {
+                choices: [
+                    {
+                        value: false,
+                        title: { en: 'All', fr: 'Tout' },
+                        icon: 'border',
+                    },
+                    {
+                        value: true,
+                        title: { en: 'Split', fr: 'Split' },
+                        icon: 'border-split',
+                    },
+                ],
+            },
+            responsive: true,
+            defaultValue: false,
+        },
+        dropdownBorderAll: {
+            type: 'Border',
+            label: {
+                en: '',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => content.dropdownBorder,
+        },
+        dropdownBorderTop: {
+            type: 'Border',
+            label: {
+                en: 'Top',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderRight: {
+            type: 'Border',
+            label: {
+                en: 'Right',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderBottom: {
+            type: 'Border',
+            label: {
+                en: 'Bottom',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderLeft: {
+            type: 'Border',
+            label: {
+                en: 'Left',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+
+        dropdownPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Padding',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+
         dropdownZIndex: {
             type: 'Number',
             label: {
-                en: 'Dropdown z-index',
+                en: 'Z axis',
             },
             bindable: true,
             defaultValue: 2,
@@ -443,72 +540,10 @@ export default {
             },
             /* wwEditor:end */
         },
-        dropdownPaddingX: {
-            label: { en: 'Padding X' },
-            type: 'Length',
-            label: { en: 'Dropdown padding X' },
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 10, max: 50 },
-                    { value: 'em', label: 'em', min: 1, max: 50 },
-                    { value: 'rem', label: 'rem', min: 1, max: 50 },
-                ],
-            },
-            classes: true,
-            states: true,
-            responsive: true,
-            bindable: true,
-            defaultValue: '8px',
-        },
-        dropdownPaddingY: {
-            label: { en: 'Padding X' },
-            type: 'Length',
-            label: { en: 'Dropdown padding Y' },
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 10, max: 50 },
-                    { value: 'em', label: 'em', min: 1, max: 50 },
-                    { value: 'rem', label: 'rem', min: 1, max: 50 },
-                ],
-            },
-            classes: true,
-            states: true,
-            responsive: true,
-            bindable: true,
-            defaultValue: '8px',
-        },
-        dropdownBorderColor: {
-            type: 'Color',
-            label: {
-                en: 'Dropdown border color',
-            },
-            bindable: true,
-            options: {
-                nullable: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '#E5E7EB',
-        },
-        dropdownBorderWidth: {
-            type: 'Length',
-            label: {
-                en: 'Dropdown border width',
-            },
-            bindable: true,
-            options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 10 }],
-                noRange: true,
-                useVar: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '1px',
-        },
         dropdownBorderRadius: {
             type: 'Length',
             label: {
-                en: 'Dropdown border radius',
+                en: 'Border radius',
             },
             bindable: true,
             options: {
@@ -523,7 +558,7 @@ export default {
         dropdownBgColor: {
             type: 'Color',
             label: {
-                en: 'Dropdown background color',
+                en: 'Background color',
             },
             bindable: true,
             options: {
@@ -536,7 +571,7 @@ export default {
         dropdownWidth: {
             type: 'Length',
             label: {
-                en: 'Dropdown width',
+                en: 'Width',
             },
             bindable: true,
             options: {
@@ -558,7 +593,7 @@ export default {
         dropdownMaxHeight: {
             type: 'Length',
             label: {
-                en: 'Dropdown max height',
+                en: 'Max height',
             },
             bindable: true,
             options: {
@@ -572,6 +607,19 @@ export default {
             classes: true,
             states: true,
             defaultValue: '300px',
+        },
+        dropdownShadow: {
+            type: 'Shadows',
+            label: {
+                en: 'Shadows',
+            },
+            bindable: true,
+            options: {
+                nullable: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '',
         },
         items: {
             bindable: 'repeatable',
@@ -846,6 +894,10 @@ export default {
             bindable: true,
             defaultValue: false,
             /* wwEditor:start */
+            section: 'settings',
+            navigator: {
+                group: 'Option',
+            },
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',
@@ -854,7 +906,7 @@ export default {
         },
         optionChoiceElement: {
             hidden: true,
-            defaultValue: [{
+            defaultValue: {
                 isWwObject: true,
                 type: 'ww-flexbox',
                 name: 'Option container',
@@ -879,9 +931,9 @@ export default {
                         },
                     ],
                 },
-            }],
+            },
             navigator: {
-                group: 'Dropdown',
+                group: 'Option',
             },
         },
 
@@ -959,6 +1011,52 @@ export default {
             navigator: {
                 group: 'Dropdown',
             },
+        },
+        /* wwEditor:start */
+        form: {
+            editorOnly: true,
+            hidden: true,
+            defaultValue: false,
+        },
+        formInfobox: {
+            type: 'InfoBox',
+            section: 'settings',
+            options: (_, sidePanelContent) => ({
+                variant: sidePanelContent.form?.name ? 'success' : 'warning',
+                icon: 'pencil',
+                title: sidePanelContent.form?.name || 'Unnamed form',
+                content: !sidePanelContent.form?.name && 'Give your form a meaningful name.',
+                cta: {
+                    label: 'Select form',
+                    action: 'selectForm',
+                },
+            }),
+            hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
+        },
+        /* wwEditor:end */
+        fieldName: {
+            label: 'Field name',
+            section: 'settings',
+            type: 'Text',
+            defaultValue: '',
+            bindable: true,
+            hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
+        },
+        customValidation: {
+            label: 'Custom validation',
+            section: 'settings',
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
+        },
+        validation: {
+            label: 'Validation',
+            section: 'settings',
+            type: 'Formula',
+            defaultValue: '',
+            bindable: true,
+            hidden: (content, sidePanelContent) => !sidePanelContent.form?.uid || !content.customValidation,
         },
     },
 };

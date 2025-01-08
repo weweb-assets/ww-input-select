@@ -1,44 +1,47 @@
 <template>
-    <div>
-        <DynamicScroller
-            v-if="virtualScroll && filteredOptions.length > 0"
-            :items="dynamicScrollerItems"
-            :min-item-size="virtualScrollMinItemSize"
-            :buffer="virtualScrollBuffer"
-            :key="filteredOptions.length"
-        >
-            <template v-slot="{ item, index, active }">
-                <DynamicScrollerItem
-                    :item="item"
-                    :active="active"
-                    :size-dependencies="JSON.stringify(item)"
-                    :data-index="index"
-                >
-                    <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
-                        <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
-                    </wwLayoutItemContext>
-                </DynamicScrollerItem>
-            </template>
-        </DynamicScroller>
-
-        <div 
-            v-else-if="!virtualScroll && filteredOptions.length > 0"
-            class="flex flex-col"
-        >
-            <wwLayoutItemContext
-                v-for="(item, index) in filteredOptions"
-                :key="index"
-                is-repeat
-                :index="index"
-                :data="item"
+    <DynamicScroller
+        :style="content.dropdownMaxHeight ? { maxHeight: content.dropdownMaxHeight } : {}"
+        v-if="virtualScroll && filteredOptions.length > 0"
+        :items="dynamicScrollerItems"
+        :min-item-size="virtualScrollMinItemSize"
+        :buffer="virtualScrollBuffer"
+        :key="filteredOptions.length"
+    >
+        <template v-slot="{ item, index, active }">
+            <DynamicScrollerItem
+                :item="item"
+                :active="active"
+                :size-dependencies="JSON.stringify(item)"
+                :data-index="index"
             >
-                <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
-            </wwLayoutItemContext>
-        </div>
+                <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
+                    <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+                </wwLayoutItemContext>
+            </DynamicScrollerItem>
+        </template>
+    </DynamicScroller>
 
-        <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor">
-            <wwElement v-bind="content.emptyStateContainer" />
-        </div>
+    <div
+        v-else-if="!virtualScroll && filteredOptions.length > 0"
+        class="flex flex-col"
+        :style="{
+            'overflow-y': 'auto',
+            ...(content.dropdownMaxHeight ? { maxHeight: content.dropdownMaxHeight } : {}),
+        }"
+    >
+        <wwLayoutItemContext
+            v-for="(item, index) in filteredOptions"
+            :key="index"
+            is-repeat
+            :index="index"
+            :data="item"
+        >
+            <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+        </wwLayoutItemContext>
+    </div>
+
+    <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor">
+        <wwElement v-bind="content.emptyStateContainer" />
     </div>
 </template>
 
@@ -106,7 +109,9 @@ export default {
         });
 
         const memoizedFilter = useMemoize((options, filterValue) => {
-            const searchBy = searchState.value?.searchBy?.length ? searchState.value?.searchBy : Object.keys(options[0]);
+            const searchBy = searchState.value?.searchBy?.length
+                ? searchState.value?.searchBy
+                : Object.keys(options[0]);
             return options.filter(option => {
                 return searchBy.some(key => {
                     const optionValue = option[key];
@@ -133,7 +138,7 @@ export default {
         });
 
         const dynamicScrollerItems = computed(() => {
-            return filteredOptions.value.map((item, index) => ({ ...item, id: `${item.value}` }));
+            return filteredOptions.value.map((item, index) => ({ ...item, id: item.id ?? `id_${index}` }));
         });
 
         watch(filteredOptions, () => {
@@ -169,7 +174,7 @@ export default {
             virtualScrollMinItemSize,
             virtualScrollBuffer,
             showEmptyStateInEditor,
-            dynamicScrollerItems
+            dynamicScrollerItems,
         };
     },
 };
