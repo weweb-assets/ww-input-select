@@ -7,6 +7,7 @@
     >
         <wwElement
             v-bind="content.optionChoiceElement"
+            :states="isFocused ? ['focused'] : []"
             class="ww-select-option"
             ref="optionRef"
             @click="handleClick"
@@ -64,6 +65,7 @@ export default {
         const updateValue = inject('_wwSelect:updateValue', () => {});
         const focusSelectElement = inject('_wwSelect:focusSelectElement', () => {});
         const isOptionDisabled = computed(() => props.content.disabled);
+        const activeDescendant = inject('_wwSelect:activeDescendant', ref(null));
 
         const mappingLabel = inject('_wwSelect:mappingLabel', ref(null));
         const mappingValue = inject('_wwSelect:mappingValue', ref(null));
@@ -74,6 +76,8 @@ export default {
         const value = computed(
             () => resolveMappingFormula(toValue(mappingValue), props.localData) || props.content.value
         );
+
+        const isFocused = computed(() => optionId == activeDescendant.value);
 
         const isSelected = computed(() =>
             selectType.value === 'single'
@@ -210,6 +214,8 @@ export default {
             optionId,
             handleClick,
             handleKeyDown,
+            isFocused,
+            activeDescendant,
             option,
             contextMethods: methods,
             contextData: data,
