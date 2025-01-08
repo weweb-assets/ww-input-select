@@ -43,10 +43,10 @@ import InputSelectDropdown from './wwElement_Dropdown.vue';
 import InputSelectOption from './wwElement_Option.vue';
 import InputSelectOptionList from './wwElement_OptionsList.vue';
 import InputSelectSearch from './wwElement_Search.vue';
-import { ref, computed, provide, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
-import useDropdownFloating from './useFloating';
-import useAccessibility from './useAccessibility';
-import useSearch from './useSearch';
+import { ref, computed, provide, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import useDropdownFloating from './select/useFloating';
+import useAccessibility from './select/useAccessibility';
+import useSearch from './select/useSearch';
 import { debounce } from './utils';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
@@ -73,6 +73,9 @@ export default {
         /* wwEditor:start */
         useEditorHint();
         /* wwEditor:end */
+        /* wwEditor:start */
+        const selectForm = inject('_wwForm:selectForm', () => {});
+        /* wwEditor:end */
 
         const componentKey = ref(0);
         const isEditing = computed(() => {
@@ -96,8 +99,21 @@ export default {
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'value',
+            type: selectType.value === 'single' ? 'any' : 'array',
             defaultValue: initValue,
         });
+
+        const fieldName = computed(() => props.content.fieldName || props.wwElementState.name);
+        const validation = computed(() => props.content.validation);
+        const customValidation = computed(() => props.content.customValidation);
+
+        const useForm = inject('_wwForm:useForm', () => {});
+        useForm(
+            variableValue,
+            { fieldName, validation, customValidation },
+            { elementState: props.wwElementState, emit, sidepanelFormPath: 'form' }
+        );
+
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
         const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
@@ -498,6 +514,7 @@ export default {
         provide('_wwSelect:unregisterOption', unregisterOption);
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);
         provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
+        provide('_wwSelect:dropdownMethods', { closeDropdown });
         provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
 
         const markdown = `### Select local informations
@@ -596,6 +613,9 @@ Present when search is enabled:
             options,
             currentLocalContext,
             variableValue,
+            /* wwEditor:start */
+            selectForm,
+            /* wwEditor:end */
         };
     },
 };

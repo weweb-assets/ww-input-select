@@ -109,11 +109,11 @@ export default function useAccessibility({
         }
     };
 
-    provide('_wwSelectActiveDescendant', activeDescendant);
-    provide('_wwSelectFocusedOptionIndex', focusedOptionIndex);
-    provide('_wwSelectSetInitialFocus', setInitialFocus);
-    provide('_wwSelectFocusFromOptionId', focusFromOptionId);
-    provide('_wwSelectFocusSelectElement', focusSelectElement);
+    provide('_wwSelect:activeDescendant', activeDescendant);
+    provide('_wwSelect:focusedOptionIndex', focusedOptionIndex);
+    provide('_wwSelect:setInitialFocus', setInitialFocus);
+    provide('_wwSelect:focusFromOptionId', focusFromOptionId);
+    provide('_wwSelect:focusSelectElement', focusSelectElement);
 
     return {
         dropdownId,

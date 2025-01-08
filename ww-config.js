@@ -68,7 +68,25 @@ export default {
                 'showSearch',
                 'searchBy',
                 'autoFocus',
-            ]
+            ],
+            'formInfobox',
+            ['fieldName', 'customValidation', 'validation'],
+            'initialState',
+            {
+                title: 'Basic',
+                properties: ['selectType', 'selectTypeWarning', 'disabled', 'required'],
+            },
+            {
+                title: 'Advanced',
+                properties: [
+                    'readonly',
+                    'limit',
+                    'canUnselect',
+                    'closeOnSelect',
+                    'closeOnClickOutside',
+                    'manualToggle',
+                ],
+            },
         ],
     },
     inherit: {
@@ -947,6 +965,52 @@ export default {
             navigator: {
                 group: 'Dropdown',
             },
+        },
+        /* wwEditor:start */
+        form: {
+            editorOnly: true,
+            hidden: true,
+            defaultValue: false,
+        },
+        formInfobox: {
+            type: 'InfoBox',
+            section: 'settings',
+            options: (_, sidePanelContent) => ({
+                variant: sidePanelContent.form?.name ? 'success' : 'warning',
+                icon: 'pencil',
+                title: sidePanelContent.form?.name || 'Unnamed form',
+                content: !sidePanelContent.form?.name && 'Give your form a meaningful name.',
+                cta: {
+                    label: 'Select form',
+                    action: 'selectForm',
+                },
+            }),
+            hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
+        },
+        /* wwEditor:end */
+        fieldName: {
+            label: 'Field name',
+            section: 'settings',
+            type: 'Text',
+            defaultValue: '',
+            bindable: true,
+            hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
+        },
+        customValidation: {
+            label: 'Custom validation',
+            section: 'settings',
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
+        },
+        validation: {
+            label: 'Validation',
+            section: 'settings',
+            type: 'Formula',
+            defaultValue: '',
+            bindable: true,
+            hidden: (content, sidePanelContent) => !sidePanelContent.form?.uid || !content.customValidation,
         },
     },
 };
