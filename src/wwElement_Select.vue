@@ -570,9 +570,8 @@ Present when search is enabled:
                 'padding': props.content.dropdownPadding || 0,
                 'box-shadow': props.content.dropdownShadow || 'none',
                 'border-radius': props.content.dropdownBorderRadius || 0,
-                'max-height': props.content.dropdownMaxHeight || 'auto',
+                //'max-height': props.content.dropdownMaxHeight || 'auto',
                 'z-index': props.content.dropdownZIndex || 2,
-                'overflow-y': 'auto',
                 'width': props.content.dropdownWidth || 'auto',
                 'background-color': props.content.dropdownBgColor || 'transparent',
 
