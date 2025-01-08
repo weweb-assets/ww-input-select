@@ -33,7 +33,7 @@
             </SelectDropdown>
         </div>
 
-        <input type="input" :value="variableValue" :required="content.required" tabindex="-1" class="fake-input"/>
+        <input type="input" :name="content.fieldName" :value="variableValue" :required="content.required" tabindex="-1" class="fake-input"/>
     </div>
 </template>
 
