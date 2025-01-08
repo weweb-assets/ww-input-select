@@ -17,6 +17,7 @@ export default {
             'choices',
             'mappingLabel',
             'mappingValue',
+            'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
             'forceOpenInEditor',
@@ -65,7 +66,6 @@ export default {
                 'virtualScroll',
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
-                'virtualScrollSizeDependencies',
             ],
             [
                 'searchTitle',
@@ -162,6 +162,23 @@ export default {
             propertyHelp: {
                 tooltip:
                     'The value of the current option item. This will be used to identify the option in the Select. <br/> <br/> This will be executed for each item in the options to return the value.',
+            },
+            /* wwEditor:end */
+        },
+        mappingDisabled: {
+            label: 'Disabled condition per item',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+            defaultValue: {
+                "type": "f",
+                "code": "false"
+            },
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip:
+                    'The condition that determines if the option is disabled. This will be executed for each item in the options to return a boolean value.',
             },
             /* wwEditor:end */
         },

@@ -33,7 +33,14 @@
             </SelectDropdown>
         </div>
 
-        <input type="input" :name="content.fieldName" :value="variableValue" :required="content.required" tabindex="-1" class="fake-input"/>
+        <input
+            type="input"
+            :name="content.fieldName"
+            :value="variableValue"
+            :required="content.required"
+            tabindex="-1"
+            class="fake-input"
+        />
     </div>
 </template>
 
@@ -135,6 +142,7 @@ export default {
         const shouldCloseDropdown = ref(true);
         const mappingLabel = computed(() => props.content.mappingLabel);
         const mappingValue = computed(() => props.content.mappingValue);
+        const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
 
         const registerOption = (id, option) => {
@@ -284,7 +292,7 @@ export default {
         };
 
         const selectionDetails = computed(() => {
-            const _optionsMap = new Map(rawData.value.map(({...option }) => [option.value, option])); // Hide optionId
+            const _optionsMap = new Map(rawData.value.map(({ ...option }) => [option.value, option])); // Hide optionId
             const obj = opt => ({
                 value: opt.value,
                 label: opt.label,
@@ -463,42 +471,46 @@ export default {
             else closeDropdown();
         });
 
-        watch(triggerElement, () => { // Observe trigger element size when updated
+        watch(triggerElement, () => {
+            // Observe trigger element size when updated
             observeTriggerSize();
         });
         /* wwEditor:end */
 
         // Local context is an object with select and selectTrigger keys
         const currentLocalContext = ref({});
-        const registerLocalContext = (key) => ({ data, methods, markdown }) => {
-            const selectLocalContext = currentLocalContext.value;
-            const newLocalContext = {
-                data: {
-                    ...selectLocalContext.data,
-                    [key]: data,
-                },
-                methods: {
-                    ...selectLocalContext.methods,
-                    ...methods,
-                },
-                markdown: {
-                    ...selectLocalContext.markdown,
-                    [key]: markdown,
-                },
-            }
-            wwLib.wwElement.useRegisterElementLocalContext(
-                'select',
-                newLocalContext.data,
-                newLocalContext.methods,
-                newLocalContext.markdown
-            );
-            currentLocalContext.value = newLocalContext;
-        };
+        const registerLocalContext =
+            key =>
+            ({ data, methods, markdown }) => {
+                const selectLocalContext = currentLocalContext.value;
+                const newLocalContext = {
+                    data: {
+                        ...selectLocalContext.data,
+                        [key]: data,
+                    },
+                    methods: {
+                        ...selectLocalContext.methods,
+                        ...methods,
+                    },
+                    markdown: {
+                        ...selectLocalContext.markdown,
+                        [key]: markdown,
+                    },
+                };
+                wwLib.wwElement.useRegisterElementLocalContext(
+                    'select',
+                    newLocalContext.data,
+                    newLocalContext.methods,
+                    newLocalContext.markdown
+                );
+                currentLocalContext.value = newLocalContext;
+            };
         const registerTriggerLocalContext = registerLocalContext('selectTrigger');
         const registerSelectLocalContext = registerLocalContext('select');
 
         provide('_wwSelect:mappingLabel', mappingLabel);
         provide('_wwSelect:mappingValue', mappingValue);
+        provide('_wwSelect:mappingDisabled', mappingDisabled);
         provide('_wwSelect:rawData', rawData);
         provide('_wwSelect:options', options);
         provide('_wwSelect:type', selectType);
@@ -519,31 +531,31 @@ export default {
 
         const markdown = `### Select local informations
 
-#### options
-Array of all available options in the dropdown. Each option contains:
-- \`value\`: Option's value
-- \`label\`: Display text
-- \`disabled\`: Boolean indicating if option is disabled
-- \`isSelected\`: Boolean indicating if option is selected
-- \`data\`: Data from the repeat context (optional)
+            #### options
+            Array of all available options in the dropdown. Each option contains:
+            - \`value\`: Option's value
+            - \`label\`: Display text
+            - \`disabled\`: Boolean indicating if option is disabled
+            - \`isSelected\`: Boolean indicating if option is selected
+            - \`data\`: Data from the repeat context (optional)
 
-#### active
-Information about currently selected option(s):
-- \`value\`: Current selection (single value or array for multiple select)
-- \`details\`: Detailed information about selected option(s)
+            #### active
+            Information about currently selected option(s):
+            - \`value\`: Current selection (single value or array for multiple select)
+            - \`details\`: Detailed information about selected option(s)
 
-#### utils
-Component state information:
-- \`type\`: Select type ('single' or 'multiple')
-- \`isOpen\`: Boolean indicating if dropdown is open
-- \`triggerWidth\`: Width of trigger element
-- \`triggerHeight\`: Height of trigger element
+            #### utils
+            Component state information:
+            - \`type\`: Select type ('single' or 'multiple')
+            - \`isOpen\`: Boolean indicating if dropdown is open
+            - \`triggerWidth\`: Width of trigger element
+            - \`triggerHeight\`: Height of trigger element
 
-#### search (optional)
-Present when search is enabled:
-- \`value\`: Current search input value
-- \`searchBy\`: Fields to search by
-- \`searchMatches\`: Options matching search criteria`;
+            #### search (optional)
+            Present when search is enabled:
+            - \`value\`: Current search input value
+            - \`searchBy\`: Fields to search by
+            - \`searchMatches\`: Options matching search criteria`;
 
         registerSelectLocalContext({
             data,
@@ -553,29 +565,22 @@ Present when search is enabled:
 
         // Styles
         const dropdownStyles = computed(() => {
-            // Border
-            let border = {}
-            if(props.content.dropdownBorder) {
-                border = {
-                    'border-top': props.content.dropdownBorderTop,
-                    'border-right': props.content.dropdownBorderRight,
-                    'border-bottom': props.content.dropdownBorderBottom,
-                    'border-left': props.content.dropdownBorderLeft,
-                }
-            } else {
-                border = {'border': props.content.dropdownBorderAll}
-            }
-            
             return {
-                'padding': props.content.dropdownPadding || 0,
+                padding: props.content.dropdownPadding || 0,
                 'box-shadow': props.content.dropdownShadow || 'none',
                 'border-radius': props.content.dropdownBorderRadius || 0,
-                //'max-height': props.content.dropdownMaxHeight || 'auto',
                 'z-index': props.content.dropdownZIndex || 2,
-                'width': props.content.dropdownWidth || 'auto',
+                width: props.content.dropdownWidth || 'auto',
                 'background-color': props.content.dropdownBgColor || 'transparent',
 
-                ...border,
+                ...(props.content.dropdownBorder
+                    ? {
+                          'border-top': props.content.dropdownBorderTop,
+                          'border-right': props.content.dropdownBorderRight,
+                          'border-bottom': props.content.dropdownBorderBottom,
+                          'border-left': props.content.dropdownBorderLeft,
+                      }
+                    : { border: props.content.dropdownBorderAll }),
             };
         });
 

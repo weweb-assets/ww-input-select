@@ -1,18 +1,18 @@
 <template>
     <wwLocalContext
-        :data="contextData"
+        :data="data"
         :methods="contextMethods"
         :markdown="contextMarkdown"
         element-key="selectOption"
     >
         <wwElement
             v-bind="content.optionChoiceElement"
-            :states="isFocused ? ['focused'] : []"
+            :states="[isFocused ? 'focused' : '', isOptionDisabled ? 'disabled' : '']"
             class="ww-select-option"
             ref="optionRef"
             @click="handleClick"
             @keydown="handleKeyDown"
-            :role="isInTrigger ? null : 'option'"
+            role='option'
             :id="optionId"
             :aria-selected="isSelected"
             :aria-disabled="isOptionDisabled"
@@ -55,8 +55,6 @@ export default {
         const unregisterOption = inject('_wwSelect:unregisterOption', () => {});
         const optionRef = ref(null);
         const optionElement = computed(() => optionRef.value?.componentRef?.$el);
-        const isInTrigger = inject('_wwSelect:isInTrigger', ref(false));
-        if (isInTrigger.value) emit('update:sidepanel-content', { path: 'isInTrigger', value: true });
         const selectValue = inject('_wwSelect:value', ref(''));
         const selectType = inject('_wwSelect:type', ref('simple'));
         const setValue = inject('_wwSelect:setValue', () => {});
@@ -64,17 +62,20 @@ export default {
         const isReadonly = inject('_wwSelect:isReadonly', ref(false));
         const updateValue = inject('_wwSelect:updateValue', () => {});
         const focusSelectElement = inject('_wwSelect:focusSelectElement', () => {});
-        const isOptionDisabled = computed(() => props.content.disabled);
         const activeDescendant = inject('_wwSelect:activeDescendant', ref(null));
 
         const mappingLabel = inject('_wwSelect:mappingLabel', ref(null));
         const mappingValue = inject('_wwSelect:mappingValue', ref(null));
+        const mappingDisabled = inject('_wwSelect:mappingDisabled', ref(null));
 
         const label = computed(
             () => resolveMappingFormula(toValue(mappingLabel), props.localData) || props.content.label
         );
         const value = computed(
             () => resolveMappingFormula(toValue(mappingValue), props.localData) || props.content.value
+        );
+        const isOptionDisabled = computed(
+            () => resolveMappingFormula(toValue(mappingDisabled), props.localData)
         );
 
         const isFocused = computed(() => optionId == activeDescendant.value);
@@ -130,7 +131,6 @@ export default {
             }
         };
 
-        let methods = {};
         const data = ref({
             isSelected: false,
             isOptionDisabled: false,
@@ -138,76 +138,61 @@ export default {
             value: '',
             _data: {},
         });
-        let markdown = '';
 
-        if (isInTrigger.value) {
-            methods = {
-                unselect: {
-                    description: 'Unselect the current option',
-                    method: unselect,
-                    editor: { label: 'Unselect', group: 'Unselect Option', icon: 'cursor-click' },
-                },
-            };
+        const select = () => {
+            if (canInteract.value) {
+                updateValue(value.value);
+            }
+        };
 
-            // wwLib.wwElement.useRegisterElementLocalContext('selectOption', null, methods);
-        } else {
-            const select = () => {
-                if (canInteract.value) {
-                    updateValue(value.value);
-                }
-            };
+        /*
+            * Create a data ref with initial empty values, then use a watcher to update it.
+            * This pattern prevents circular dependencies that can occur when reactive refs
+            * directly reference each other. Instead of creating a complex web of reactive
+            * dependencies, we:
+            * 1. Start with a clean slate (empty values)
+            * 2. Use a watcher to explicitly update all values when any dependency changes
+            * 3. Keep the data flow unidirectional (computed props -> watcher -> data ref)
+            *
+            * The previous approach of directly referencing computed properties in the ref
+            * created an infinite loop because:
+            * - The ref would try to access the computed properties
+            * - The computed properties would trigger updates
+            * - These updates would cause the ref to update
+            * - Which would trigger the computed properties again... and so on
+            */
 
-            /*
-             * Create a data ref with initial empty values, then use a watcher to update it.
-             * This pattern prevents circular dependencies that can occur when reactive refs
-             * directly reference each other. Instead of creating a complex web of reactive
-             * dependencies, we:
-             * 1. Start with a clean slate (empty values)
-             * 2. Use a watcher to explicitly update all values when any dependency changes
-             * 3. Keep the data flow unidirectional (computed props -> watcher -> data ref)
-             *
-             * The previous approach of directly referencing computed properties in the ref
-             * created an infinite loop because:
-             * - The ref would try to access the computed properties
-             * - The computed properties would trigger updates
-             * - These updates would cause the ref to update
-             * - Which would trigger the computed properties again... and so on
-             */
+        watch(
+            [isSelected, isOptionDisabled, label, value],
+            ([newIsSelected, newIsOptionDisabled, newLabel, newValue]) => {
+                data.value = {
+                    isSelected: newIsSelected,
+                    isOptionDisabled: newIsOptionDisabled,
+                    label: newLabel,
+                    value: newValue,
+                    _data: props.localData,
+                };
+            },
+            { immediate: true }
+        );
 
-            watch(
-                [isSelected, isOptionDisabled, label, value],
-                ([newIsSelected, newIsOptionDisabled, newLabel, newValue]) => {
-                    data.value = {
-                        isSelected: newIsSelected,
-                        isOptionDisabled: newIsOptionDisabled,
-                        label: newLabel,
-                        value: newValue,
-                        _data: props.localData,
-                    };
-                },
-                { immediate: true }
-            );
+        const contextMethods = {
+            select: {
+                description: 'Select the current option',
+                method: select,
+                editor: { label: 'Select', group: 'Select Option', icon: 'cursor-click' },
+            },
+        };
 
-            methods = {
-                select: {
-                    description: 'Select the current option',
-                    method: select,
-                    editor: { label: 'Select', group: 'Select Option', icon: 'cursor-click' },
-                },
-            };
+        onBeforeUnmount(() => unregisterOption(optionId));
 
-            onBeforeUnmount(() => unregisterOption(optionId));
+        const contextMarkdown = `### Select Option local informations
 
-            markdown = `### Select Option local informations
+        // - \`isSelected\`: Boolean indicating if the option is selected
+        // - \`isOptionDisabled\`: Boolean indicating if the option is disabled
+        // - \`label\`: The label of the option (will be overwritten if defined in the Select root element)
+        // - \`value\`: The value of the option (will be overwritten if defined in the Select root element)`;
 
-            // - \`isSelected\`: Boolean indicating if the option is selected
-            // - \`isOptionDisabled\`: Boolean indicating if the option is disabled
-            // - \`label\`: The label of the option (will be overwritten if defined in the Select root element)
-            // - \`value\`: The value of the option (will be overwritten if defined in the Select root element)`;
-
-            //             console.log('data', data.value);
-            //wwLib.wwElement.useRegisterElementLocalContext('selectOption_'+data.value.value, data, methods, markdown);
-        }
 
         return {
             optionRef,
@@ -217,9 +202,10 @@ export default {
             isFocused,
             activeDescendant,
             option,
-            contextMethods: methods,
-            contextData: data,
-            contextMarkdown: markdown,
+            contextMethods,
+            data,
+            contextMarkdown,
+            isOptionDisabled,
         };
     },
 };

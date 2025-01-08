@@ -12,11 +12,8 @@ export default function useAccessibility({ emit, optionElement, content }) {
                 if (optionElement.value) {
                     optionElement.value.focus();
                     optionElement.value.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-                    emit('add-state', 'focused');
                 }
             });
-        } else {
-            emit('remove-state', 'focused');
         }
     });
 

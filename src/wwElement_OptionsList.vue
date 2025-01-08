@@ -21,10 +21,13 @@
         </template>
     </DynamicScroller>
 
-    <div 
+    <div
         v-else-if="!virtualScroll && filteredOptions.length > 0"
         class="flex flex-col"
-        :style="content.dropdownMaxHeight ? { maxHeight: content.dropdownMaxHeight, 'overflow-y': 'auto' } : {'overflow-y': 'auto'}"
+        :style="{
+            'overflow-y': 'auto',
+            ...(content.dropdownMaxHeight ? { maxHeight: content.dropdownMaxHeight } : {}),
+        }"
     >
         <wwLayoutItemContext
             v-for="(item, index) in filteredOptions"
@@ -106,7 +109,9 @@ export default {
         });
 
         const memoizedFilter = useMemoize((options, filterValue) => {
-            const searchBy = searchState.value?.searchBy?.length ? searchState.value?.searchBy : Object.keys(options[0]);
+            const searchBy = searchState.value?.searchBy?.length
+                ? searchState.value?.searchBy
+                : Object.keys(options[0]);
             return options.filter(option => {
                 return searchBy.some(key => {
                     const optionValue = option[key];
@@ -133,7 +138,7 @@ export default {
         });
 
         const dynamicScrollerItems = computed(() => {
-            return filteredOptions.value.map((item, index) => ({ ...item, id: index }));
+            return filteredOptions.value.map((item, index) => ({ ...item, id: item.id ?? `id_${index}` }));
         });
 
         watch(filteredOptions, () => {
@@ -169,7 +174,7 @@ export default {
             virtualScrollMinItemSize,
             virtualScrollBuffer,
             showEmptyStateInEditor,
-            dynamicScrollerItems
+            dynamicScrollerItems,
         };
     },
 };

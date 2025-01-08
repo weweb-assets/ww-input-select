@@ -16,7 +16,6 @@ export default {
     },
     setup(props) {
         const registerTriggerLocalContext = inject('_wwSelect:registerTriggerLocalContext');
-        provide('_wwSelect:isInTrigger', ref(true));
 
         const options = inject('_wwSelect:options', ref(''));
         const selectValue = inject('_wwSelect:value', ref(''));
