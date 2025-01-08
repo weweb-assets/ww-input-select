@@ -553,20 +553,30 @@ Present when search is enabled:
 
         // Styles
         const dropdownStyles = computed(() => {
+            // Border
+            let border = {}
+            if(props.content.dropdownBorder) {
+                border = {
+                    'border-top': props.content.dropdownBorderTop,
+                    'border-right': props.content.dropdownBorderRight,
+                    'border-bottom': props.content.dropdownBorderBottom,
+                    'border-left': props.content.dropdownBorderLeft,
+                }
+            } else {
+                border = {'border': props.content.dropdownBorderAll}
+            }
+            
             return {
-                'padding-top': props.content.dropdownPaddingY || 0,
-                'padding-bottom': props.content.dropdownPaddingY || 0,
-                'padding-left': props.content.dropdownPaddingX || 0,
-                'padding-right': props.content.dropdownPaddingX || 0,
-                'border-color': props.content.dropdownBorderColor || 'transparent',
-                'border-width': props.content.dropdownBorderWidth || 0,
+                'padding': props.content.dropdownPadding || 0,
+                'box-shadow': props.content.dropdownShadow || 'none',
                 'border-radius': props.content.dropdownBorderRadius || 0,
-                'background-color': props.content.dropdownBgColor || 'transparent',
-                'width': props.content.dropdownWidth || 'auto',
-                'border-style': 'solid',
                 'max-height': props.content.dropdownMaxHeight || 'auto',
-                'overflow-y': 'auto',
                 'z-index': props.content.dropdownZIndex || 2,
+                'overflow-y': 'auto',
+                'width': props.content.dropdownWidth || 'auto',
+                'background-color': props.content.dropdownBgColor || 'transparent',
+
+                ...border,
             };
         });
 

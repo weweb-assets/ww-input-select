@@ -53,7 +53,7 @@ export default {
         const registerOption = inject('_wwSelect:registerOption', () => {});
         const unregisterOption = inject('_wwSelect:unregisterOption', () => {});
         const optionRef = ref(null);
-        const optionElement = computed(() => optionRef.value?.$el);
+        const optionElement = computed(() => optionRef.value?.componentRef?.$el);
         const isInTrigger = inject('_wwSelect:isInTrigger', ref(false));
         if (isInTrigger.value) emit('update:sidepanel-content', { path: 'isInTrigger', value: true });
         const selectValue = inject('_wwSelect:value', ref(''));

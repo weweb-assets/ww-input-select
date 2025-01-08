@@ -23,14 +23,19 @@ export default {
             'showEmptyStateInEditor',
             [
                 'dropdownTitle',
-                'dropdownPaddingX',
-                'dropdownPaddingY',
-                'dropdownBorderColor',
-                'dropdownBorderWidth',
+
+                'dropdownBorder',
+                'dropdownBorderAll',
+                'dropdownBorderTop',
+                'dropdownBorderRight',
+                'dropdownBorderBottom',
+                'dropdownBorderLeft',
                 'dropdownBorderRadius',
+                'dropdownPadding',
                 'dropdownBgColor',
                 'dropdownWidth',
                 'dropdownMaxHeight',
+                'dropdownShadow',
                 'side',
                 'align',
                 'offsetX',
@@ -428,10 +433,85 @@ export default {
             },
             editorOnly: true,
         },
+        dropdownBorder: {
+            type: 'TextRadioGroup',
+            label: { en: 'Borders' },
+            options: {
+                choices: [
+                    {
+                        value: false,
+                        title: { en: 'All', fr: 'Tout' },
+                        icon: 'border',
+                    },
+                    {
+                        value: true,
+                        title: { en: 'Split', fr: 'Split' },
+                        icon: 'border-split',
+                    },
+                ],
+            },
+            responsive: true,
+            defaultValue: false,
+        },
+        dropdownBorderAll: {
+            type: 'Border',
+            label: {
+                en: '',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => content.dropdownBorder,
+        },
+        dropdownBorderTop: {
+            type: 'Border',
+            label: {
+                en: 'Top',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderRight: {
+            type: 'Border',
+            label: {
+                en: 'Right',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderBottom: {
+            type: 'Border',
+            label: {
+                en: 'Bottom',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderLeft: {
+            type: 'Border',
+            label: {
+                en: 'Left',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+
+        dropdownPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Padding',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+
         dropdownZIndex: {
             type: 'Number',
             label: {
-                en: 'Dropdown z-index',
+                en: 'Z axis',
             },
             bindable: true,
             defaultValue: 2,
@@ -445,72 +525,10 @@ export default {
             },
             /* wwEditor:end */
         },
-        dropdownPaddingX: {
-            label: { en: 'Padding X' },
-            type: 'Length',
-            label: { en: 'Dropdown padding X' },
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 10, max: 50 },
-                    { value: 'em', label: 'em', min: 1, max: 50 },
-                    { value: 'rem', label: 'rem', min: 1, max: 50 },
-                ],
-            },
-            classes: true,
-            states: true,
-            responsive: true,
-            bindable: true,
-            defaultValue: '8px',
-        },
-        dropdownPaddingY: {
-            label: { en: 'Padding X' },
-            type: 'Length',
-            label: { en: 'Dropdown padding Y' },
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 10, max: 50 },
-                    { value: 'em', label: 'em', min: 1, max: 50 },
-                    { value: 'rem', label: 'rem', min: 1, max: 50 },
-                ],
-            },
-            classes: true,
-            states: true,
-            responsive: true,
-            bindable: true,
-            defaultValue: '8px',
-        },
-        dropdownBorderColor: {
-            type: 'Color',
-            label: {
-                en: 'Dropdown border color',
-            },
-            bindable: true,
-            options: {
-                nullable: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '#E5E7EB',
-        },
-        dropdownBorderWidth: {
-            type: 'Length',
-            label: {
-                en: 'Dropdown border width',
-            },
-            bindable: true,
-            options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 10 }],
-                noRange: true,
-                useVar: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '1px',
-        },
         dropdownBorderRadius: {
             type: 'Length',
             label: {
-                en: 'Dropdown border radius',
+                en: 'Border radius',
             },
             bindable: true,
             options: {
@@ -525,7 +543,7 @@ export default {
         dropdownBgColor: {
             type: 'Color',
             label: {
-                en: 'Dropdown background color',
+                en: 'Background color',
             },
             bindable: true,
             options: {
@@ -538,7 +556,7 @@ export default {
         dropdownWidth: {
             type: 'Length',
             label: {
-                en: 'Dropdown width',
+                en: 'Width',
             },
             bindable: true,
             options: {
@@ -560,7 +578,7 @@ export default {
         dropdownMaxHeight: {
             type: 'Length',
             label: {
-                en: 'Dropdown max height',
+                en: 'Max height',
             },
             bindable: true,
             options: {
@@ -574,6 +592,19 @@ export default {
             classes: true,
             states: true,
             defaultValue: '300px',
+        },
+        dropdownShadow: {
+            type: 'Shadows',
+            label: {
+                en: 'Shadows',
+            },
+            bindable: true,
+            options: {
+                nullable: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '',
         },
         items: {
             bindable: 'repeatable',
