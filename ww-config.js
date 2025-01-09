@@ -6,9 +6,6 @@ const bufferHelp =
 
 const minItemSizeHelp = 'The minimum height of an item in the virtual scroll.';
 
-const sizeDependenciesHelp =
-    'The main property that can affect the size of the item. This prop will be watched and if it changes, the size will be recomputed.';
-
 export default {
     editor: {
         label: 'Select',
@@ -792,29 +789,6 @@ export default {
             /* wwEditor:end */
             hidden: content => !content.virtualScroll,
         },
-        virtualScrollSizeDependencies: {
-            label: { en: 'Size dependencies' },
-            type: 'TextSelect',
-            section: 'settings',
-            options: (_, sidepanelContent) => {
-                return {
-                    options: Object.keys(sidepanelContent.optionProperties).map(property => ({
-                        value: property,
-                        label: property,
-                    })),
-                };
-            },
-            hidden: content => !content.virtualScroll,
-            /* wwEditor:start */
-            bindingValidation: {
-                validations: [{ type: 'string' }],
-                tooltip: sizeDependenciesHelp,
-            },
-            propertyHelp: {
-                tooltip: sizeDependenciesHelp,
-            },
-            /* wwEditor:end */
-        },
         showEmptyStateInEditor: {
             label: { en: 'Show empty state in editor' },
             type: 'OnOff',
@@ -847,31 +821,6 @@ export default {
         },
 
         // >>>>>>>>>>> OPTION <<<<<<<<<<
-        /* wwEditor:start */
-        selectTypeWarning: {
-            type: 'InfoBox',
-            section: 'settings',
-            options: (_, sidepanelContent) => ({
-                title: sidepanelContent.isInTrigger ? 'Value override' : 'Label and value override',
-                content: sidepanelContent.isInTrigger
-                    ? `When "Value per item" is configured in the Select root element, it will override any value defined in this Option element.`
-                    : `When "Label per item" and "Value per item" are configured in the Select root element, they will override any label and value defined in this Option element.`,
-            }),
-        },
-        /* wwEditor:end */
-        disabled: {
-            label: { en: 'Disabled' },
-            type: 'OnOff',
-            bindable: true,
-            defaultValue: false,
-            section: 'settings',
-            /* wwEditor:start */
-            bindingValidation: {
-                type: 'boolean',
-                tooltip: 'A boolean that defines if the option is disabled: `true | false`',
-            },
-            /* wwEditor:end */
-        },
         selectOnClick: {
             label: { en: 'Select on click' },
             type: 'OnOff',
