@@ -182,6 +182,21 @@ export default {
             if (props.content.closeOnSelect) closeDropdown();
         };
 
+        const toggleValue = value => {
+            if (selectType.value === 'single') {
+                if (variableValue.value === value) setValue(null);
+                else setValue(value);
+            } else {
+                const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
+                const valueIndex = currentValue.indexOf(value);
+
+                if (valueIndex === -1) currentValue.push(value);
+                else currentValue.splice(valueIndex, 1);
+
+                setValue(currentValue);
+            }
+        }
+
         function removeSpecificValue(valueToRemove) {
             if (selectType.value !== 'multiple') return;
 
@@ -258,7 +273,7 @@ export default {
             elementRef: triggerElement,
             options,
             isOpen,
-            methods: { openDropdown, closeDropdown, toggleDropdown, updateValue },
+            methods: { openDropdown, closeDropdown, toggleDropdown, toggleValue },
         });
 
         function handleInitialFocus() {

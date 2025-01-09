@@ -4,7 +4,7 @@ export default function useAccessibility({
     elementRef,
     options,
     isOpen,
-    methods: { openDropdown, closeDropdown, updateValue },
+    methods: { openDropdown, closeDropdown, toggleValue },
 }) {
     const dropdownId = `ww-select-dropdown-${wwLib.wwUtils.getUid()}`;
 
@@ -84,7 +84,7 @@ export default function useAccessibility({
             Enter: () => {
                 event.preventDefault();
                 if (isOpen.value && activeOptionValue.value) {
-                    updateValue(activeOptionValue.value);
+                    toggleValue(activeOptionValue.value);
                 } else if (!isOpen.value) {
                     openDropdown();
                 }
