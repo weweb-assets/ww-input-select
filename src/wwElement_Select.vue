@@ -476,6 +476,19 @@ export default {
         );
 
         /* wwEditor:start */
+        watch(
+            props.wwEditorState,
+            (editorState) => {
+                console.log('editMode', editorState.editMode);
+                if(forceOpenInEditor.value && editorState.editMode == 'EDITION') openDropdown();
+                else closeDropdown();
+            },
+            {
+                immediate: true,
+                deep: true,
+            }
+        );
+
         watch(isEditing, () => {
             componentKey.value++;
             nextTick(debounce(syncFloating, 300));
