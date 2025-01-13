@@ -249,7 +249,7 @@ export default {
                 expandable: true,
                 item: {
                     type: 'Text',
-                    defaultValue: 'Selected option',
+                    defaultValue: '',
                 },
             },
             /* wwEditor:start */
