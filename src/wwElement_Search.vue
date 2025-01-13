@@ -6,15 +6,6 @@
             name="select-search"
             @element-event="handleInputChange"
             data-skip-validation
-            :parent-selection="{
-                allow: true,
-                info: {
-                    header: 'You are on the input element',
-                    text: 'If you want to configure the Search element, you can select it here.',
-                    button: 'Select Search element',
-                    args: ['ww-select-search'],
-                },
-            }"
         />
     </div>
 </template>
