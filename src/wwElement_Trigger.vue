@@ -1,7 +1,7 @@
 <template>
-    <button class="ww-input-select__trigger" type="button">
+    <div class="ww-input-select__trigger">
         <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" />
-    </button>
+    </div>
 </template>
 
 <script>
