@@ -1,5 +1,5 @@
 <template>
-    <button class="ww-input-select__trigger" @click="selectParentElement" type="button">
+    <button class="ww-input-select__trigger" type="button">
         <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" />
     </button>
 </template>
@@ -42,13 +42,6 @@ export default {
             selectedLabel,
             isOptionSelected,
         };
-    },
-    methods: {
-        /* wwEditor:start */
-        selectParentElement() {
-            wwLib.selectParentByFlag(this.$el, 'ww-select');
-        },
-        /* wwEditor:end */
     },
 };
 </script>
