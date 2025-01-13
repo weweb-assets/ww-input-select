@@ -90,15 +90,6 @@ export default {
         { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
     ],
-    /*
-    openDropdown,
-    closeDropdown,
-    toggleDropdown,
-    updateValue,
-    resetValue,
-    removeSpecificValue,
-    resetSearch,
-    */
     actions: [
         {
             label: 'Open',
@@ -1004,6 +995,10 @@ export default {
                 };
             },
             /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'array' }],
+                tooltip: `An array of object with properties to search by in filter key. Ex: [{filter: "['value','label']"}]`,
+            },
             propertyHelp: {
                 tooltip: 'Which properties of the choices are searchable.',
             },
