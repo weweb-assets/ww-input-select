@@ -180,7 +180,7 @@ export default {
                 }
 
                 setValue(currentValue);
-                emit('trigger-event', { name: 'change', event: { value } });
+                emit('trigger-event', { name: 'change', event: { value: currentValue } });
             }
 
             if (props.content.closeOnSelect) closeDropdown();
