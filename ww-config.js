@@ -42,13 +42,7 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
-            [
-                'triggerTitle',
-                'placeholder',
-                'initialState',
-                'selectType',
-                'selectTypeWarning',
-            ],
+            ['triggerTitle', 'placeholder', 'initialState', 'selectType', 'selectTypeWarning'],
             [
                 'optionsTitle',
                 'disabled',
@@ -64,12 +58,7 @@ export default {
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
             ],
-            [
-                'searchTitle',
-                'showSearch',
-                'searchBy',
-                'autoFocus',
-            ],
+            ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
             'formInfobox',
             ['fieldName', 'customValidation', 'validation'],
             {
@@ -101,6 +90,64 @@ export default {
         { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
     ],
+    /*
+    openDropdown,
+    closeDropdown,
+    toggleDropdown,
+    updateValue,
+    resetValue,
+    removeSpecificValue,
+    resetSearch,
+    */
+    actions: [
+        {
+            label: 'Open',
+            action: 'actionOpenDropdown',
+            args: [],
+        },
+        {
+            label: 'Close',
+            action: 'actionCloseDropdown',
+            args: [],
+        },
+        {
+            label: 'Toggle',
+            action: 'actionToggleDropdown',
+            args: [],
+        },
+        {
+            label: 'Set value',
+            action: 'actionUpdateValue',
+            args: [
+                {
+                    name: 'Value',
+                    type: 'any',
+                    required: true,
+                },
+            ],
+        },
+        {
+            label: 'Reset value',
+            action: 'actionResetValue',
+            args: [],
+        },
+        {
+            label: 'Remove specific value',
+            action: 'actionRemoveSpecificValue',
+            args: [
+                {
+                    name: 'Value',
+                    type: 'any',
+                    required: true,
+                },
+            ],
+        },
+        {
+            label: 'Reset search',
+            action: 'actionResetSearch',
+            args: [],
+        },
+    ],
     properties: {
         // >>>>>>>>>>> SELECT <<<<<<<<<<
         choices: {
@@ -112,7 +159,11 @@ export default {
                 useSchema: true,
             },
             bindable: true,
-            defaultValue: [{ "label": "Item 1", "value": "one" }, { "label": "Item 2", "value": "two" }, { "label": "Item 3", "value": "three" }],
+            defaultValue: [
+                { label: 'Item 1', value: 'one' },
+                { label: 'Item 2', value: 'two' },
+                { label: 'Item 3', value: 'three' },
+            ],
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
@@ -134,8 +185,8 @@ export default {
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
             }),
             defaultValue: {
-                "type": "f",
-                "code": "context.mapping?.['label']"
+                type: 'f',
+                code: "context.mapping?.['label']",
             },
             /* wwEditor:start */
             propertyHelp: {
@@ -151,8 +202,8 @@ export default {
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
             }),
             defaultValue: {
-                "type": "f",
-                "code": "context.mapping?.['value']"
+                type: 'f',
+                code: "context.mapping?.['value']",
             },
             /* wwEditor:start */
             propertyHelp: {
@@ -168,8 +219,8 @@ export default {
                 template: Array.isArray(content.choices) ? content.choices[0] : null,
             }),
             defaultValue: {
-                "type": "f",
-                "code": "false"
+                type: 'f',
+                code: 'false',
             },
             /* wwEditor:start */
             propertyHelp: {
@@ -415,7 +466,7 @@ export default {
             defaultValue: {
                 isWwObject: true,
                 type: 'ww-flexbox',
-                name: 'Trigger container',
+                name: 'Trigger',
                 content: {
                     children: [
                         {
@@ -431,9 +482,6 @@ export default {
                     ],
                 },
             },
-            navigator: {
-                group: 'Trigger',
-            },
         },
 
         // >>>>>>>>>>> DROPDOWN <<<<<<<<<<
@@ -444,6 +492,17 @@ export default {
                 en: 'Dropdown',
             },
             editorOnly: true,
+        },
+        dropdownContainerElement: {
+            hidden: true,
+            defaultValue: {
+                isWwObject: true,
+                type: 'ww-flexbox',
+                name: 'Dropdown container',
+                content: {
+                    children: [],
+                },
+            },
         },
         dropdownBorder: {
             type: 'TextRadioGroup',
@@ -582,9 +641,9 @@ export default {
             classes: true,
             states: true,
             defaultValue: {
-                "code": "context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+\"px\"",
-                "__wwtype": "f",
-                "defaultValue": "100%"
+                code: "context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+\"px\"",
+                __wwtype: 'f',
+                defaultValue: '100%',
             },
         },
         dropdownMaxHeight: {
@@ -645,6 +704,14 @@ export default {
                 ],
             },
             defaultValue: 'bottom',
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'string' }],
+                tooltip:
+                    'The side of the dropdown relative to the trigger. A string value: \n\n`bottom`, `left`, `top`, `right`',
+            },
+            /* wwEditor:end */
             // hidden: content => content.autoPosition,
         },
         align: {
@@ -658,6 +725,14 @@ export default {
                 ],
             },
             defaultValue: 'start',
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'string' }],
+                tooltip:
+                    'The alignment of the dropdown relative to the trigger. A string value: \n\n`start`, `center`, `end`',
+            },
+            /* wwEditor:end */
             // hidden: content => content.autoPosition,
         },
         offsetX: {
@@ -670,6 +745,7 @@ export default {
                 ],
             },
             defaultValue: '0px',
+            bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'number' }],
@@ -691,6 +767,7 @@ export default {
                 ],
             },
             defaultValue: '0px',
+            bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'number' }],
@@ -712,6 +789,7 @@ export default {
                 ],
             },
             defaultValue: '0px',
+            bindable: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'number' }],
@@ -726,7 +804,7 @@ export default {
         },
         dropdownContent: {
             hidden: true,
-            defaultValue: []
+            defaultValue: [],
         },
 
         // >>>>>>>>>>> OPTION LIST <<<<<<<<<<
@@ -810,9 +888,9 @@ export default {
                         {
                             isWwObject: true,
                             type: 'ww-text',
-                            content: { default: { "_ww-text_text": 'No items found' } },
+                            content: { default: { '_ww-text_text': 'No items found' } },
                         },
-                    ]
+                    ],
                 },
             },
             navigator: {
@@ -844,9 +922,6 @@ export default {
             defaultValue: false,
             /* wwEditor:start */
             section: 'settings',
-            navigator: {
-                group: 'Option',
-            },
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',
@@ -858,19 +933,20 @@ export default {
             defaultValue: {
                 isWwObject: true,
                 type: 'ww-flexbox',
-                name: 'Option container',
+                name: 'Option',
                 content: {
                     children: [
                         {
                             isWwObject: true,
                             type: 'ww-text',
                             content: {
-                                text: { en: 'Option' }, "_ww-text_text": {
-                                    "en": {
-                                        "__wwtype": "f",
-                                        "code": "context.item.data?.['label']"
-                                    }
-                                }
+                                text: { en: 'Option' },
+                                '_ww-text_text': {
+                                    en: {
+                                        __wwtype: 'f',
+                                        code: "context.item.data?.['label']",
+                                    },
+                                },
                             },
                         },
                         {
@@ -880,9 +956,6 @@ export default {
                         },
                     ],
                 },
-            },
-            navigator: {
-                group: 'Option',
             },
         },
 

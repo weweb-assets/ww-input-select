@@ -18,7 +18,7 @@
         <div
             class="ww-select__dropdown"
             ref="dropdownElement"
-            :style="[floatingStyles, dropdownStyles]"
+            :style="[floatingStyles]"
             v-show="isOpen"
             :id="dropdownId"
             :role="selectType === 'single' ? 'listbox' : 'group'"
@@ -26,11 +26,13 @@
             :aria-label="'Select options'"
             inherit-component-style
         >
+            <!-- <wwElement v-bind="content.dropdownContainerElement" noDropzone> -->
             <SelectDropdown :content="content" :wwEditorState="wwEditorState">
                 <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
                 <!-- List mode -->
                 <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
             </SelectDropdown>
+            <!-- </wwElement> -->
         </div>
 
         <input
@@ -145,6 +147,8 @@ export default {
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
 
+        const lastTriggeredComponentAction = ref(Date.now());
+
         const registerOption = (id, option) => {
             optionsMap.value.set(id, option);
         };
@@ -195,7 +199,7 @@ export default {
 
                 setValue(currentValue);
             }
-        }
+        };
 
         function removeSpecificValue(valueToRemove) {
             if (selectType.value !== 'multiple') return;
@@ -235,6 +239,7 @@ export default {
         });
 
         function openDropdown() {
+            console.log('openDropdown function');
             if (isDisabled.value || isReadonly.value) return;
 
             isOpen.value = true;
@@ -257,13 +262,18 @@ export default {
             else openDropdown();
         }
 
+        function resetValue() {
+            setValue(initValue.value || null);
+        }
+
         function handleClickOutside(event) {
             if (
                 closeOnClickOutside.value &&
                 isOpen.value &&
                 !triggerElement.value.contains(event.target) &&
                 !dropdownElement.value.contains(event.target) &&
-                !isEditing.value
+                !isEditing.value &&
+                Date.now() > lastTriggeredComponentAction.value + 400
             ) {
                 closeDropdown();
             }
@@ -367,7 +377,7 @@ export default {
                 editor: {
                     label: 'Set value',
                     group: 'Select',
-                    description: 'Set the value',
+                    description: 'Set the select value or append the value in multiselect',
                     icon: 'select',
                     args: [
                         {
@@ -380,7 +390,7 @@ export default {
                 /* wwEditor:end */
             },
             resetValue: {
-                method: () => setValue(initValue.value || null),
+                method: resetValue,
                 /* wwEditor:start */
                 editor: { label: 'Reset value', group: 'Select', description: 'Reset the value', icon: 'select' },
                 /* wwEditor:end */
@@ -478,9 +488,18 @@ export default {
         /* wwEditor:start */
         watch(
             props.wwEditorState,
-            (editorState) => {
-                console.log('editMode', editorState.editMode);
-                if(forceOpenInEditor.value && editorState.editMode == 'EDITION') openDropdown();
+            (newEditorState, oldEditorState) => {
+                console.log('new editMode', newEditorState?.editMode);
+                console.log('old editMode', oldEditorState?.editMode);
+                if (newEditorState?.editMode == oldEditorState?.editMode) {
+                    return;
+                }
+
+                if (
+                    forceOpenInEditor.value &&
+                    newEditorState?.editMode == 'EDITION'
+                )
+                    openDropdown();
                 else closeDropdown();
             },
             {
@@ -591,27 +610,6 @@ export default {
             markdown,
         });
 
-        // Styles
-        const dropdownStyles = computed(() => {
-            return {
-                padding: props.content.dropdownPadding || 0,
-                'box-shadow': props.content.dropdownShadow || 'none',
-                'border-radius': props.content.dropdownBorderRadius || 0,
-                'z-index': props.content.dropdownZIndex || 2,
-                width: props.content.dropdownWidth || 'auto',
-                'background-color': props.content.dropdownBgColor || 'transparent',
-
-                ...(props.content.dropdownBorder
-                    ? {
-                          'border-top': props.content.dropdownBorderTop,
-                          'border-right': props.content.dropdownBorderRight,
-                          'border-bottom': props.content.dropdownBorderBottom,
-                          'border-left': props.content.dropdownBorderLeft,
-                      }
-                    : { border: props.content.dropdownBorderAll }),
-            };
-        });
-
         onMounted(() => {
             nextTick(() => {
                 debounce(syncFloating, 300);
@@ -650,15 +648,57 @@ export default {
             selectType,
             handleKeydown,
             toggleDropdown,
-            dropdownStyles,
             resizeObserver,
             options,
             currentLocalContext,
             variableValue,
+            lastTriggeredComponentAction,
+
+            // Methods
+            openDropdown,
+            closeDropdown,
+            toggleDropdown,
+            updateValue,
+            resetValue,
+            removeSpecificValue,
+            resetSearch,
             /* wwEditor:start */
             selectForm,
             /* wwEditor:end */
         };
+    },
+    methods: {
+        resetLastTriggerComponentAction() {
+            this.lastTriggeredComponentAction = Date.now();
+        },
+        actionOpenDropdown() {
+            this.resetLastTriggerComponentAction();
+            this.openDropdown();
+        },
+        actionCloseDropdown() {
+            this.resetLastTriggerComponentAction();
+            this.closeDropdown();
+        },
+        actionToggleDropdown() {
+            this.resetLastTriggerComponentAction();
+            this.toggleDropdown();
+        },
+        actionUpdateValue(value) {
+            this.resetLastTriggerComponentAction();
+            this.updateValue(value);
+        },
+        actionResetValue() {
+            this.resetLastTriggerComponentAction();
+            this.resetValue();
+        },
+        actionRemoveSpecificValue(value) {
+            this.resetLastTriggerComponentAction();
+            this.removeSpecificValue(value);
+        },
+        actionResetSearch() {
+            this.resetLastTriggerComponentAction();
+            this.resetSearch();
+        },
     },
 };
 </script>

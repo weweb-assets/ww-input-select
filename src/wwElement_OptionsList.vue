@@ -1,6 +1,5 @@
 <template>
     <DynamicScroller
-        :style="content.dropdownMaxHeight ? { maxHeight: content.dropdownMaxHeight } : {}"
         v-if="virtualScroll && filteredOptions.length > 0"
         :items="dynamicScrollerItems"
         :min-item-size="virtualScrollMinItemSize"
@@ -21,24 +20,16 @@
         </template>
     </DynamicScroller>
 
-    <div
+    <wwLayoutItemContext
         v-else-if="!virtualScroll && filteredOptions.length > 0"
-        class="flex flex-col"
-        :style="{
-            'overflow-y': 'auto',
-            ...(content.dropdownMaxHeight ? { maxHeight: content.dropdownMaxHeight } : {}),
-        }"
+        v-for="(item, index) in filteredOptions"
+        :key="index"
+        is-repeat
+        :index="index"
+        :data="item"
     >
-        <wwLayoutItemContext
-            v-for="(item, index) in filteredOptions"
-            :key="index"
-            is-repeat
-            :index="index"
-            :data="item"
-        >
-            <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
-        </wwLayoutItemContext>
-    </div>
+        <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+    </wwLayoutItemContext>
 
     <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor">
         <wwElement v-bind="content.emptyStateContainer" />
