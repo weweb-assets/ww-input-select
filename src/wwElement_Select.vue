@@ -162,6 +162,7 @@ export default {
         };
 
         const updateSearch = filter => {
+            console.log('updateSearch function', filter);
             searchState.value = filter;
         };
 
@@ -489,8 +490,6 @@ export default {
         watch(
             props.wwEditorState,
             (newEditorState, oldEditorState) => {
-                console.log('new editMode', newEditorState?.editMode);
-                console.log('old editMode', oldEditorState?.editMode);
                 if (newEditorState?.editMode == oldEditorState?.editMode) {
                     return;
                 }
