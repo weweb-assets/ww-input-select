@@ -26,13 +26,13 @@
             :aria-label="'Select options'"
             inherit-component-style
         >
-            <!-- <wwElement v-bind="content.dropdownContainerElement" noDropzone> -->
-            <SelectDropdown :content="content" :wwEditorState="wwEditorState">
-                <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
-                <!-- List mode -->
-                <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
-            </SelectDropdown>
-            <!-- </wwElement> -->
+            <wwElement v-bind="content.dropdownContainerElement" noDropzone>
+                <SelectDropdown :content="content" :wwEditorState="wwEditorState">
+                    <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
+                    <!-- List mode -->
+                    <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
+                </SelectDropdown>
+            </wwElement>
         </div>
 
         <input
@@ -714,7 +714,7 @@ export default {
 }
 
 .ww-select__dropdown {
-    overflow: hidden;
+    //overflow: hidden;
 }
 
 .fake-input {
