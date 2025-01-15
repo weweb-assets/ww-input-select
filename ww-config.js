@@ -150,11 +150,7 @@ export default {
                 useSchema: true,
             },
             bindable: true,
-            defaultValue: [
-                { label: 'Item 1', value: 'one' },
-                { label: 'Item 2', value: 'two' },
-                { label: 'Item 3', value: 'three' },
-            ],
+            defaultValue: [],
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
@@ -495,194 +491,6 @@ export default {
                 },
             },
         },
-        dropdownBorder: {
-            type: 'TextRadioGroup',
-            label: { en: 'Borders' },
-            options: {
-                choices: [
-                    {
-                        value: false,
-                        title: { en: 'All', fr: 'Tout' },
-                        icon: 'border',
-                    },
-                    {
-                        value: true,
-                        title: { en: 'Split', fr: 'Split' },
-                        icon: 'border-split',
-                    },
-                ],
-            },
-            responsive: true,
-            defaultValue: false,
-        },
-        dropdownBorderAll: {
-            type: 'Border',
-            label: {
-                en: '',
-            },
-            bindable: true,
-            defaultValue: undefined,
-            hidden: content => content.dropdownBorder,
-        },
-        dropdownBorderTop: {
-            type: 'Border',
-            label: {
-                en: 'Top',
-            },
-            bindable: true,
-            defaultValue: undefined,
-            hidden: content => !content.dropdownBorder,
-        },
-        dropdownBorderRight: {
-            type: 'Border',
-            label: {
-                en: 'Right',
-            },
-            bindable: true,
-            defaultValue: undefined,
-            hidden: content => !content.dropdownBorder,
-        },
-        dropdownBorderBottom: {
-            type: 'Border',
-            label: {
-                en: 'Bottom',
-            },
-            bindable: true,
-            defaultValue: undefined,
-            hidden: content => !content.dropdownBorder,
-        },
-        dropdownBorderLeft: {
-            type: 'Border',
-            label: {
-                en: 'Left',
-            },
-            bindable: true,
-            defaultValue: undefined,
-            hidden: content => !content.dropdownBorder,
-        },
-
-        dropdownPadding: {
-            type: 'Spacing',
-            label: {
-                en: 'Padding',
-            },
-            bindable: true,
-            defaultValue: '0px',
-        },
-
-        dropdownZIndex: {
-            type: 'Number',
-            label: {
-                en: 'Z axis',
-            },
-            bindable: true,
-            defaultValue: 2,
-            /* wwEditor:start */
-            bindingValidation: {
-                validations: [{ type: 'number' }],
-                tooltip: 'The z-index of the dropdown that leads to be on top of other elements.',
-            },
-            propertyHelp: {
-                tooltip: 'The z-index of the dropdown.',
-            },
-            /* wwEditor:end */
-        },
-        dropdownBorderRadius: {
-            type: 'Length',
-            label: {
-                en: 'Border radius',
-            },
-            bindable: true,
-            options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 0, max: 50 }],
-                noRange: true,
-                useVar: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '4px',
-        },
-        dropdownBgColor: {
-            type: 'Color',
-            label: {
-                en: 'Background color',
-            },
-            bindable: true,
-            options: {
-                nullable: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '#FFFFFF',
-        },
-        dropdownWidth: {
-            type: 'Length',
-            label: {
-                en: 'Width',
-            },
-            bindable: true,
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 100, max: 500 },
-                    { value: '%', label: '%', min: 10, max: 100 },
-                ],
-                noRange: true,
-                useVar: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: {
-                code: "context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+\"px\"",
-                __wwtype: 'f',
-                defaultValue: '100%',
-            },
-        },
-        dropdownMaxHeight: {
-            type: 'Length',
-            label: {
-                en: 'Max height',
-            },
-            bindable: true,
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 100, max: 500 },
-                    { value: '%', label: '%', min: 10, max: 100 },
-                ],
-                noRange: true,
-                useVar: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '300px',
-        },
-        dropdownShadow: {
-            type: 'Shadows',
-            label: {
-                en: 'Shadows',
-            },
-            bindable: true,
-            options: {
-                nullable: true,
-            },
-            classes: true,
-            states: true,
-            defaultValue: '',
-        },
-        items: {
-            bindable: 'repeatable',
-            label: {
-                en: 'Items',
-                fr: 'Items',
-            },
-            type: 'Info',
-            options: {
-                text: {
-                    en: 'Elements to repeat',
-                },
-            },
-            defaultValue: [],
-            hidden: true,
-        },
         side: {
             label: { en: 'Side' },
             type: 'TextSelect',
@@ -792,10 +600,6 @@ export default {
                     'Offset to the edge of the screen when the dropdown should change the side to opposite when there is no space for it.',
             },
             /* wwEditor:end */
-        },
-        dropdownContent: {
-            hidden: true,
-            defaultValue: [],
         },
 
         // >>>>>>>>>>> OPTION LIST <<<<<<<<<<
