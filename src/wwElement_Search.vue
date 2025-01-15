@@ -50,8 +50,12 @@ export default {
         // This event come from ww-input-basic => https://github.com/weweb-assets/ww-input-basic
         const handleInputChange = event => {
             console.log('handleInputChange', event);
-            if ((event.type === 'change' || event.name === 'change') && debounce)
+            // Triggered by trigger-event
+            if (event.type === 'change' && debounce)
                 debouncedUpdateSearch(event?.value?.value, searchBy);
+            // Triggered by element-event
+            if (event.name === 'change' && debounce)
+                debouncedUpdateSearch(event?.event?.value, searchBy);
         };
 
         function focusInput() {
