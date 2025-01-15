@@ -109,6 +109,7 @@ export default {
         );
 
         const handleClick = () => {
+            console.log('handleClick', props.localData);
             if (isSelected.value && canInteract.value && props.content.unselectOnClick) {
                 unselect();
                 focusFromOptionId(null);

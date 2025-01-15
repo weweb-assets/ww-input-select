@@ -52,7 +52,7 @@ import InputSelectDropdown from './wwElement_Dropdown.vue';
 import InputSelectOption from './wwElement_Option.vue';
 import InputSelectOptionList from './wwElement_OptionsList.vue';
 import InputSelectSearch from './wwElement_Search.vue';
-import { ref, computed, provide, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, provide, watch, inject, nextTick, toValue, onMounted, onBeforeUnmount } from 'vue';
 import useDropdownFloating from './select/useFloating';
 import useAccessibility from './select/useAccessibility';
 import useSearch from './select/useSearch';
@@ -112,6 +112,8 @@ export default {
             defaultValue: initValue,
         });
 
+        const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
+
         const fieldName = computed(() => props.content.fieldName || props.wwElementState.name);
         const validation = computed(() => props.content.validation);
         const customValidation = computed(() => props.content.customValidation);
@@ -167,6 +169,7 @@ export default {
         };
 
         const updateValue = value => {
+            console.log('updateValue function', value);
             if (selectType.value === 'single') {
                 setValue(value);
                 emit('trigger-event', { name: 'change', event: { value } });
@@ -240,7 +243,6 @@ export default {
         });
 
         function openDropdown() {
-            console.log('openDropdown function');
             if (isDisabled.value || isReadonly.value) return;
 
             isOpen.value = true;
@@ -318,10 +320,16 @@ export default {
         };
 
         const selectionDetails = computed(() => {
-            const _optionsMap = new Map(rawData.value.map(({ ...option }) => [option.value, option])); // Hide optionId
+            console.log('selectionDetails', rawData.value);
+            const _optionsMap = new Map(
+                rawData.value.map(({ ...option }) => [
+                    resolveMappingFormula(toValue(mappingValue), option) || option.value,
+                    option,
+                ])
+            ); // Hide optionId
             const obj = opt => ({
-                value: opt.value,
-                label: opt.label,
+                value: resolveMappingFormula(toValue(mappingValue),opt) || opt.value,
+                label: resolveMappingFormula(toValue(mappingLabel),opt) || opt.value,
                 disabled: opt.disabled || false,
                 data: opt || {},
             });
