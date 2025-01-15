@@ -578,29 +578,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        boundOffset: {
-            label: { en: 'Edge offset' },
-            type: 'Length',
-            options: {
-                unitChoices: [
-                    { value: 'px', label: 'px', min: 0, max: 100 },
-                    { value: '%', label: '%', min: 0, max: 100 },
-                ],
-            },
-            defaultValue: '0px',
-            bindable: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                validations: [{ type: 'number' }],
-                tooltip:
-                    'Offset to the edge of the screen when the dropdown should change the side to opposite when there is no space for it. A number value: \n\n`4`, `8`, `12`, etc.',
-            },
-            propertyHelp: {
-                tooltip:
-                    'Offset to the edge of the screen when the dropdown should change the side to opposite when there is no space for it.',
-            },
-            /* wwEditor:end */
-        },
 
         // >>>>>>>>>>> OPTION LIST <<<<<<<<<<
         optionsTitle: {
