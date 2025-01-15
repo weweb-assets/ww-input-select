@@ -1,6 +1,7 @@
 <template>
     <DynamicScroller
         v-if="virtualScroll && filteredOptions.length > 0"
+        style="height: 100%"
         :items="dynamicScrollerItems"
         :min-item-size="virtualScrollMinItemSize"
         :buffer="virtualScrollBuffer"
@@ -20,16 +21,17 @@
         </template>
     </DynamicScroller>
 
-    <wwLayoutItemContext
-        v-else-if="!virtualScroll && filteredOptions.length > 0"
-        v-for="(item, index) in filteredOptions"
-        :key="index"
-        is-repeat
-        :index="index"
-        :data="item"
-    >
-        <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
-    </wwLayoutItemContext>
+    <div v-else-if="!virtualScroll && filteredOptions.length > 0" style="height: 100%;overflow: auto;">
+        <wwLayoutItemContext
+            v-for="(item, index) in filteredOptions"
+            :key="index"
+            is-repeat
+            :index="index"
+            :data="item"
+        >
+            <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+        </wwLayoutItemContext>
+    </div>
 
     <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor">
         <wwElement v-bind="content.emptyStateContainer" />

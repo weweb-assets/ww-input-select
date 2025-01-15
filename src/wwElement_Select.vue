@@ -26,7 +26,7 @@
             :aria-label="'Select options'"
             inherit-component-style
         >
-            <wwElement v-bind="content.dropdownContainerElement" noDropzone>
+            <wwElement v-bind="content.dropdownContainerElement" :wwProps="{ noDropzone: true }">
                 <SelectDropdown :content="content" :wwEditorState="wwEditorState">
                     <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
                     <!-- List mode -->
@@ -487,29 +487,14 @@ export default {
         );
 
         /* wwEditor:start */
-        watch(
-            props.wwEditorState,
-            (newEditorState, oldEditorState) => {
-                if (newEditorState?.editMode == oldEditorState?.editMode) {
-                    return;
-                }
-
-                if (
-                    forceOpenInEditor.value &&
-                    newEditorState?.editMode == 'EDITION'
-                )
-                    openDropdown();
-                else closeDropdown();
-            },
-            {
-                immediate: true,
-                deep: true,
-            }
-        );
-
         watch(isEditing, () => {
+            console.log('isEditing', isEditing.value);
             componentKey.value++;
             nextTick(debounce(syncFloating, 300));
+
+            if (forceOpenInEditor.value && isEditing.value) openDropdown();
+            else if (initialState.value && initialState.value === 'open') openDropdown();
+            else closeDropdown();
         });
 
         watch(forceOpenInEditor, () => {
