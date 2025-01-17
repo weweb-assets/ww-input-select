@@ -102,7 +102,6 @@ export default {
         });
 
         const memoizedFilter = useMemoize((options, filterValue) => {
-            console.log('memoizedFilter', options, filterValue, searchState.value);
             const searchBy = searchState.value?.searchBy?.length
                 ? searchState.value?.searchBy
                 : Object.keys(options[0]);
