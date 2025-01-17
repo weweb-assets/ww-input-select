@@ -26,7 +26,7 @@
             :aria-label="'Select options'"
             inherit-component-style
         >
-            <wwElement v-bind="content.dropdownContainerElement" :wwProps="{ noDropzone: true }">
+            <wwElement v-bind="content.dropdownContainerElement" :wwProps="{ noDropzone: true, overrideDisplayValues: ['flex'] }">
                 <SelectDropdown :content="content" :wwEditorState="wwEditorState">
                     <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
                     <!-- List mode -->
