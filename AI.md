@@ -69,5 +69,11 @@ Events:
 Variables:
 - value: any|array - Current selected value(s). Type depends on selectType (single/multiple)
 
+Context ( accessible globally ):
+- context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, _data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: selectionDetails(dynamicConfiguration format) }, utils: { type: selectType, isOpen, triggerWidth, triggerHeight } }, selectTrigger: { placeholder: Text } }
+
+Context ( accessible inside optionChoiceElement):
+- context.local.data.selectOption: { label: Text, value: value (according to mappingValue), isOptionDisabled: bool, isSelected: bool, _data: current rawData defined in choices }
+
 Note:
 If you want to fix width, you should set it in root ww-input-select component, and set triggerContainer width to 100%. Don't forget zIndex 1 to the root ww-input-select.
