@@ -20,6 +20,7 @@ Properties:
 - choices: array<{ label: string, value: any }> - Array of options to display in the dropdown. Don't forget linked dynamicConfiguration in settings.
 - mappingLabel: Formula - A formula to derive the label from each choice item.
 - mappingValue: Formula - A formula to derive the value from each choice item.
+- mappingDisabled: Formula - A formula applyed to each choice item to disable or not them.
 - initValueSingle: string | null - Initial value for single select. Default: null.
 - initValueMulti: Array<string> - Initial values for multiple select. Default: [].
 - selectType: 'single' | 'multiple' - Type of select (single or multiple selection). Default: 'single'.
