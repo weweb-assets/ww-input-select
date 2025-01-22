@@ -77,4 +77,8 @@ Context ( accessible inside optionChoiceElement):
 - context.local.data.selectOption: { label: Text, value: value (according to mappingValue), isOptionDisabled: bool, isSelected: bool, _data: current rawData defined in choices }
 
 Note:
-If you want to fix width, you should set it in root ww-input-select component, and set triggerContainer width to 100%. Don't forget zIndex 1 to the root ww-input-select.
+- Do not forget to style the dropdownContainerElement
+- Do not forget dynamicConfiguration
+- If you want to fix width, you should set it in root ww-input-select component, and set triggerContainer width to 100%. 
+- Don't forget zIndex 1 to the root ww-input-select.
+**IMPORTANT**: Don't be lazy, the ww-input-select have to be complete and perfect otherwise it will be broken !
