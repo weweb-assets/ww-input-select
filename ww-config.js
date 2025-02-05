@@ -110,7 +110,7 @@ export default {
             args: [],
         },
         {
-            label: 'Remove specific value',
+            label: 'Remove specific value (multiselect)',
             action: 'actionRemoveSpecificValue',
             args: [
                 {
@@ -536,7 +536,7 @@ export default {
             bindingValidation: {
                 validations: [{ type: 'number' }],
                 tooltip:
-                    'The horizontal offset of the dropdown relative to the trigger. A number value: \n\n`4`, `8`, `12`, etc.',
+                    'The horizontal offset of the dropdown relative to the trigger. A length value: \n\n`4px`, `50%`, `8rem`, etc.',
             },
             propertyHelp: {
                 tooltip: 'The horizontal offset of the dropdown relative to the trigger.',
@@ -558,7 +558,7 @@ export default {
             bindingValidation: {
                 validations: [{ type: 'number' }],
                 tooltip:
-                    'The vertical offset of the dropdown relative to the trigger. A number value: \n\n`4`, `8`, `12`, etc.',
+                    'The vertical offset of the dropdown relative to the trigger. A length value: \n\n`4px`, `50%`, `8rem`, etc.',
             },
             propertyHelp: {
                 tooltip: 'The vertical offset of the dropdown relative to the trigger.',
@@ -581,7 +581,7 @@ export default {
             bindingValidation: {
                 validations: [{ type: 'number' }],
                 tooltip:
-                    'Offset to the edge of the screen when the dropdown should change the side to opposite when there is no space for it. A number value: \n\n`4`, `8`, `12`, etc.',
+                    'Offset to the edge of the screen when the dropdown should change the side to opposite when there is no space for it. A length value: \n\n`4px`, `50%`, `8rem`, etc.',
             },
             propertyHelp: {
                 tooltip:
@@ -789,7 +789,7 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'array' }],
-                tooltip: `An array of object with properties to search by in filter key. Ex: [{filter: "['value','label']"}]`,
+                tooltip: `An array of object with properties to search by in filter key. Ex: [{filter: "['key1','key2']"}]`,
             },
             propertyHelp: {
                 tooltip: 'Which properties of the choices are searchable.',

@@ -76,7 +76,7 @@ export default {
 
         const showEmptyStateInEditor = computed(() => {
             /* wwEditor:start */
-            return props.wwEditorState.sidepanelContent.showEmptyStateInEditor;
+            return props.wwEditorState.sidepanelContent.showEmptyStateInEditor && props.wwEditorState.isEditing;
             /* wwEditor:end */
             // eslint-disable-next-line no-unreachable
             return false;
