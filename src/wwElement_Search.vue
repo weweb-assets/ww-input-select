@@ -49,7 +49,6 @@ export default {
 
         // This event come from ww-input-basic => https://github.com/weweb-assets/ww-input-basic
         const handleInputChange = event => {
-            console.log('handleInputChange', event);
             // Triggered by trigger-event
             if (event.type === 'change' && debounce)
                 debouncedUpdateSearch(event?.value?.value, searchBy);
