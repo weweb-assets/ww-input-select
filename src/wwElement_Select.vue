@@ -26,7 +26,10 @@
             :aria-label="'Select options'"
             inherit-component-style
         >
-            <wwElement v-bind="content.dropdownContainerElement" :wwProps="{ noDropzone: true, overrideDisplayValues: ['flex'] }">
+            <wwElement
+                v-bind="content.dropdownContainerElement"
+                :wwProps="{ noDropzone: true, overrideDisplayValues: ['flex'] }"
+            >
                 <SelectDropdown :content="content" :wwEditorState="wwEditorState">
                     <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
                     <!-- List mode -->
@@ -85,7 +88,7 @@ export default {
         /* wwEditor:start */
         const selectForm = inject('_wwForm:selectForm', () => {});
         /* wwEditor:end */
-
+        
         const componentKey = ref(0);
         const isEditing = computed(() => {
             /* wwEditor:start */
@@ -164,12 +167,10 @@ export default {
         };
 
         const updateSearch = filter => {
-            console.log('updateSearch function', filter);
             searchState.value = filter;
         };
 
         const updateValue = value => {
-            console.log('updateValue function', value);
             if (selectType.value === 'single') {
                 setValue(value);
                 emit('trigger-event', { name: 'change', event: { value } });
@@ -190,16 +191,28 @@ export default {
             if (props.content.closeOnSelect) closeDropdown();
         };
 
-        const toggleValue = value => {
+        const toggleValueAccessibility = value => {
             if (selectType.value === 'single') {
-                if (variableValue.value === value) setValue(null);
-                else setValue(value);
+                if (variableValue.value === value) {
+                    // Unselect ?
+                    if (props.content.unselectOnClick) setValue(null);
+                } else if(props.content.selectOnClick) {
+                    // Select ?
+                    setValue(value)
+                    if (props.content.closeOnSelect) closeDropdown();
+                }
             } else {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
                 const valueIndex = currentValue.indexOf(value);
 
-                if (valueIndex === -1) currentValue.push(value);
-                else currentValue.splice(valueIndex, 1);
+                if (valueIndex >= 0) {
+                    // Unelect ?
+                    if (props.content.unselectOnClick) currentValue.splice(valueIndex, 1);
+                } else if(props.content.selectOnClick) {
+                    // Select ?
+                    currentValue.push(value)
+                    if (props.content.closeOnSelect) closeDropdown();
+                }
 
                 setValue(currentValue);
             }
@@ -286,7 +299,7 @@ export default {
             elementRef: triggerElement,
             options,
             isOpen,
-            methods: { openDropdown, closeDropdown, toggleDropdown, toggleValue },
+            methods: { openDropdown, closeDropdown, toggleDropdown, toggleValue: toggleValueAccessibility },
         });
 
         function handleInitialFocus() {
@@ -320,7 +333,6 @@ export default {
         };
 
         const selectionDetails = computed(() => {
-            console.log('selectionDetails', rawData.value);
             const _optionsMap = new Map(
                 rawData.value.map(({ ...option }) => [
                     resolveMappingFormula(toValue(mappingValue), option) || option.value,
@@ -496,7 +508,6 @@ export default {
 
         /* wwEditor:start */
         watch(isEditing, () => {
-            console.log('isEditing', isEditing.value);
             componentKey.value++;
             nextTick(debounce(syncFloating, 300));
 
