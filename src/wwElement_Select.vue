@@ -1,5 +1,11 @@
 <template>
-    <div class="ww-select" :key="componentKey" data-ww-flag="ww-select">
+    <div
+        class="ww-select"
+        :class="{ 'ww-select-z-index': isOpen && content.zIndexOpen }"
+        :style="{ '--select-z-index': isOpen && content.zIndexOpen ? content.zIndexOpen : 'auto' }"
+        ref="componentKey"
+        data-ww-flag="ww-select"
+    >
         <div
             class="ww-select__trigger"
             ref="triggerElement"
@@ -88,7 +94,7 @@ export default {
         /* wwEditor:start */
         const selectForm = inject('_wwForm:selectForm', () => {});
         /* wwEditor:end */
-        
+
         const componentKey = ref(0);
         const isEditing = computed(() => {
             /* wwEditor:start */
@@ -152,6 +158,17 @@ export default {
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
 
+        // Styles
+        const selectStyles = computed(() => {
+            if (isOpen.value && props.content.zIndexOpen) {
+                console.log('isOpen', isOpen.value, props.content.zIndexOpen);
+                return {
+                    zIndex: `${props.content.zIndexOpen} !important`,
+                };
+            }
+            return {};
+        });
+
         const lastTriggeredComponentAction = ref(Date.now());
 
         const registerOption = (id, option) => {
@@ -200,9 +217,9 @@ export default {
                 if (variableValue.value === value) {
                     // Unselect ?
                     if (props.content.unselectOnClick) setValue(null);
-                } else if(props.content.selectOnClick) {
+                } else if (props.content.selectOnClick) {
                     // Select ?
-                    setValue(value)
+                    setValue(value);
                     if (props.content.closeOnSelect) closeDropdown();
                 }
             } else {
@@ -212,9 +229,9 @@ export default {
                 if (valueIndex >= 0) {
                     // Unelect ?
                     if (props.content.unselectOnClick) currentValue.splice(valueIndex, 1);
-                } else if(props.content.selectOnClick) {
+                } else if (props.content.selectOnClick) {
                     // Select ?
-                    currentValue.push(value)
+                    currentValue.push(value);
                     if (props.content.closeOnSelect) closeDropdown();
                 }
 
@@ -344,8 +361,8 @@ export default {
                 ])
             ); // Hide optionId
             const obj = opt => ({
-                value: resolveMappingFormula(toValue(mappingValue),opt) || opt.value,
-                label: resolveMappingFormula(toValue(mappingLabel),opt) || opt.value,
+                value: resolveMappingFormula(toValue(mappingValue), opt) || opt.value,
+                label: resolveMappingFormula(toValue(mappingLabel), opt) || opt.value,
                 disabled: opt.disabled || false,
                 data: opt || {},
             });
@@ -660,6 +677,7 @@ export default {
             currentLocalContext,
             variableValue,
             lastTriggeredComponentAction,
+            selectStyles,
 
             // Methods
             openDropdown,
@@ -715,6 +733,10 @@ export default {
 
 .ww-select {
     position: relative;
+}
+
+.ww-select-z-index {
+    z-index: var(--select-z-index, auto) !important;
 }
 
 .ww-select__trigger {

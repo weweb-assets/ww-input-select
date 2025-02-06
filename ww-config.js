@@ -25,6 +25,7 @@ export default {
                 'align',
                 'offsetX',
                 'offsetY',
+                'zIndexOpen',
                 'boundOffset',
             ],
         ],
@@ -562,6 +563,21 @@ export default {
             },
             propertyHelp: {
                 tooltip: 'The vertical offset of the dropdown relative to the trigger.',
+            },
+            /* wwEditor:end */
+        },
+        zIndexOpen: {
+            label: { en: 'Z-index when open' },
+            type: 'Number',
+            defaultValue: 1,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'number' }],
+                tooltip: 'The z-index of the dropdown when it is open.',
+            },
+            propertyHelp: {
+                tooltip: 'The z-index of the dropdown when it is open.',
             },
             /* wwEditor:end */
         },
