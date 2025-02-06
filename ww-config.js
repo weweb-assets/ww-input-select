@@ -39,7 +39,7 @@ export default {
                 'unselectOnClick',
                 'closeOnSelect',
                 'closeOnClickOutside',
-                'manualToggle',
+                'manualTrigger',
                 'selectOnClick',
                 'virtualScroll',
                 'virtualScrollBuffer',
@@ -60,7 +60,7 @@ export default {
                     'canUnselect',
                     'closeOnSelect',
                     'closeOnClickOutside',
-                    'manualToggle',
+                    'manualTrigger',
                 ],
             },
         ],
@@ -372,8 +372,8 @@ export default {
             /* wwEditor:end */
             section: 'settings',
         },
-        manualToggle: {
-            label: { en: 'Manual toggle' },
+        manualTrigger: {
+            label: { en: 'manual trigger' },
             type: 'OnOff',
             defaultValue: false,
             bindable: true,

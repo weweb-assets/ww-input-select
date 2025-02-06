@@ -140,7 +140,7 @@ export default {
         const canUnselect = computed(() => props.content.unselectOnClick || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
-        const manualToggle = computed(() => props.content.manualToggle || false);
+        const manualTrigger = computed(() => props.content.manualTrigger || false);
         const searchState = ref(null);
         const optionProperties = ref({});
         const resizeObserver = ref(null);
@@ -192,6 +192,10 @@ export default {
         };
 
         const toggleValueAccessibility = value => {
+            const option = Array.from(optionsMap.value).find(([key, option]) => option.value === value);
+            if (!option && !options?.length > 1) return;
+            if (option?.[1]?.disabled) return;
+
             if (selectType.value === 'single') {
                 if (variableValue.value === value) {
                     // Unselect ?
@@ -272,8 +276,8 @@ export default {
             isOpen.value = false;
         }
 
-        function toggleDropdown() {
-            if (isEditing.value || manualToggle.value) return;
+        function toggleDropdown(event = null) {
+            if (isEditing.value || (manualTrigger.value && event)) return;
             if (isOpen.value) closeDropdown();
             else openDropdown();
         }
