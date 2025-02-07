@@ -24,8 +24,10 @@
         <div
             class="ww-select__dropdown"
             ref="dropdownElement"
-            :style="[floatingStyles]"
-            v-show="isOpen"
+            :style="[
+                floatingStyles || {},
+            ]"
+            v-if="isOpen"
             :id="dropdownId"
             :role="selectType === 'single' ? 'listbox' : 'group'"
             :aria-multiselectable="selectType === 'multiple'"
@@ -161,7 +163,6 @@ export default {
         // Styles
         const selectStyles = computed(() => {
             if (isOpen.value && props.content.zIndexOpen) {
-                console.log('isOpen', isOpen.value, props.content.zIndexOpen);
                 return {
                     zIndex: `${props.content.zIndexOpen} !important`,
                 };

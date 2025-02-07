@@ -18,9 +18,9 @@ keywords:
 
 Properties:
 - choices: array<{ label: string, value: any }> - Array of options to display in the dropdown. Don't forget linked dynamicConfiguration in settings.
-- mappingLabel: Formula - A formula to derive the label from each choice item.
-- mappingValue: Formula - A formula to derive the value from each choice item.
-- mappingDisabled: Formula - A formula applyed to each choice item to disable or not them.
+- mappingLabel: Formula - A formula to derive the label from each choice item. Always use 'context.mapping...'
+- mappingValue: Formula - A formula to derive the value from each choice item. Always use 'context.mapping...'
+- mappingDisabled: Formula - A formula applyed to each choice item to disable or not them. Always use 'context.mapping...'
 - initValueSingle: string | null - Initial value for single select. Default: null.
 - initValueMulti: Array<string> - Initial values for multiple select. Default: [].
 - selectType: 'single' | 'multiple' - Type of select (single or multiple selection). Default: 'single'.
@@ -50,7 +50,7 @@ Children:
 - triggerContainer: Component(ww-flexbox) - Container for the trigger content.
 - emptyStateContainer: Component(ww-flexbox) - Container to display when no options are available.
 - optionChoiceElement: Component(ww-flexbox) - Container for each option item in the dropdown.
-- inputElement: Component(ww-input-basic) - Input component for the search field. Always set required false.
+- inputElement: Component(ww-input-basic) - Input element for the search field. Always set required false.
 - dropdownContainerElement: Component(ww-flexbox) - Container for the dropdown content. Exceptionnaly : Use only this to add dropdown styles, do not add children ! inputElement and optionChoiceElement are added automatically. Always set display flex and flexDirection column.
 
 Settings:
@@ -139,5 +139,5 @@ Context ( accessible only inside optionChoiceElement):
 Note:
 - Do not forget to style the dropdownContainerElement
 - Do not forget dynamicConfiguration
-- If you want to fix width, you should set it in root ww-input-select component, and set triggerContainer width to 100%. 
+- Mandatory : Set 'width' both in root ww-input-select element and in its triggerContainer.
 **IMPORTANT**: Don't be lazy, the ww-input-select have to be complete and perfect otherwise it will be broken !

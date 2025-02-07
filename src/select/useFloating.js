@@ -15,13 +15,14 @@ export default function useDropdownFloating(triggerElement, dropdownElement) {
             crossAxis: parseFloat(dropdownConfig.value.offsetX) || 0,
         }),
         flip({ padding: 16 }),
-        shift({ padding: parseFloat(dropdownConfig.value.boundOffset) || 0 }),
+        shift({ padding: parseFloat(dropdownConfig.value.boundOffset) || 0, boundary: [] }),
     ]);
 
     const { floatingStyles, update } = useFloating(triggerElement, dropdownElement, {
         placement,
         middleware,
         strategy: 'fixed',
+        whileElementsMounted: autoUpdate,
     });
 
     function updateDropdownConfig(config) {
