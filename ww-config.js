@@ -20,13 +20,96 @@ export default {
             'forceOpenInEditor',
             'showEmptyStateInEditor',
             [
-                'dropdownTitle',
+                'selectedTitle',
+                'selectedFontSize',
+                'selectedFontWeight',
+                'selectedFontColor',
+                'selectedPadding',
+                'selectedBgColor',
+                'selectedTextAlign',
+            ],
+            [
+                'placeholderTitle',
+                'placeholderFontSize',
+                'placeholderFontWeight',
+                'placeholderFontColor',
+            ],
+            [
+                'triggerStylesTitle',
+                'triggerWidth',
+                'triggerHeight',
+                'triggerBorder',
+                'triggerBorderAll',
+                'triggerBorderTop',
+                'triggerBorderRight',
+                'triggerBorderBottom',
+                'triggerBorderLeft',
+                'triggerBorderRadius',
+                'triggerBgColor',
+                'triggerShadows',
+                'triggerPadding',
+                'triggerMargin',
+                'triggerIconClose',
+                'triggerIconOpen',
+                'triggerIconSize',
+                'triggerIconColor',
+            ],
+            [
+                'dropdownStylesTitle',
                 'side',
                 'align',
                 'offsetX',
                 'offsetY',
-                'zIndexOpen',
                 'boundOffset',
+                'dropdownWidth',
+                'dropdownMaxHeight',
+                'dropdownBorder',
+                'dropdownBorderAll',
+                'dropdownBorderTop',
+                'dropdownBorderRight',
+                'dropdownBorderBottom',
+                'dropdownBorderLeft',
+                'dropdownBorderRadius',
+                'dropdownBgColor',
+                'dropdownShadows',
+                'dropdownOverflowY',
+                'dropdownPadding',
+                'zIndexOpen',
+            ],
+            [
+                'optionStylesTitle',
+                'optionFontSize',
+                'optionFontWeight',
+                'optionFontColor',
+                'optionPadding',
+                'optionBorderRadius',
+                'optionBgColor',
+                'optionBgColorFocused',
+                'optionBgColorHover',
+                'optionCursor',
+                'optionIcon',
+                'optionIconSize',
+                'optionIconColor',
+            ],
+            [
+                'searchStylesTitle',
+                'searchWidth',
+                'searchHeight',
+                'searchBorder',
+                'searchBorderAll',
+                'searchBorderTop',
+                'searchBorderRight',
+                'searchBorderBottom',
+                'searchBorderLeft',
+                'searchBorderRadius',
+                'searchPadding',
+                'searchMargin',
+                'searchOutline',
+                'searchBgColor',
+                'searchFontFamily',
+                'searchFontSize',
+                'searchFontColor',
+                'searchPlaceholderColor',
             ],
         ],
         customSettingsPropertiesOrder: [
@@ -324,20 +407,6 @@ export default {
             /* wwEditor:end */
             section: 'settings',
         },
-        // limit: {
-        //     label: { en: 'Values limit' },
-        //     type: 'Number',
-        //     defaultValue: null,
-        //     bindable: true,
-        //     /* wwEditor:start */
-        //     bindingValidation: {
-        //         type: 'number',
-        //         tooltip: 'A number value: \n\n`1`, `2`, `3`, etc.',
-        //     },
-        //     /* wwEditor:end */
-        //     hidden: content => content.selectType !== 'multiple',
-        //     section: 'settings',
-        // },
         forceOpenInEditor: {
             label: { en: 'Force open in editor' },
             type: 'OnOff',
@@ -436,49 +505,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        triggerContainer: {
-            hidden: true,
-            defaultValue: {
-                isWwObject: true,
-                type: 'ww-flexbox',
-                name: 'Trigger',
-                content: {
-                    children: [
-                        {
-                            isWwObject: true,
-                            type: 'ww-text',
-                            content: { text: { en: 'Select a value' } },
-                        },
-                        {
-                            isWwObject: true,
-                            type: 'ww-icon',
-                            content: { icon: 'fas fa-caret-down', color: '#000000' },
-                        },
-                    ],
-                },
-            },
-        },
-
-        // >>>>>>>>>>> DROPDOWN <<<<<<<<<<
-        dropdownTitle: {
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Dropdown',
-            },
-            editorOnly: true,
-        },
-        dropdownContainerElement: {
-            hidden: true,
-            defaultValue: {
-                isWwObject: true,
-                type: 'ww-flexbox',
-                name: 'Dropdown container',
-                content: {
-                    children: [],
-                },
-            },
-        },
         side: {
             label: { en: 'Side' },
             type: 'TextSelect',
@@ -553,7 +579,7 @@ export default {
                     { value: '%', label: '%', min: -100, max: 100 },
                 ],
             },
-            defaultValue: '0px',
+            defaultValue: '8px',
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
@@ -676,26 +702,6 @@ export default {
             hidden: true,
             editorOnly: true,
         },
-        emptyStateContainer: {
-            hidden: true,
-            defaultValue: {
-                isWwObject: true,
-                type: 'ww-flexbox',
-                name: 'Empty state',
-                content: {
-                    children: [
-                        {
-                            isWwObject: true,
-                            type: 'ww-text',
-                            content: { default: { '_ww-text_text': 'No items found' } },
-                        },
-                    ],
-                },
-            },
-            navigator: {
-                group: 'Dropdown',
-            },
-        },
 
         // >>>>>>>>>>> OPTION <<<<<<<<<<
         selectOnClick: {
@@ -726,36 +732,6 @@ export default {
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',
             },
             /* wwEditor:end */
-        },
-        optionChoiceElement: {
-            hidden: true,
-            defaultValue: {
-                isWwObject: true,
-                type: 'ww-flexbox',
-                name: 'Option',
-                content: {
-                    children: [
-                        {
-                            isWwObject: true,
-                            type: 'ww-text',
-                            content: {
-                                text: { en: 'Option' },
-                                '_ww-text_text': {
-                                    en: {
-                                        __wwtype: 'f',
-                                        code: "context.item.data?.['label']",
-                                    },
-                                },
-                            },
-                        },
-                        {
-                            isWwObject: true,
-                            type: 'ww-icon',
-                            content: { icon: 'icon-check', color: '#000000' },
-                        },
-                    ],
-                },
-            },
         },
 
         // >>>>>>>>>>> SEARCH <<<<<<<<<<
@@ -825,18 +801,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        inputElement: {
-            hidden: true,
-            section: 'settings',
-            defaultValue: {
-                isWwObject: true,
-                name: 'Search input',
-                type: 'deb10a01-5eef-4aa1-9017-1b51c2ad6fd0',
-            },
-            navigator: {
-                group: 'Dropdown',
-            },
-        },
         /* wwEditor:start */
         form: {
             editorOnly: true,
@@ -882,6 +846,952 @@ export default {
             defaultValue: '',
             bindable: true,
             hidden: (content, sidePanelContent) => !sidePanelContent.form?.uid || !content.customValidation,
+        },
+
+        /* ------------------------------------
+            SELECTED STYLES
+        ------------------------------------- */
+        selectedTitle: {
+            type: 'Title',
+            label: { en: 'Selected style' },
+        },
+        selectedFontSize: {
+            type: 'Length',
+            label: {
+                en: 'Font size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            defaultValue: '14px',
+        },
+        selectedFontWeight: {
+            label: {
+                en: 'Font weight',
+                fr: 'Graisse',
+            },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: null, label: { en: 'Default' } },
+                    { value: 100, label: { en: '100 - Thin' } },
+                    { value: 200, label: { en: '200 - Extra Light' } },
+                    { value: 300, label: { en: '300 - Light' } },
+                    { value: 400, label: { en: '400 - Normal' } },
+                    { value: 500, label: { en: '500 - Medium' } },
+                    { value: 600, label: { en: '600 - Semi Bold' } },
+                    { value: 700, label: { en: '700 - Bold' } },
+                    { value: 800, label: { en: '800 - Extra Bold' } },
+                    { value: 900, label: { en: '900 - Black' } },
+                ],
+            },
+            defaultValue: null,
+        },
+        selectedFontColor: {
+            label: {
+                en: 'Font color',
+            },
+            type: 'Color',
+            defaultValue: '#333',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        selectedTextAlign: {
+            label: { en: 'Text align' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'left', label: 'Left' },
+                    { value: 'center', label: 'Center' },
+                    { value: 'right', label: 'Right' },
+                ],
+            },
+            defaultValue: 'left',
+        },
+
+        /* ------------------------------------
+            PLACEHOLDER STYLES
+        ------------------------------------- */
+        placeholderTitle: {
+            type: 'Title',
+            label: { en: 'Placeholder styles' },
+        },
+        placeholderFontSize: {
+            type: 'Length',
+            label: {
+                en: 'Font size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            defaultValue: '14px',
+        },
+        placeholderFontWeight: {
+            label: {
+                en: 'Font weight',
+                fr: 'Graisse',
+            },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: null, label: { en: 'Default' } },
+                    { value: 100, label: { en: '100 - Thin' } },
+                    { value: 200, label: { en: '200 - Extra Light' } },
+                    { value: 300, label: { en: '300 - Light' } },
+                    { value: 400, label: { en: '400 - Normal' } },
+                    { value: 500, label: { en: '500 - Medium' } },
+                    { value: 600, label: { en: '600 - Semi Bold' } },
+                    { value: 700, label: { en: '700 - Bold' } },
+                    { value: 800, label: { en: '800 - Extra Bold' } },
+                    { value: 900, label: { en: '900 - Black' } },
+                ],
+            },
+            defaultValue: null,
+        },
+        placeholderFontColor: {
+            label: {
+                en: 'Font color',
+            },
+            type: 'Color',
+            defaultValue: '#333',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+
+        /* ------------------------------------
+            TRIGGER STYLES
+        ------------------------------------- */
+        triggerStylesTitle: {
+            type: 'Title',
+            label: {
+                en: 'Trigger styles',
+            },
+            editorOnly: true,
+        },
+        triggerWidth: {
+            type: 'Length',
+            label: {
+                en: 'Width',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            defaultValue: '100%',
+        },
+        triggerHeight: {
+            type: 'Length',
+            label: {
+                en: 'Height',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+        },
+        triggerBorder: {
+            type: 'Border',
+            label: {
+                en: 'Trigger border',
+            },
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        triggerBorder: {
+            type: 'TextRadioGroup',
+            label: { en: 'Borders' },
+            options: {
+                choices: [
+                    {
+                        value: false,
+                        title: { en: 'All', fr: 'Tout' },
+                        icon: 'border',
+                    },
+                    {
+                        value: true,
+                        title: { en: 'Split', fr: 'Split' },
+                        icon: 'border-split',
+                    },
+                ],
+            },
+            responsive: true,
+            defaultValue: false,
+        },
+        triggerBorderAll: {
+            type: 'Border',
+            label: {
+                en: '',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => content.triggerBorder,
+        },
+        triggerBorderTop: {
+            type: 'Border',
+            label: {
+                en: 'Top',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.triggerBorder,
+        },
+        triggerBorderRight: {
+            type: 'Border',
+            label: {
+                en: 'Right',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.triggerBorder,
+        },
+        triggerBorderBottom: {
+            type: 'Border',
+            label: {
+                en: 'Bottom',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.triggerBorder,
+        },
+        triggerBorderLeft: {
+            type: 'Border',
+            label: {
+                en: 'Left',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.triggerBorder,
+        },
+        triggerBorderRadius: {
+            type: 'Length',
+            label: {
+                en: 'Border radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            defaultValue: '0px',
+            responsive: true,
+        },
+        triggerBgColor: {
+            label: {
+                en: 'Trigger background color',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        triggerShadows: {
+            type: 'Shadows',
+            label: {
+                en: 'Shadows',
+            },
+            bindable: true,
+            options: {
+                nullable: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '',
+        },
+        triggerPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Padding',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+        triggerMargin: {
+            type: 'Spacing',
+            label: {
+                en: 'Margin',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+        triggerIconOpen: {
+            label: { en: 'Open icon', fr: 'Icône ouverte' },
+            type: 'Icon',
+            bindable: true,
+            states: true,
+            defaultValue: 'fas fa-angle-up',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
+            },
+            /* wwEditor:end */
+        },
+        triggerIconClose: {
+            label: { en: 'Close icon', fr: 'Icône fermée' },
+            type: 'Icon',
+            bindable: true,
+            states: true,
+            defaultValue: 'fas fa-angle-down',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
+            },
+            /* wwEditor:end */
+        },
+        triggerIconColor: {
+            label: { en: 'Icon color' },
+            type: 'Color',
+            defaultValue: 'black',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        triggerIconSize: {
+            type: 'Length',
+            label: {
+                en: 'Icon size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '16px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the icon size: `12`',
+            },
+            /* wwEditor:end */
+        },
+
+        /* ------------------------------------
+            DROPDOWN STYLES
+        ------------------------------------- */
+        dropdownStylesTitle: {
+            type: 'Title',
+            label: {
+                en: 'Dropdown styles',
+            },
+            editorOnly: true,
+        },
+        dropdownWidth: {
+            type: 'Length',
+            label: {
+                en: 'Width',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            defaultValue: { __wwtype: 'f', code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'` },
+        },
+        dropdownMaxHeight: {
+            type: 'Length',
+            label: {
+                en: 'Max-height',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+        },
+        dropdownBorder: {
+            type: 'TextRadioGroup',
+            label: { en: 'Borders' },
+            options: {
+                choices: [
+                    {
+                        value: false,
+                        title: { en: 'All', fr: 'Tout' },
+                        icon: 'border',
+                    },
+                    {
+                        value: true,
+                        title: { en: 'Split', fr: 'Split' },
+                        icon: 'border-split',
+                    },
+                ],
+            },
+            responsive: true,
+            defaultValue: false,
+        },
+        dropdownBorderAll: {
+            type: 'Border',
+            label: {
+                en: '',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => content.dropdownBorder,
+        },
+        dropdownBorderTop: {
+            type: 'Border',
+            label: {
+                en: 'Top',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderRight: {
+            type: 'Border',
+            label: {
+                en: 'Right',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderBottom: {
+            type: 'Border',
+            label: {
+                en: 'Bottom',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderLeft: {
+            type: 'Border',
+            label: {
+                en: 'Left',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.dropdownBorder,
+        },
+        dropdownBorderRadius: {
+            type: 'Length',
+            label: {
+                en: 'Border radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            defaultValue: '0px',
+            responsive: true,
+        },
+        dropdownBgColor: {
+            label: {
+                en: 'Dropdown background color',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        dropdownShadows: {
+            type: 'Shadows',
+            label: {
+                en: 'Shadows',
+            },
+            bindable: true,
+            options: {
+                nullable: true,
+            },
+            classes: true,
+            states: true,
+            defaultValue: '',
+        },
+        dropdownOverflowY: {
+            label: { en: 'Overflow Y' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'visible', label: 'Visible' },
+                    { value: 'hidden', label: 'Hidden' },
+                    { value: 'auto', label: 'Auto' },
+                    { value: 'scroll', label: 'Scroll' },
+                ],
+            },
+            bindable: true,
+            defaultValue: 'auto',
+        },
+        dropdownPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Padding',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+
+
+        /* ------------------------------------
+            OPTION STYLES
+        ------------------------------------- */
+        optionStylesTitle: {
+            type: 'Title',
+            label: {
+                en: 'Option styles',
+            },
+            editorOnly: true,
+        },
+        optionFontSize: {
+            type: 'Length',
+            label: {
+                en: 'Font size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            defaultValue: '14px',
+        },
+        optionFontWeight: {
+            label: {
+                en: 'Font weight',
+                fr: 'Graisse',
+            },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: null, label: { en: 'Default' } },
+                    { value: 100, label: { en: '100 - Thin' } },
+                    { value: 200, label: { en: '200 - Extra Light' } },
+                    { value: 300, label: { en: '300 - Light' } },
+                    { value: 400, label: { en: '400 - Normal' } },
+                    { value: 500, label: { en: '500 - Medium' } },
+                    { value: 600, label: { en: '600 - Semi Bold' } },
+                    { value: 700, label: { en: '700 - Bold' } },
+                    { value: 800, label: { en: '800 - Extra Bold' } },
+                    { value: 900, label: { en: '900 - Black' } },
+                ],
+            },
+            defaultValue: null,
+        },
+        optionFontColor: {
+            label: {
+                en: 'Text color',
+            },
+            type: 'Color',
+            defaultValue: 'black',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        optionPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Option padding',
+            },
+            bindable: true,
+            defaultValue: '0px',
+            states: true,
+            classes: true,
+            responsive: true,
+            bindable: true,
+        },
+        optionBorderRadius: {
+            type: 'Length',
+            label: {
+                en: 'Border radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            defaultValue: '0px',
+            responsive: true,
+        },
+        optionBgColor: {
+            label: {
+                en: 'Option background color',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        optionBgColorFocused: {
+            label: {
+                en: 'Focus background',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: '#f5f5f5',
+        },
+        optionBgColorHover: {
+            label: {
+                en: 'Hover background',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: '#f5f5f5',
+        },
+        optionCursor: {
+            label: { en: "Dragging cursor" },
+            type: "TextSelect",
+            section: "settings",
+            options: {
+                options: [
+                    { value: "auto", label: "Auto" },
+                    { value: "default", label: "Default" },
+                    { value: "pointer", label: "Pointer" },
+                    { value: "none", label: "None" },
+                    { value: "not-allowed", label: "Not allowed" },
+                    { value: "help", label: "Help" },
+                    { value: "text", label: "Text" },
+                    { value: "move", label: "Move" },
+                    { value: "grab", label: "Grab" },
+                    { value: "grabbing", label: "Grabbing", default: true },
+                    { value: "n-resize", label: "Arrow up" },
+                    { value: "s-resize", label: "Arrow down" },
+                    { value: "w-resize", label: "Arrow left" },
+                    { value: "e-resize", label: "Arrow right" },
+                    { value: "ne-resize", label: "Arrow top-right" },
+                    { value: "nw-resize", label: "Arrow top-left" },
+                    { value: "se-resize", label: "Arrow bottom-right" },
+                    { value: "sw-resize", label: "Arrow bottom-left" },
+                    { value: "ew-resize", label: "Arrow left-right" },
+                    { value: "ns-resize", label: "Arrow up-down" },
+                    { value: "nesw-resize", label: "Arrow top-right to bottom-left" },
+                    { value: "nwse-resize", label: "Arrow top-left to bottom-right" },
+                    { value: "zoom-in", label: "Zoom in" },
+                    { value: "zoom-out", label: "Zoom out" },
+                    { value: "col-resize", label: "Column resize" },
+                    { value: "row-resize", label: "Row resize" },
+                    { value: "all-scroll", label: "All-scroll" },
+                    { value: "context-menu", label: "Context menu" },
+                    { value: "cell", label: "Cell" },
+                    { value: "crosshair", label: "Crosshair" },
+                    { value: "vertical-text", label: "Vertical text" },
+                    { value: "alias", label: "Alias" },
+                    { value: "copy", label: "Copy" },
+                    { value: "progress", label: "Progress" },
+                    { value: "wait", label: "Wait" },
+                ],
+            },
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: "string",
+                tooltip: "A string that represent the cursor type",
+            },
+            /* wwEditor:end */
+            defaultValue: "pointer",
+        },
+        optionIcon: {
+            label: { en: 'Checked icon', fr: 'Icône check' },
+            type: 'Icon',
+            bindable: true,
+            states: true,
+            defaultValue: 'fas fa-check',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
+            },
+            /* wwEditor:end */
+        },
+        optionIconColor: {
+            label: { en: 'Icon color' },
+            type: 'Color',
+            defaultValue: 'black',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        optionIconSize: {
+            type: 'Length',
+            label: {
+                en: 'Icon size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '16px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the icon size: `12`',
+            },
+            /* wwEditor:end */
+        },
+
+        /* ------------------------------------
+            SEARCH STYLES
+        ------------------------------------- */
+        searchStylesTitle: {
+            type: 'Title',
+            label: {
+                en: 'Search styles',
+            },
+            editorOnly: true,
+        },
+        searchWidth: {
+            type: 'Length',
+            label: {
+                en: 'Width',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            defaultValue: '100%',
+        },
+        searchHeight: {
+            type: 'Length',
+            label: {
+                en: 'Height',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+        },
+        searchBorder: {
+            type: 'Border',
+            label: {
+                en: 'Search border',
+            },
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        searchBorder: {
+            type: 'TextRadioGroup',
+            label: { en: 'Borders' },
+            options: {
+                choices: [
+                    {
+                        value: false,
+                        title: { en: 'All', fr: 'Tout' },
+                        icon: 'border',
+                    },
+                    {
+                        value: true,
+                        title: { en: 'Split', fr: 'Split' },
+                        icon: 'border-split',
+                    },
+                ],
+            },
+            responsive: true,
+            defaultValue: false,
+        },
+        searchBorderAll: {
+            type: 'Border',
+            label: {
+                en: '',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => content.searchBorder,
+        },
+        searchBorderTop: {
+            type: 'Border',
+            label: {
+                en: 'Top',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.searchBorder,
+        },
+        searchBorderRight: {
+            type: 'Border',
+            label: {
+                en: 'Right',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.searchBorder,
+        },
+        searchBorderBottom: {
+            type: 'Border',
+            label: {
+                en: 'Bottom',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.searchBorder,
+        },
+        searchBorderLeft: {
+            type: 'Border',
+            label: {
+                en: 'Left',
+            },
+            bindable: true,
+            defaultValue: undefined,
+            hidden: content => !content.searchBorder,
+        },
+        searchBorderRadius: {
+            type: 'Length',
+            label: {
+                en: 'Border radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            defaultValue: '0px',
+            responsive: true,
+        },
+        searchPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Padding',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+        searchMargin: {
+            type: 'Spacing',
+            label: {
+                en: 'Margin',
+            },
+            bindable: true,
+            defaultValue: '0px',
+        },
+        searchOutline: {
+            type: 'Border',
+            label: {
+                en: 'Outline',
+            },
+            bindable: true,
+            defaultValue: undefined,
+        },
+        searchFontFamily: {
+            label: {
+                en: 'Font family',
+            },
+            type: 'FontFamily',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        searchFontSize: {
+            label: {
+                en: 'Font size',
+            },
+            type: 'Length',
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            classes: true,
+            states: true,
+            bindable: true,
+            responsive: true,
+        },
+        searchFontColor: {
+            label: {
+                en: 'Font color',
+            },
+            type: 'Color',
+            defaultValue: 'black',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        searchBgColor: {
+            label: {
+                en: 'Search background color',
+            },
+            type: 'Color',
+            defaultValue: 'white',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        searchPlaceholderColor: {
+            label: {
+                en: 'Placeholder color',
+            },
+            type: 'Color',
+            defaultValue: 'gray',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
     },
 };

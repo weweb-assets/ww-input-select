@@ -1,13 +1,12 @@
 <template>
-    <div class="ww-select-search" data-ww-flag="ww-select-search">
-        <wwElement
-            ref="searchElementRef"
-            v-bind="content.inputElement"
-            name="select-search"
-            @element-event="handleInputChange"
-            data-skip-validation
-        />
-    </div>
+    <input
+        ref="searchElementRef"
+        name="select-search"
+        :style="[searchStyles]"
+        :class="['ww-select-search']"
+        @input="handleInputChange"
+        placeholder="Search"
+    />
 </template>
 
 <script>
@@ -47,14 +46,39 @@ export default {
             if (updateSearch) updateSearch({ value, searchBy });
         }, 300);
 
+        const searchStyles = computed(() => {
+            const borderCss = !props.content.searchBorder
+                ? {
+                      border: props.content.searchBorderAll,
+                  }
+                : {
+                      'border-top': props.content.searchBorderTop,
+                      'border-right': props.content.searchBorderRight,
+                      'border-bottom': props.content.searchBorderBottom,
+                      'border-left': props.content.searchBorderLeft,
+                  };
+
+            return {
+                width: props.content.searchWidth,
+                height: props.content.searchHeight,
+                'border-radius': props.content.searchBorderRadius,
+                padding: props.content.searchPadding,
+                margin: props.content.searchMargin,
+                'background-color': props.content.searchBgColor,
+                'font-family': props.content.searchFontFamily,
+                'font-size': props.content.searchFontSize,
+                color: props.content.searchFontColor,
+                '--placeholder-color': props.content.searchPlaceholderColor,
+                outline: props.content.searchOutline,
+                cursor: 'text',
+                ...borderCss,
+            };
+        });
+
         // This event come from ww-input-basic => https://github.com/weweb-assets/ww-input-basic
         const handleInputChange = event => {
-            // Triggered by trigger-event
-            if (event.type === 'change' && debounce)
-                debouncedUpdateSearch(event?.value?.value, searchBy);
-            // Triggered by element-event
-            if (event.name === 'change' && debounce)
-                debouncedUpdateSearch(event?.event?.value, searchBy);
+            console.log('handleInputChange', event);
+            debouncedUpdateSearch(event?.target?.value, searchBy);
         };
 
         function focusInput() {
@@ -82,7 +106,16 @@ export default {
             searchElementRef,
             handleInputChange,
             focusInput,
+            searchStyles,
         };
     },
 };
 </script>
+
+<style scoped lang="scss">
+.ww-select-search {
+    &::placeholder {
+        color: var(--placeholder-color);
+    }
+}
+</style>

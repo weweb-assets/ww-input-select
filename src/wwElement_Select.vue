@@ -34,16 +34,15 @@
             :aria-label="'Select options'"
             inherit-component-style
         >
-            <wwElement
-                v-bind="content.dropdownContainerElement"
-                :wwProps="{ noDropzone: true, overrideDisplayValues: ['flex'] }"
+            <div
+                :style="[dropdownStyles]"
             >
                 <SelectDropdown :content="content" :wwEditorState="wwEditorState">
                     <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
                     <!-- List mode -->
                     <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
                 </SelectDropdown>
-            </wwElement>
+            </div>
         </div>
 
         <input
@@ -169,9 +168,33 @@ export default {
             }
             return {};
         });
+        const dropdownStyles = computed(() => {
+            const dropdownBorderCss = !props.content.dropdownBorder
+                ? {
+                      border: props.content.dropdownBorderAll,
+                  }
+                : {
+                      'border-top': props.content.dropdownBorderTop,
+                      'border-right': props.content.dropdownBorderRight,
+                      'border-bottom': props.content.dropdownBorderBottom,
+                      'border-left': props.content.dropdownBorderLeft,
+                  };
+
+            return {
+                width: props.content.dropdownWidth,
+                'max-height': props.content.dropdownMaxHeight,
+                'border-radius': props.content.dropdownBorderRadius,
+                padding: props.content.dropdownPadding,
+                'background-color': props.content.dropdownBgColor,
+                'box-shadow': props.content.dropdownShadows,
+                'overflow-y': props.content.dropdownOverflowY,
+                ...dropdownBorderCss,
+            };
+        });
 
         const lastTriggeredComponentAction = ref(Date.now());
 
+        // Methods
         const registerOption = (id, option) => {
             optionsMap.value.set(id, option);
         };
@@ -600,6 +623,7 @@ export default {
         provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
         provide('_wwSelect:dropdownMethods', { closeDropdown });
         provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
+        provide('_wwSelect:localContext', currentLocalContext);
 
         const markdown = `### Select local informations
 
@@ -667,6 +691,7 @@ export default {
             triggerElement,
             dropdownElement,
             floatingStyles,
+            dropdownStyles,
             dropdownId,
             activeDescendant,
             isDisabled,

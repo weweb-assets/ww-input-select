@@ -1,5 +1,5 @@
 <template>
-    <wwLocalContext
+    <!-- <wwLocalContext
         :data="data"
         :methods="contextMethods"
         :markdown="contextMarkdown"
@@ -17,7 +17,26 @@
             :aria-selected="isSelected"
             :aria-disabled="isOptionDisabled"
         />
-    </wwLocalContext>
+    </wwLocalContext> -->
+    <div
+        :class="['ww-select-option', isFocused ? 'focused' : '', isOptionDisabled ? 'disabled' : '']"
+        :style="optionStyles"
+        ref="optionRef"
+        @click="handleClick"
+        @keydown="handleKeyDown"
+        role="option"
+        :id="optionId"
+        :aria-selected="isSelected"
+        :aria-disabled="isOptionDisabled"
+    >
+        <span>{{ data.label }}</span>
+        <div 
+            v-if="data.isSelected"
+            :class="[content.optionIcon]" 
+            :style="optionIconStyle"
+            aria-hidden="true"
+        ></div>
+    </div>
 </template>
 
 <script>
@@ -68,15 +87,37 @@ export default {
         const mappingValue = inject('_wwSelect:mappingValue', ref(null));
         const mappingDisabled = inject('_wwSelect:mappingDisabled', ref(null));
 
+        // Styles
+        const optionStyles = computed(() => {
+
+            return {
+                padding: props.content.optionPadding,
+                'background-color': props.content.optionBgColor,
+                color: props.content.optionFontColor,
+                'font-size': props.content.optionFontSize,
+                'font-weight': props.content.optionFontWeight,
+                'cursor': props.content.optionCursor,
+                'border-radius': props.content.optionBorderRadius,
+                '--ww-select-option-bg-color-hover': props.content.optionBgColorHover,
+                '--ww-select-option-bg-color-focused': props.content.optionBgColorFocused,
+            };
+        });
+        const optionIconStyle = computed(() => {
+            return {
+                'font-size': props.content.optionIconSize,
+                color: props.content.optionIconColor,
+                display: 'flex',
+                'align-items': 'center'
+            };
+        });
+
         const label = computed(
             () => resolveMappingFormula(toValue(mappingLabel), props.localData) || props.content.label
         );
         const value = computed(
             () => resolveMappingFormula(toValue(mappingValue), props.localData) || props.content.value
         );
-        const isOptionDisabled = computed(
-            () => resolveMappingFormula(toValue(mappingDisabled), props.localData)
-        );
+        const isOptionDisabled = computed(() => resolveMappingFormula(toValue(mappingDisabled), props.localData));
 
         const isFocused = computed(() => optionId == activeDescendant.value);
 
@@ -146,21 +187,21 @@ export default {
         };
 
         /*
-            * Create a data ref with initial empty values, then use a watcher to update it.
-            * This pattern prevents circular dependencies that can occur when reactive refs
-            * directly reference each other. Instead of creating a complex web of reactive
-            * dependencies, we:
-            * 1. Start with a clean slate (empty values)
-            * 2. Use a watcher to explicitly update all values when any dependency changes
-            * 3. Keep the data flow unidirectional (computed props -> watcher -> data ref)
-            *
-            * The previous approach of directly referencing computed properties in the ref
-            * created an infinite loop because:
-            * - The ref would try to access the computed properties
-            * - The computed properties would trigger updates
-            * - These updates would cause the ref to update
-            * - Which would trigger the computed properties again... and so on
-            */
+         * Create a data ref with initial empty values, then use a watcher to update it.
+         * This pattern prevents circular dependencies that can occur when reactive refs
+         * directly reference each other. Instead of creating a complex web of reactive
+         * dependencies, we:
+         * 1. Start with a clean slate (empty values)
+         * 2. Use a watcher to explicitly update all values when any dependency changes
+         * 3. Keep the data flow unidirectional (computed props -> watcher -> data ref)
+         *
+         * The previous approach of directly referencing computed properties in the ref
+         * created an infinite loop because:
+         * - The ref would try to access the computed properties
+         * - The computed properties would trigger updates
+         * - These updates would cause the ref to update
+         * - Which would trigger the computed properties again... and so on
+         */
 
         watch(
             [isSelected, isOptionDisabled, label, value],
@@ -193,7 +234,6 @@ export default {
         // - \`label\`: The label of the option (will be overwritten if defined in the Select root element)
         // - \`value\`: The value of the option (will be overwritten if defined in the Select root element)`;
 
-
         return {
             optionRef,
             optionId,
@@ -202,6 +242,8 @@ export default {
             isFocused,
             activeDescendant,
             option,
+            optionStyles,
+            optionIconStyle,
             contextMethods,
             data,
             contextMarkdown,
@@ -210,3 +252,22 @@ export default {
     },
 };
 </script>
+
+<style scoped lang="scss">
+.ww-select-option {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &:hover {
+        background-color: var(--ww-select-option-bg-color-hover) !important;
+    }
+    &.focused {
+        background-color: var(--ww-select-option-bg-color-focused) !important;
+    }
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}
+</style>
