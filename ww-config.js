@@ -2277,7 +2277,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: undefined,
+            defaultValue: "1px solid #A3A3A3",
             hidden: content => content.searchBorder || !content.showSearch,
         },
         searchBorderTop: {
@@ -2343,7 +2343,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '0px',
+            defaultValue: '4px',
             hidden: content => !content.showSearch,
         },
         searchPadding: {
@@ -2355,7 +2355,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '0px',
+            defaultValue: "8px 12px",
             hidden: content => !content.showSearch,
         },
         searchMargin: {
@@ -2367,7 +2367,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '0px',
+            defaultValue: "0px 0px 8px 0px",
             hidden: content => !content.showSearch,
         },
         searchOutline: {
@@ -2470,7 +2470,7 @@ export default {
                 en: 'Search - background color',
             },
             type: 'Color',
-            defaultValue: 'white',
+            defaultValue: "#FAFAFA",
             states: true,
             classes: true,
             bindable: true,
@@ -2482,7 +2482,7 @@ export default {
                 en: 'Search - Placeholder color',
             },
             type: 'Color',
-            defaultValue: 'gray',
+            defaultValue: "#737373",
             states: true,
             classes: true,
             bindable: true,
