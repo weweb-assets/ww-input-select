@@ -11,14 +11,6 @@ export default {
         label: 'Select',
         icon: 'select',
         customStylePropertiesOrder: [
-            'choices',
-            'mappingLabel',
-            'mappingValue',
-            'mappingDisabled',
-            'initValueSingle',
-            'initValueMulti',
-            'forceOpenInEditor',
-            'showEmptyStateInEditor',
             [
                 'selectedTitle',
                 'selectedFontSize',
@@ -33,6 +25,24 @@ export default {
                 'placeholderFontSize',
                 'placeholderFontWeight',
                 'placeholderFontColor',
+            ],
+            [
+                'chipStylesTitle',
+                'chipFontSize',
+                'chipFontWeight',
+                'chipFontColor',
+                'chipPadding',
+                'chipBgColor',
+                'chipBorder',
+                'chipBorderAll',
+                'chipBorderTop',
+                'chipBorderRight',
+                'chipBorderBottom',
+                'chipBorderLeft',
+                'chipBorderRadius',
+                'chipIconUnselect',
+                'chipIconColor',
+                'chipIconSize',
             ],
             [
                 'triggerStylesTitle',
@@ -113,6 +123,14 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
+            'choices',
+            'mappingLabel',
+            'mappingValue',
+            'mappingDisabled',
+            'initValueSingle',
+            'initValueMulti',
+            'forceOpenInEditor',
+            'showEmptyStateInEditor',
             ['triggerTitle', 'placeholder', 'initialState', 'selectType', 'selectTypeWarning'],
             [
                 'optionsTitle',
@@ -235,6 +253,7 @@ export default {
                 tooltip: 'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...]`',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         mappingLabel: {
             label: 'Label per item',
@@ -252,6 +271,7 @@ export default {
                     'The label of the current option item. This will not automatically show this label on the screen, its purpose is accessibility and allowing easy bounding of the choice label. <br/> <br/> This will be executed for each item in the options to return the label. ',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         mappingValue: {
             label: 'Value per item',
@@ -269,6 +289,7 @@ export default {
                     'The value of the current option item. This will be used to identify the option in the Select. <br/> <br/> This will be executed for each item in the options to return the value.',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         mappingDisabled: {
             label: 'Disabled condition per item',
@@ -286,6 +307,7 @@ export default {
                     'The condition that determines if the option is disabled. This will be executed for each item in the options to return a boolean value.',
             },
             /* wwEditor:end */
+            section: 'settings',
         },
         initValueSingle: {
             type: 'Text',
@@ -305,6 +327,7 @@ export default {
                 tooltip: 'A string value: \n\n`"myValue"`, or an array of values: \n\n`["myValue1", "myValue2"]`',
             },
             /* wwEditor:end */
+            section: 'settings',
             hidden: content => content.selectType !== 'single',
         },
         initValueMulti: {
@@ -319,6 +342,7 @@ export default {
                     defaultValue: '',
                 },
             },
+            section: 'settings',
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
@@ -446,7 +470,10 @@ export default {
             label: { en: 'manual trigger' },
             type: 'OnOff',
             defaultValue: false,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
@@ -464,7 +491,10 @@ export default {
             label: { en: 'Close on click outside' },
             type: 'OnOff',
             defaultValue: true,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
@@ -496,7 +526,10 @@ export default {
             type: 'Text',
             defaultValue: { en: 'Select a value' },
             section: 'settings',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             multiLang: true,
             /* wwEditor:start */
             propertyHelp: {
@@ -517,7 +550,10 @@ export default {
                 ],
             },
             defaultValue: 'bottom',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'string' }],
@@ -538,7 +574,10 @@ export default {
                 ],
             },
             defaultValue: 'start',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'string' }],
@@ -558,7 +597,10 @@ export default {
                 ],
             },
             defaultValue: '0px',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'number' }],
@@ -580,7 +622,10 @@ export default {
                 ],
             },
             defaultValue: '8px',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'number' }],
@@ -595,8 +640,11 @@ export default {
         zIndexOpen: {
             label: { en: 'Z-index when open' },
             type: 'Number',
-            defaultValue: 1,
+            defaultValue: 2,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'number' }],
@@ -617,7 +665,10 @@ export default {
                 ],
             },
             defaultValue: '0px',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             hidden: true,
             /* wwEditor:start */
             bindingValidation: {
@@ -646,7 +697,10 @@ export default {
             label: { en: 'Virtual scroll' },
             type: 'OnOff',
             defaultValue: false,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             section: 'settings',
             /* wwEditor:start */
             bindingValidation: {
@@ -662,7 +716,10 @@ export default {
             label: { en: 'Buffer' },
             type: 'Number',
             defaultValue: 600,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             section: 'settings',
             /* wwEditor:start */
             bindingValidation: {
@@ -679,7 +736,10 @@ export default {
             label: { en: 'Min item size' },
             type: 'Number',
             defaultValue: 40,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             section: 'settings',
             /* wwEditor:start */
             bindingValidation: {
@@ -707,7 +767,10 @@ export default {
         selectOnClick: {
             label: { en: 'Select on click' },
             type: 'OnOff',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: true,
             section: 'settings',
             /* wwEditor:start */
@@ -723,7 +786,10 @@ export default {
         unselectOnClick: {
             label: { en: 'Unselect on click' },
             type: 'OnOff',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: false,
             /* wwEditor:start */
             section: 'settings',
@@ -748,7 +814,10 @@ export default {
             label: { en: 'Search' },
             type: 'OnOff',
             defaultValue: false,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
@@ -760,7 +829,10 @@ export default {
         searchBy: {
             label: 'Search by',
             section: 'settings',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             type: 'Array',
             options: (_, sidepanelContent) => {
                 return {
@@ -793,7 +865,10 @@ export default {
             section: 'settings',
             type: 'OnOff',
             defaultValue: true,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 validations: [{ type: 'boolean' }],
@@ -828,7 +903,10 @@ export default {
             section: 'settings',
             type: 'Text',
             defaultValue: '',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         customValidation: {
@@ -836,7 +914,10 @@ export default {
             section: 'settings',
             type: 'OnOff',
             defaultValue: false,
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         validation: {
@@ -844,7 +925,10 @@ export default {
             section: 'settings',
             type: 'Formula',
             defaultValue: '',
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             hidden: (content, sidePanelContent) => !sidePanelContent.form?.uid || !content.customValidation,
         },
 
@@ -853,7 +937,8 @@ export default {
         ------------------------------------- */
         selectedTitle: {
             type: 'Title',
-            label: { en: 'Selected style' },
+            label: { en: 'Selected' },
+            hidden: content => content.selectType !== 'single',
         },
         selectedFontSize: {
             type: 'Length',
@@ -865,10 +950,12 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '14px',
+            hidden: content => content.selectType !== 'single',
         },
         selectedFontWeight: {
             label: {
@@ -876,6 +963,10 @@ export default {
                 fr: 'Graisse',
             },
             type: 'TextSelect',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             options: {
                 options: [
                     { value: null, label: { en: 'Default' } },
@@ -891,6 +982,7 @@ export default {
                 ],
             },
             defaultValue: null,
+            hidden: content => content.selectType !== 'single',
         },
         selectedFontColor: {
             label: {
@@ -902,6 +994,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => content.selectType !== 'single',
         },
         selectedTextAlign: {
             label: { en: 'Text align' },
@@ -913,7 +1006,12 @@ export default {
                     { value: 'right', label: 'Right' },
                 ],
             },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: 'left',
+            hidden: content => content.selectType !== 'single',
         },
 
         /* ------------------------------------
@@ -921,7 +1019,7 @@ export default {
         ------------------------------------- */
         placeholderTitle: {
             type: 'Title',
-            label: { en: 'Placeholder styles' },
+            label: { en: 'Placeholder' },
         },
         placeholderFontSize: {
             type: 'Length',
@@ -933,9 +1031,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '14px',
         },
         placeholderFontWeight: {
@@ -958,6 +1057,10 @@ export default {
                     { value: 900, label: { en: '900 - Black' } },
                 ],
             },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: null,
         },
         placeholderFontColor: {
@@ -973,12 +1076,267 @@ export default {
         },
 
         /* ------------------------------------
+            CHIP STYLES
+        ------------------------------------- */
+        chipStylesTitle: {
+            type: 'Title',
+            label: {
+                en: 'Chip',
+            },
+            editorOnly: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipFontSize: {
+            type: 'Length',
+            label: {
+                en: 'Font size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: '14px',
+            hidden: content => content.selectType == 'single',
+        },
+        chipFontWeight: {
+            label: {
+                en: 'Font weight',
+                fr: 'Graisse',
+            },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: null, label: { en: 'Default' } },
+                    { value: 100, label: { en: '100 - Thin' } },
+                    { value: 200, label: { en: '200 - Extra Light' } },
+                    { value: 300, label: { en: '300 - Light' } },
+                    { value: 400, label: { en: '400 - Normal' } },
+                    { value: 500, label: { en: '500 - Medium' } },
+                    { value: 600, label: { en: '600 - Semi Bold' } },
+                    { value: 700, label: { en: '700 - Bold' } },
+                    { value: 800, label: { en: '800 - Extra Bold' } },
+                    { value: 900, label: { en: '900 - Black' } },
+                ],
+            },
+            defaultValue: null,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipFontColor: {
+            label: {
+                en: 'Font color',
+            },
+            type: 'Color',
+            defaultValue: 'white',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipPadding: {
+            type: 'Spacing',
+            label: {
+                en: 'Padding',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: '2px 8px',
+            hidden: content => content.selectType == 'single',
+        },
+        chipBgColor: {
+            label: {
+                en: 'Trigger background color',
+            },
+            type: 'Color',
+            defaultValue: "#363636",
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipBorder: {
+            type: 'Border',
+            label: {
+                en: 'Trigger border',
+            },
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipBorder: {
+            type: 'TextRadioGroup',
+            label: { en: 'Borders' },
+            options: {
+                choices: [
+                    {
+                        value: false,
+                        title: { en: 'All', fr: 'Tout' },
+                        icon: 'border',
+                    },
+                    {
+                        value: true,
+                        title: { en: 'Split', fr: 'Split' },
+                        icon: 'border-split',
+                    },
+                ],
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: false,
+            hidden: content => content.selectType == 'single',
+        },
+        chipBorderAll: {
+            type: 'Border',
+            label: {
+                en: '',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: undefined,
+            hidden: content => content.chipBorder || content.selectType == 'single',
+        },
+        chipBorderTop: {
+            type: 'Border',
+            label: {
+                en: 'Top',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: undefined,
+            hidden: content => !content.chipBorder || content.selectType == 'single',
+        },
+        chipBorderRight: {
+            type: 'Border',
+            label: {
+                en: 'Right',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: undefined,
+            hidden: content => !content.chipBorder || content.selectType == 'single',
+        },
+        chipBorderBottom: {
+            type: 'Border',
+            label: {
+                en: 'Bottom',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: undefined,
+            hidden: content => !content.chipBorder || content.selectType == 'single',
+        },
+        chipBorderLeft: {
+            type: 'Border',
+            label: {
+                en: 'Left',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: undefined,
+            hidden: content => !content.chipBorder || content.selectType == 'single',
+        },
+        chipBorderRadius: {
+            type: 'Length',
+            label: {
+                en: 'Border radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            defaultValue: '4px',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipIconUnselect: {
+            label: { en: 'Unselect icon', fr: 'Icône désélection' },
+            type: 'Icon',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: 'wwi wwi-cross',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType == 'single',
+        },
+        chipIconColor: {
+            label: { en: 'Icon color' },
+            type: 'Color',
+            defaultValue: 'white',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            hidden: content => content.selectType == 'single',
+        },
+        chipIconSize: {
+            type: 'Length',
+            label: {
+                en: 'Icon size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the icon size: `12`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType == 'single',
+        },
+        
+
+        /* ------------------------------------
             TRIGGER STYLES
         ------------------------------------- */
         triggerStylesTitle: {
             type: 'Title',
             label: {
-                en: 'Trigger styles',
+                en: 'Trigger',
             },
             editorOnly: true,
         },
@@ -992,9 +1350,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '100%',
         },
         triggerHeight: {
@@ -1007,9 +1366,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
         },
         triggerBorder: {
             type: 'Border',
@@ -1039,6 +1399,9 @@ export default {
                     },
                 ],
             },
+            states: true,
+            classes: true,
+            bindable: true,
             responsive: true,
             defaultValue: false,
         },
@@ -1047,7 +1410,10 @@ export default {
             label: {
                 en: '',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => content.triggerBorder,
         },
@@ -1056,7 +1422,10 @@ export default {
             label: {
                 en: 'Top',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.triggerBorder,
         },
@@ -1065,7 +1434,10 @@ export default {
             label: {
                 en: 'Right',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.triggerBorder,
         },
@@ -1074,7 +1446,10 @@ export default {
             label: {
                 en: 'Bottom',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.triggerBorder,
         },
@@ -1083,7 +1458,10 @@ export default {
             label: {
                 en: 'Left',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.triggerBorder,
         },
@@ -1117,12 +1495,13 @@ export default {
             label: {
                 en: 'Shadows',
             },
-            bindable: true,
             options: {
                 nullable: true,
             },
-            classes: true,
             states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: '',
         },
         triggerPadding: {
@@ -1130,7 +1509,10 @@ export default {
             label: {
                 en: 'Padding',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '0px',
         },
         triggerMargin: {
@@ -1138,14 +1520,19 @@ export default {
             label: {
                 en: 'Margin',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '0px',
         },
         triggerIconOpen: {
             label: { en: 'Open icon', fr: 'Icône ouverte' },
             type: 'Icon',
-            bindable: true,
             states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: 'fas fa-angle-up',
             /* wwEditor:start */
             bindingValidation: {
@@ -1157,8 +1544,10 @@ export default {
         triggerIconClose: {
             label: { en: 'Close icon', fr: 'Icône fermée' },
             type: 'Icon',
-            bindable: true,
             states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: 'fas fa-angle-down',
             /* wwEditor:start */
             bindingValidation: {
@@ -1205,7 +1594,7 @@ export default {
         dropdownStylesTitle: {
             type: 'Title',
             label: {
-                en: 'Dropdown styles',
+                en: 'Dropdown',
             },
             editorOnly: true,
         },
@@ -1219,9 +1608,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: { __wwtype: 'f', code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'` },
         },
         dropdownMaxHeight: {
@@ -1234,8 +1624,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             bindable: true,
         },
         dropdownBorder: {
@@ -1255,6 +1647,9 @@ export default {
                     },
                 ],
             },
+            states: true,
+            classes: true,
+            bindable: true,
             responsive: true,
             defaultValue: false,
         },
@@ -1263,7 +1658,10 @@ export default {
             label: {
                 en: '',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => content.dropdownBorder,
         },
@@ -1272,7 +1670,10 @@ export default {
             label: {
                 en: 'Top',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.dropdownBorder,
         },
@@ -1281,7 +1682,10 @@ export default {
             label: {
                 en: 'Right',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.dropdownBorder,
         },
@@ -1290,7 +1694,10 @@ export default {
             label: {
                 en: 'Bottom',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.dropdownBorder,
         },
@@ -1299,7 +1706,10 @@ export default {
             label: {
                 en: 'Left',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
             hidden: content => !content.dropdownBorder,
         },
@@ -1313,9 +1723,11 @@ export default {
                 noRange: true,
                 useVar: true,
             },
+            states: true,
+            classes: true,
             bindable: true,
-            defaultValue: '0px',
             responsive: true,
+            defaultValue: '0px',
         },
         dropdownBgColor: {
             label: {
@@ -1333,12 +1745,13 @@ export default {
             label: {
                 en: 'Shadows',
             },
-            bindable: true,
             options: {
                 nullable: true,
             },
-            classes: true,
             states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: '',
         },
         dropdownOverflowY: {
@@ -1352,7 +1765,10 @@ export default {
                     { value: 'scroll', label: 'Scroll' },
                 ],
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: 'auto',
         },
         dropdownPadding: {
@@ -1360,7 +1776,10 @@ export default {
             label: {
                 en: 'Padding',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '0px',
         },
 
@@ -1371,7 +1790,7 @@ export default {
         optionStylesTitle: {
             type: 'Title',
             label: {
-                en: 'Option styles',
+                en: 'Option',
             },
             editorOnly: true,
         },
@@ -1385,9 +1804,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '14px',
         },
         optionFontWeight: {
@@ -1410,6 +1830,10 @@ export default {
                     { value: 900, label: { en: '900 - Black' } },
                 ],
             },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: null,
         },
         optionFontColor: {
@@ -1428,7 +1852,6 @@ export default {
             label: {
                 en: 'Option padding',
             },
-            bindable: true,
             defaultValue: '0px',
             states: true,
             classes: true,
@@ -1445,8 +1868,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            bindable: true,
             defaultValue: '0px',
+            states: true,
+            classes: true,
+            bindable: true,
             responsive: true,
         },
         optionBgColor: {
@@ -1527,7 +1952,10 @@ export default {
                     { value: "wait", label: "Wait" },
                 ],
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: "string",
@@ -1539,8 +1967,10 @@ export default {
         optionIcon: {
             label: { en: 'Checked icon', fr: 'Icône check' },
             type: 'Icon',
-            bindable: true,
             states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
             defaultValue: 'fas fa-check',
             /* wwEditor:start */
             bindingValidation: {
@@ -1587,9 +2017,10 @@ export default {
         searchStylesTitle: {
             type: 'Title',
             label: {
-                en: 'Search styles',
+                en: 'Search',
             },
             editorOnly: true,
+            hidden: content => !content.showSearch,
         },
         searchWidth: {
             type: 'Length',
@@ -1601,10 +2032,12 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '100%',
+            hidden: content => !content.showSearch,
         },
         searchHeight: {
             type: 'Length',
@@ -1616,9 +2049,11 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            classes: true,
             states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
+            hidden: content => !content.showSearch,
         },
         searchBorder: {
             type: 'Border',
@@ -1630,6 +2065,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => !content.showSearch,
         },
         searchBorder: {
             type: 'TextRadioGroup',
@@ -1648,53 +2084,72 @@ export default {
                     },
                 ],
             },
+            states: true,
+            classes: true,
+            bindable: true,
             responsive: true,
             defaultValue: false,
+            hidden: content => !content.showSearch,
         },
         searchBorderAll: {
             type: 'Border',
             label: {
                 en: '',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
-            hidden: content => content.searchBorder,
+            hidden: content => content.searchBorder || !content.showSearch,
         },
         searchBorderTop: {
             type: 'Border',
             label: {
                 en: 'Top',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderRight: {
             type: 'Border',
             label: {
                 en: 'Right',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderBottom: {
             type: 'Border',
             label: {
                 en: 'Bottom',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderLeft: {
             type: 'Border',
             label: {
                 en: 'Left',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderRadius: {
             type: 'Length',
@@ -1706,33 +2161,48 @@ export default {
                 noRange: true,
                 useVar: true,
             },
+            states: true,
+            classes: true,
             bindable: true,
-            defaultValue: '0px',
             responsive: true,
+            defaultValue: '0px',
+            hidden: content => !content.showSearch,
         },
         searchPadding: {
             type: 'Spacing',
             label: {
                 en: 'Padding',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '0px',
+            hidden: content => !content.showSearch,
         },
         searchMargin: {
             type: 'Spacing',
             label: {
                 en: 'Margin',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: '0px',
+            hidden: content => !content.showSearch,
         },
         searchOutline: {
             type: 'Border',
             label: {
                 en: 'Outline',
             },
+            states: true,
+            classes: true,
             bindable: true,
+            responsive: true,
             defaultValue: undefined,
+            hidden: content => !content.showSearch,
         },
         searchFontFamily: {
             label: {
@@ -1744,6 +2214,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => !content.showSearch,
         },
         searchFontSize: {
             label: {
@@ -1759,6 +2230,7 @@ export default {
             states: true,
             bindable: true,
             responsive: true,
+            hidden: content => !content.showSearch,
         },
         searchFontColor: {
             label: {
@@ -1770,6 +2242,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => !content.showSearch,
         },
         searchBgColor: {
             label: {
@@ -1781,6 +2254,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => !content.showSearch,
         },
         searchPlaceholderColor: {
             label: {
@@ -1792,6 +2266,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => !content.showSearch,
         },
     },
 };

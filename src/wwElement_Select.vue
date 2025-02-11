@@ -19,7 +19,10 @@
             :tabindex="isDisabled ? -1 : 0"
             :aria-disabled="isDisabled"
         >
-            <SelectTriger :content="content" />
+            <SelectTriger 
+                :content="content"
+                @remove-multiselect-value="removeSpecificValue"
+            />
         </div>
         <div
             class="ww-select__dropdown"

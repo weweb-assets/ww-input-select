@@ -13,7 +13,7 @@ keywords:
 
 #### ww-input-select
 
-1. **Component Purpose:** A customizable select component that supports single and multiple selection.
+1. **Component Purpose:** A customizable select element that supports single and multiple selection.
 
 2. **Properties:**
 
@@ -51,6 +51,22 @@ keywords:
     - placeholderFontSize: `string` - Font size of placeholder. Default: `'14px'`
     - placeholderFontWeight: `number | null` - Font weight of placeholder
     - placeholderFontColor: `string` - Font color of placeholder. Default: `'#333'`
+
+    - chipFontSize: `string` - Font size of the chip text. Default: `"14px"`.
+    - chipFontWeight: `null | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900` - Font weight of the chip text. Default: `null`.
+    - chipFontColor: `string` - Color of the chip text. Default: `"white"`.
+    - chipPadding: `string` - Padding inside the chip. Default: `"2px 8px"`.
+    - chipBgColor: `string` - Background color of the chip. Default: `"#363636"`.
+    - chipBorder: `boolean` - Toggle between all borders or split borders. Default: `false`.
+    - chipBorderAll: `string` - Border style when `chipBorder` is false.
+    - chipBorderTop: `string` - Top border when `chipBorder` is true.
+    - chipBorderRight: `string` - Right border when `chipBorder` is true.
+    - chipBorderBottom: `string` - Bottom border when `chipBorder` is true.
+    - chipBorderLeft: `string` - Left border when `chipBorder` is true.
+    - chipBorderRadius: `string` - Border radius of the chip. Default: `"4px"`.
+    - chipIconUnselect: `string` - Icon used for unselecting the chip. Default: `"wwi wwi-cross"`.
+    - chipIconColor: `string` - Color of the chip icon. Default: `"white"`.
+    - chipIconSize: `string` - Size of the chip icon. Default: `"14px"`.
 
     - triggerWidth: `string` - Width of trigger. Default: `'100%'`
     - triggerHeight: `string` - Height of trigger
@@ -117,6 +133,8 @@ keywords:
     - searchBgColor: `string` - Background color. Default: `'white'`
     - searchPlaceholderColor: `string` - Placeholder color. Default: `'gray'`
 
+    Note: chip properties for multiselect, and selected properties for single select.
+
 3. **Settings:**
 
 -   dynamicConfiguration: object({"content":{"choices":[{"key":"nameOfKey","type"="typeOfKey"}]}}) - Object that describe format of data in choices
@@ -145,3 +163,5 @@ This select contain all logic for the select and all styling is done throught pr
 9. **Exemple:**
 
 {"uid":"ww-input-select-car-type","tag":"ww-input-select","name":"Fuel Type Select","settings":{"workflows":[...],"dynamicConfiguration":{"content":{"choices":[{"key":"label","type":"Text"},{"key":"value","type":"Text"},{"key":"icon","type":"Text"}]}}},"props":{"default":{"choices":[{"label":"Gasoline","value":"gasoline","icon":"⛽"},{"label":"Diesel","value":"diesel","icon":"🛢️"},{"label":"Electric","value":"electric","icon":"⚡"}],"mappingLabel":{"type":"f","code":"context.mapping?.['icon'] + ' ' + context.mapping?.['label']"},"mappingValue":{"type":"f","code":"context.mapping?.['value']"},"placeholder":{"en":"Choose fuel type"},"triggerWidth":"100%","triggerHeight":"40px","triggerBorderRadius":"8px","triggerBorder":false,"triggerBorderAll":"1px solid #E2E8F0","triggerPadding":"8px 16px","triggerBgColor":"#FFFFFF","dropdownBorderRadius":"8px","dropdownBorder":false,"dropdownBorderAll":"1px solid #E2E8F0","dropdownPadding":"8px","dropdownBgColor":"#FFFFFF","optionPadding":"8px 16px","optionBorderRadius":"8px","optionFontSize":"14px","optionBgColorHover":"#F7FAFC","selectedFontSize":"14px","selectedFontColor":"#2D3748","mappingDisabled":{"type":"f","code":"false"},"selectType":"single","disabled":false,"required":false,"readonly":false,"initialState":"closed","closeOnSelect":true,"manualTrigger":false,"closeOnClickOutside":true,"side":"bottom","align":"start","offsetX":"0px","offsetY":"8px","zIndexOpen":1,"boundOffset":"0px","virtualScroll":false,"virtualScrollBuffer":600,"virtualScrollMinItemSize":40,"selectOnClick":true,"unselectOnClick":false,"showSearch":true,"autoFocus":true,"fieldName":"","customValidation":false,"validation":"","selectedTextAlign":"left","placeholderFontSize":"14px","placeholderFontColor":"#333","triggerShadows":"","triggerMargin":"0px","triggerIconOpen":"fas fa-angle-up","triggerIconClose":"fas fa-angle-down","triggerIconColor":"#666666","triggerIconSize":"16px","dropdownWidth":{"__wwtype":"f","code":"context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'"},"dropdownShadows":"","dropdownOverflowY":"auto","optionFontColor":"black","optionBgColorFocused":"#f5f5f5","optionCursor":"pointer","optionIcon":"fas fa-check","optionIconColor":"black","optionIconSize":"16px","searchWidth":"100%","searchBorder":false,"searchBorderRadius":"6px","searchPadding":"8px 12px","searchMargin":"0 0 8px 0","searchFontColor":"#2D3748","searchBgColor":"#F7FAFC","searchPlaceholderColor":"#A0AEC0","searchHeight":"32px","searchBorderAll":"1px solid #E2E8F0"}},"styles":{"default":{"width":"100%","maxWidth":"300px"}}}
+
+Note : mapping are 'Formula' type ('type' and 'code' keys) not bindings.

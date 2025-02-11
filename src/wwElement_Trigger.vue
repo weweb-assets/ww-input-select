@@ -1,7 +1,29 @@
 <template>
     <div class="ww-input-select__trigger">
-        <div :style="triggerStyle">
-            <span v-if="isOptionSelected" :style="selectedValueStyle">{{selectedLabel}}</span>
+        <!-- SINGLE SELECT -->
+        <div v-if="isSingleSelect" :style="triggerStyle">
+            <span v-if="isOptionSelected" :style="selectedValueStyle">{{ selectedLabel }}</span>
+            <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
+            <div
+                :class="[isOpen ? content.triggerIconOpen : content.triggerIconClose]"
+                :style="triggerIconStyle"
+                aria-hidden="true"
+            ></div>
+        </div>
+        <!-- MULTI SELECT -->
+        <div v-else :style="triggerStyle">
+            <div v-if="isOptionSelected" class="ww-input-select__chip_container">
+                <div
+                    class="ww-input-select__chip"
+                    v-for="option in localContext?.data?.select?.active?.details"
+                    :key="option.value"
+                    @click="e => handleChipClick(e, option.value)"
+                    :style="chipStyle"
+                >
+                    <span>{{ option.label }}</span>
+                    <div :class="[content.chipIconUnselect]" :style="chipIconStyle" aria-hidden="true"></div>
+                </div>
+            </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div
                 :class="[isOpen ? content.triggerIconOpen : content.triggerIconClose]"
@@ -14,7 +36,7 @@
 </template>
 
 <script>
-import { provide, computed, inject, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 
 export default {
     props: {
@@ -23,15 +45,22 @@ export default {
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
     },
-    setup(props) {
+    emits: ['remove-multiselect-value'],
+    setup(props, { emit }) {
         const registerTriggerLocalContext = inject('_wwSelect:registerTriggerLocalContext');
         const localContext = inject('_wwSelect:localContext');
+
+        const isSingleSelect = computed(() => props.content.selectType === 'single');
 
         const placeholder = computed(() => wwLib.wwLang.getText(props.content.placeholder));
         const selectedLabel = computed(() => {
             return localContext.value?.data?.select?.active?.details?.label;
         });
-        const isOptionSelected = computed(() => !!localContext.value?.data?.select?.active?.details?.label);
+        const isOptionSelected = computed(
+            () =>
+                !!localContext.value?.data?.select?.active?.details?.label ||
+                localContext.value?.data?.select?.active?.details?.length > 0
+        );
         const isOpen = computed(() => localContext.value?.data?.select?.utils?.isOpen);
         const data = ref({
             placeholder,
@@ -99,7 +128,44 @@ export default {
             };
         });
 
+        const chipStyle = computed(() => {
+            const borderCss = !props.content.chipBorder
+                ? {
+                      border: props.content.chipBorderAll,
+                  }
+                : {
+                      'border-top': props.content.chipBorderTop,
+                      'border-right': props.content.chipBorderRight,
+                      'border-bottom': props.content.chipBorderBottom,
+                      'border-left': props.content.chipBorderLeft,
+                  };
+
+            return {
+                'font-size': props.content.chipFontSize,
+                color: props.content.chipFontColor,
+                'font-weight': props.content.chipFontWeight,
+                padding: props.content.chipPadding,
+                'background-color': props.content.chipBgColor,
+                'border-radius': props.content.chipBorderRadius,
+                ...borderCss,
+            };
+        });
+
+        const chipIconStyle = computed(() => {
+            return {
+                'font-size': props.content.chipIconSize,
+                color: props.content.chipIconColor,
+            };
+        });
+
+        const handleChipClick = (event, value) => {
+            event.stopPropagation();
+            console.log('handleChipClick', event, value);
+            emit('remove-multiselect-value', value);
+        };
+
         return {
+            isSingleSelect,
             data,
             selectedLabel,
             isOptionSelected,
@@ -108,7 +174,10 @@ export default {
             triggerIconStyle,
             selectedValueStyle,
             placeholderStyle,
+            chipStyle,
+            chipIconStyle,
             isOpen,
+            handleChipClick,
         };
     },
 };
@@ -121,6 +190,23 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    .ww-input-select__chip_container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        .ww-input-select__chip {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+    }
 }
 
 .ww-select-trigger {
