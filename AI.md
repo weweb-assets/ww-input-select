@@ -92,7 +92,7 @@ keywords:
     - triggerIconColor: `string` - Icon color. Default: `'black'`
     - triggerIconSize: `string` - Icon size. Default: `'16px'`
 
-    - dropdownWidth: `string` - Width of dropdown. Default: `[Trigger Width]`
+    - dropdownWidth: `string` - Width of dropdown. Do not touch it if not necessary, default value compute the same width as trigger.
     - dropdownMaxHeight: `string` - Maximum height of dropdown
     - dropdownBorder: `boolean` - When false, borders defined with dropdownBorderAll, when true, use each borderLeft..
     - dropdownBorderAll: `Border` - All borders when not split

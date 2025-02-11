@@ -166,21 +166,6 @@ export default {
             ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
             'formInfobox',
             ['fieldName', 'customValidation', 'validation'],
-            {
-                title: 'Basic',
-                properties: ['selectType', 'selectTypeWarning', 'disabled', 'required'],
-            },
-            {
-                title: 'Advanced',
-                properties: [
-                    'readonly',
-                    'limit',
-                    'canUnselect',
-                    'closeOnSelect',
-                    'closeOnClickOutside',
-                    'manualTrigger',
-                ],
-            },
         ],
     },
     inherit: {
@@ -255,7 +240,10 @@ export default {
                 useSchema: true,
             },
             bindable: true,
-            defaultValue: [],
+            defaultValue: {
+                '__wwtype': 'f',
+                'code': '[{"label":"Option 1","value":"option1"},{"label":"Option 2","value":"option2"}]',
+            },
             /* wwEditor:start */
             bindingValidation: {
                 validations: [
@@ -561,7 +549,10 @@ export default {
                 fr: 'Aucun résultat trouvé',
             },
             type: 'Text',
-            defaultValue: { en: 'Select a value' },
+            defaultValue: {
+                en: 'No results found',
+                fr: 'Aucun résultat trouvé',
+            },
             section: 'settings',
             states: true,
             bindable: true,
@@ -1070,7 +1061,6 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            hidden: content => !content.showSearch,
         },
         placeholderFontSize: {
             type: 'Length',
@@ -1279,7 +1269,10 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: false,
+            defaultValue: {
+                "__wwtype": "f",
+                "code": '[{"label":"Option 1","value":"opt1"},{"label":"Option 2","value":"opt2"}]'
+            },
             hidden: content => content.selectType == 'single',
         },
         chipBorderAll: {
@@ -1435,7 +1428,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '100%',
+            defaultValue: '200px',
         },
         triggerHeight: {
             type: 'Length',
@@ -1447,17 +1440,6 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            states: true,
-            classes: true,
-            bindable: true,
-            responsive: true,
-        },
-        triggerBorder: {
-            type: 'Border',
-            label: {
-                en: 'Trigger - border',
-            },
-            defaultValue: undefined,
             states: true,
             classes: true,
             bindable: true,
@@ -1495,7 +1477,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: undefined,
+            defaultValue: "1px solid #B0B0B0",
             hidden: content => content.triggerBorder,
         },
         triggerBorderTop: {
@@ -1558,7 +1540,7 @@ export default {
                 useVar: true,
             },
             bindable: true,
-            defaultValue: '0px',
+            defaultValue: '4px',
             responsive: true,
         },
         triggerBgColor: {
@@ -1566,7 +1548,7 @@ export default {
                 en: 'Trigger - background color',
             },
             type: 'Color',
-            defaultValue: undefined,
+            defaultValue: 'white',
             states: true,
             classes: true,
             bindable: true,
@@ -1595,7 +1577,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '0px',
+            defaultValue: '8px 16px',
         },
         triggerMargin: {
             type: 'Spacing',
@@ -1744,7 +1726,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: undefined,
+            defaultValue: "1px solid #B0B0B0",
             hidden: content => content.dropdownBorder,
         },
         dropdownBorderTop: {
@@ -1810,14 +1792,14 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '0px',
+            defaultValue: '4px',
         },
         dropdownBgColor: {
             label: {
                 en: 'Dropdown - Border Dropdown background color',
             },
             type: 'Color',
-            defaultValue: undefined,
+            defaultValue: "#FFFFFF",
             states: true,
             classes: true,
             bindable: true,
@@ -1846,7 +1828,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: '0px',
+            defaultValue: '8px',
         },
         dropdownRowGap: {
             type: 'Length',
@@ -1945,7 +1927,7 @@ export default {
             label: {
                 en: 'Option - padding',
             },
-            defaultValue: '0px',
+            defaultValue: '8px',
             states: true,
             classes: true,
             responsive: true,
@@ -1962,7 +1944,7 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            defaultValue: '0px',
+            defaultValue: '4px',
             states: true,
             classes: true,
             bindable: true,
@@ -1973,7 +1955,7 @@ export default {
                 en: 'Option - background color',
             },
             type: 'Color',
-            defaultValue: undefined,
+            defaultValue: 'white',
             states: true,
             classes: true,
             bindable: true,
@@ -2095,7 +2077,7 @@ export default {
             responsive: true,
             states: true,
             classes: true,
-            defaultValue: '16px',
+            defaultValue: '12px',
             /* wwEditor:start */
             bindingValidation: {
                 type: 'number',
