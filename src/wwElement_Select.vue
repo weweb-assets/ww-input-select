@@ -190,7 +190,6 @@ export default {
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
-                'overflow-y': props.content.dropdownOverflowY,
                 ...dropdownBorderCss,
             };
         });

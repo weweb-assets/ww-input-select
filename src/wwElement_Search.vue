@@ -67,9 +67,11 @@ export default {
                 'background-color': props.content.searchBgColor,
                 'font-family': props.content.searchFontFamily,
                 'font-size': props.content.searchFontSize,
+                'font-weight': props.content.searchFontWeight,
                 color: props.content.searchFontColor,
                 '--placeholder-color': props.content.searchPlaceholderColor,
                 outline: props.content.searchOutline,
+                'outline-offset': props.content.searchOutlineOffset,
                 cursor: 'text',
                 ...borderCss,
             };

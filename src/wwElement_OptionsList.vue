@@ -13,9 +13,13 @@
                 :active="active"
                 :size-dependencies="JSON.stringify(item)"
                 :data-index="index"
-            >
+            >   
                 <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
-                    <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+                    <div
+                        :style="index != filteredOptions.length - 1 ? { paddingBottom: content.dropdownRowGap } : {}"
+                    >
+                        <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+                    </div>
                 </wwLayoutItemContext>
             </DynamicScrollerItem>
         </template>
@@ -33,8 +37,11 @@
         </wwLayoutItemContext>
     </div> -->
 
-    <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor">
-        <p>Empty state</p>
+    <div 
+        v-show="filteredOptions.length === 0 || showEmptyStateInEditor"
+        :style="emptyStateStyle"
+    >
+        <span>{{emptyStateText}}</span>
         <!-- <wwElement v-bind="content.emptyStateContainer" /> -->
     </div>
 </template>
@@ -92,6 +99,8 @@ export default {
         const virtualScrollMinItemSize = computed(() => props.content.virtualScrollMinItemSize || 40);
         const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer || 400);
 
+        const emptyStateText = computed(() => wwLib.wwLang.getText(props.content.emptyStateText));
+
         const options = computed(() => {
             const items = rawData.value;
             return Array.isArray(items) ? items : [];
@@ -142,6 +151,20 @@ export default {
             }
         });
 
+        // Styles
+        const emptyStateStyle = computed(() => {            
+            return {
+                'font-family': props.content.emptyStateFontFamily,
+                'font-size': props.content.emptyStateFontSize,
+                'font-weight': props.content.emptyStateFontWeight,
+                color: props.content.emptyStateFontColor,
+                padding: props.content.emptyStatePadding,
+                'text-align': props.content.emptyStateTextAlign,
+                'width': '100%',
+            };
+        });
+
+        // Watch
         watch(
             optionProperties,
             value => {
@@ -162,6 +185,7 @@ export default {
         /* wwEditor:end */
 
         return {
+            emptyStateText,
             filteredOptions,
             virtualScroll,
             virtualScrollSizeDependencies,
@@ -169,6 +193,7 @@ export default {
             virtualScrollBuffer,
             showEmptyStateInEditor,
             dynamicScrollerItems,
+            emptyStateStyle,
         };
     },
 };

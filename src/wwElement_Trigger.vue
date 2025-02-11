@@ -113,6 +113,7 @@ export default {
         const selectedValueStyle = computed(() => {
             return {
                 'font-size': props.content.selectedFontSize,
+                'font-family': props.content.selectedFontFamily,
                 color: props.content.selectedFontColor,
                 'font-weight': props.content.selectedFontWeight,
                 'text-align': props.content.selectedTextAlign,
@@ -123,8 +124,11 @@ export default {
         const placeholderStyle = computed(() => {
             return {
                 'font-size': props.content.placeholderFontSize,
+                'font-family': props.content.placeholderFontFamily,
                 color: props.content.placeholderFontColor,
                 'font-weight': props.content.placeholderFontWeight,
+                'text-align': props.content.placeholderTextAlign,
+                'width': '100%',
             };
         });
 
@@ -142,6 +146,7 @@ export default {
 
             return {
                 'font-size': props.content.chipFontSize,
+                'font-family': props.content.chipFontFamily,
                 color: props.content.chipFontColor,
                 'font-weight': props.content.chipFontWeight,
                 padding: props.content.chipPadding,

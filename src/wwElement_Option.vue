@@ -94,6 +94,7 @@ export default {
                 padding: props.content.optionPadding,
                 'background-color': props.content.optionBgColor,
                 color: props.content.optionFontColor,
+                'font-family': props.content.optionFontFamily,
                 'font-size': props.content.optionFontSize,
                 'font-weight': props.content.optionFontWeight,
                 'cursor': props.content.optionCursor,
