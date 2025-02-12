@@ -27,7 +27,7 @@ keywords:
     - disabled: `boolean` - Whether the select is disabled. Default: `false`
     - required: `boolean` - Whether the select is required. Default: `false`
     - readonly: `boolean` - Whether the select is read-only. Default: `false`
-    - closeOnSelect: `boolean` - Whether to close dropdown after selection. Default: `false`
+    - closeOnSelect: `boolean` - Whether to close dropdown after selection. Set `true` for single select, `false` for multiple select. Default: `true`
     - manualTrigger: `boolean` - Whether to disable automatic trigger opening. Default: `false`
     - closeOnClickOutside: `boolean` - Whether to close on outside click. Default: `true`
     - selectOnClick: `boolean` - Whether to select option on click. Default: `true`
@@ -184,7 +184,7 @@ This select contain all logic for the select and all styling is done throught pr
 
 - Multiselect example (changes from simple select)
 
-{"uid":"multi-select-car","tag":"ww-input-select","name":"Vehicle Multi Select",...,"props":{"chipFontColor":"#FFFFFF","chipBgColor":"#454545","chipPadding":"2px 6px","chipBorderRadius":"8px","chipIconUnselect":"wwi wwi-cross","chipIconSize":"12px","chipIconColor":"#FFFFFF"},...}
+{"uid":"multi-select-car","tag":"ww-input-select","name":"Vehicle Multi Select",...,"props":{"chipFontColor":"#FFFFFF","chipBgColor":"#454545","chipPadding":"2px 6px","chipBorderRadius":"8px","chipIconUnselect":"wwi wwi-cross","chipIconSize":"12px","chipIconColor":"#FFFFFF","closeOnSelect":false,...}...}
 
 Important for multiselect : "triggerHeight" have to be "unset" to let the component calculate it with the number of chips.
 

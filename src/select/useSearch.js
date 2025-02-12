@@ -1,4 +1,4 @@
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, unref } from 'vue';
 
 export default function useSearch(searchState, { updateSearch }) {
     const hasSearch = ref(false);
@@ -14,15 +14,16 @@ export default function useSearch(searchState, { updateSearch }) {
     }
 
     function focusSearch() {
-        if (searchElement.value) {
-            nextTick(() => {
+        nextTick(() => {
+            if (searchElement.value) {
                 searchElement.value.focus();
-            });
-        }
+            }
+        });
+        
     }
 
     function updateAutoFocusSearch(value) {
-        autoFocusSearch.value = value;
+        autoFocusSearch.value = unref(value);
     }
 
     function resetSearch() {

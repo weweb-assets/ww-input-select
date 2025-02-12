@@ -455,7 +455,7 @@ export default {
         closeOnSelect: {
             label: { en: 'Close on select' },
             type: 'OnOff',
-            defaultValue: false,
+            defaultValue: true,
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { inject, onMounted, onBeforeUnmount, ref, computed, watch } from 'vue';
+import { inject, onMounted, onBeforeUnmount, ref, computed, watch, nextTick } from 'vue';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
@@ -29,7 +29,7 @@ export default {
         /* wwEditor:start */
         useEditorHint(emit);
         /* wwEditor:end */
-        const { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch } = inject(
+        const { updateHasSearch, updateSearchElement, updateSearch, autoFocusSearch, focusSearch } = inject(
             '_wwSelect:useSearch',
             {}
         );
@@ -41,8 +41,6 @@ export default {
                 .map(item => JSON.parse(item.filter.replace(/'/g, '"')))
                 .flat();
         });
-        const autoFocus = computed(() => props.content.autoFocus);
-        updateAutoFocusSearch(autoFocus);
 
         const debouncedUpdateSearch = debounce((value, searchBy) => {
             if (updateSearch) updateSearch({ value, searchBy });
@@ -88,16 +86,8 @@ export default {
             debouncedUpdateSearch(event?.target?.value, searchBy);
         };
 
-        function focusInput() {
-            searchElement.value?.focus();
-        }
-
         watch(searchElement, value => {
             if (updateSearchElement) updateSearchElement(value);
-        });
-
-        watch(autoFocus, value => {
-            if (updateAutoFocusSearch) updateAutoFocusSearch(value);
         });
 
         onMounted(() => {
@@ -112,7 +102,6 @@ export default {
         return {
             searchElementRef,
             handleInputChange,
-            focusInput,
             searchStyles,
             searchPlaceholder,
         };

@@ -141,6 +141,7 @@ export default {
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
         //const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
+        const autoFocus = computed(() => props.content.autoFocus);
         const optionsMap = ref(new Map());
         const options = computed(() => Array.from(optionsMap.value.values()));
         const isOpen = ref(false);
@@ -462,6 +463,10 @@ export default {
             { immediate: true }
         );
 
+        watch(autoFocus, value => {
+            if (updateAutoFocusSearch) updateAutoFocusSearch(value);
+        });
+
         watch(showSearch, () => {
             updateHasSearch(showSearch);
         });
@@ -607,6 +612,8 @@ export default {
             data,
             markdown,
         });
+
+        updateAutoFocusSearch(autoFocus);
 
         onMounted(() => {
             nextTick(() => {
