@@ -49,7 +49,6 @@ export default {
             ],
             [
                 'triggerStylesTitle',
-                'triggerWidth',
                 'triggerHeight',
                 'triggerBorder',
                 'triggerBorderAll',
@@ -85,7 +84,6 @@ export default {
                 'dropdownBorderRadius',
                 'dropdownBgColor',
                 'dropdownShadows',
-                'dropdownOverflowY',
                 'dropdownPadding',
                 'dropdownRowGap',
                 'zIndexOpen',
@@ -147,7 +145,7 @@ export default {
             'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
-            ['triggerTitle', 'placeholder', 'emptyStateText','initialState', 'selectType', 'selectTypeWarning'],
+            ['triggerTitle', 'placeholder', 'emptyStateText','searchPlaceholder', 'initialState', 'selectType', 'selectTypeWarning'],
             [
                 'optionsTitle',
                 'disabled',
@@ -159,7 +157,6 @@ export default {
                 'closeOnClickOutside',
                 'manualTrigger',
                 'selectOnClick',
-                'virtualScroll',
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
             ],
@@ -475,7 +472,7 @@ export default {
             section: 'settings',
         },
         manualTrigger: {
-            label: { en: 'manual trigger' },
+            label: { en: 'Manual trigger' },
             type: 'OnOff',
             defaultValue: false,
             states: true,
@@ -545,8 +542,8 @@ export default {
         },
         emptyStateText: {
             label: {
-                en: 'No results found',
-                fr: 'Aucun résultat trouvé',
+                en: 'No results text',
+                fr: 'Texte aucun résultat',
             },
             type: 'Text',
             defaultValue: {
@@ -561,7 +558,29 @@ export default {
             /* wwEditor:start */
             propertyHelp: {
                 tooltip:
-                    'The placeholder text for the select. Available in the formula explorer in the Trigger element.',
+                    'The text to display when there are no results. Available in the formula explorer in the Trigger element.',
+            },
+            /* wwEditor:end */
+        },
+        searchPlaceholder: {
+            label: {
+                en: 'Search placeholder',
+                fr: 'Placeholder recherche',
+            },
+            type: 'Text',
+            defaultValue: {
+                en: 'Search',
+                fr: 'Rechercher',
+            },
+            section: 'settings',
+            states: true,
+            bindable: true,
+            responsive: true,
+            multiLang: true,
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip:
+                    'The placeholder text for the search input. Available in the formula explorer in the Trigger element.',
             },
             /* wwEditor:end */
         },
@@ -588,7 +607,7 @@ export default {
                     'The side of the dropdown relative to the trigger. A string value: \n\n`bottom`, `left`, `top`, `right`',
             },
             /* wwEditor:end */
-            // hidden: content => content.autoPosition,
+            hidden: content => true,
         },
         align: {
             label: { en: 'Align' },
@@ -612,7 +631,7 @@ export default {
                     'The alignment of the dropdown relative to the trigger. A string value: \n\n`start`, `center`, `end`',
             },
             /* wwEditor:end */
-            // hidden: content => content.autoPosition,
+            hidden: content => true,
         },
         offsetX: {
             label: { en: 'Offset X' },
@@ -720,25 +739,25 @@ export default {
             },
             editorOnly: true,
         },
-        virtualScroll: {
-            label: { en: 'Virtual scroll' },
-            type: 'OnOff',
-            defaultValue: true,
-            states: true,
-            bindable: true,
-            responsive: true,
-            section: 'settings',
-            hidden: true,
-            /* wwEditor:start */
-            bindingValidation: {
-                validations: [{ type: 'boolean' }],
-                tooltip: virtualScrollHelp,
-            },
-            propertyHelp: {
-                tooltip: virtualScrollHelp,
-            },
-            /* wwEditor:end */
-        },
+        // virtualScroll: {
+        //     label: { en: 'Virtual scroll' },
+        //     type: 'OnOff',
+        //     defaultValue: true,
+        //     states: true,
+        //     bindable: true,
+        //     responsive: true,
+        //     section: 'settings',
+        //     hidden: true,
+        //     /* wwEditor:start */
+        //     bindingValidation: {
+        //         validations: [{ type: 'boolean' }],
+        //         tooltip: virtualScrollHelp,
+        //     },
+        //     propertyHelp: {
+        //         tooltip: virtualScrollHelp,
+        //     },
+        //     /* wwEditor:end */
+        // },
         virtualScrollBuffer: {
             label: { en: 'Buffer' },
             type: 'Number',
@@ -756,7 +775,7 @@ export default {
                 tooltip: bufferHelp,
             },
             /* wwEditor:end */
-            hidden: content => !content.virtualScroll,
+            // hidden: content => !content.virtualScroll,
         },
         virtualScrollMinItemSize: {
             label: { en: 'Min item size' },
@@ -775,7 +794,7 @@ export default {
                 tooltip: minItemSizeHelp,
             },
             /* wwEditor:end */
-            hidden: content => !content.virtualScroll,
+            // hidden: content => !content.virtualScroll,
         },
         showEmptyStateInEditor: {
             label: { en: 'Show empty state in editor' },
@@ -968,7 +987,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            hidden: content => !content.showSearch,
+            hidden: content => content.selectType !== 'single',
         },
         selectedFontSize: {
             type: 'Length',
@@ -1336,7 +1355,7 @@ export default {
             hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderRadius: {
-            type: 'Length',
+            type: 'Spacing',
             label: {
                 en: 'Chip - Border radius',
             },
@@ -1414,22 +1433,22 @@ export default {
             },
             editorOnly: true,
         },
-        triggerWidth: {
-            type: 'Length',
-            label: {
-                en: 'Trigger - Width',
-            },
-            options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
-                noRange: true,
-                useVar: true,
-            },
-            states: true,
-            classes: true,
-            bindable: true,
-            responsive: true,
-            defaultValue: '200px',
-        },
+        // triggerWidth: {
+        //     type: 'Length',
+        //     label: {
+        //         en: 'Trigger - Width',
+        //     },
+        //     options: {
+        //         unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+        //         noRange: true,
+        //         useVar: true,
+        //     },
+        //     states: true,
+        //     classes: true,
+        //     bindable: true,
+        //     responsive: true,
+        //     defaultValue: '200px',
+        // },
         triggerHeight: {
             type: 'Length',
             label: {
@@ -1539,8 +1558,10 @@ export default {
                 noRange: true,
                 useVar: true,
             },
-            bindable: true,
             defaultValue: '4px',
+            states: true,
+            classes: true,
+            bindable: true,
             responsive: true,
         },
         triggerBgColor: {

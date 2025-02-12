@@ -18,7 +18,7 @@ keywords:
 2. **Properties:**
 
     - choices: array<{ label: string, value: any }> - Array of options to display in the dropdown. Don't forget linked dynamicConfiguration in settings.
-    - mappingLabel: Formula - A formula to derive the label from each choice item. Always use 'context.mapping...'
+    - mappingLabel: Formula - A formula to derive the label from each choice item, only text, no img, icons, etc. Always use 'context.mapping...'
     - mappingValue: Formula - A formula to derive the value from each choice item. Always use 'context.mapping...'
     - mappingDisabled: Formula - A formula applyed to each choice item to disable or not them. Always use 'context.mapping...'
     - initValueSingle: `string | null` - Initial value for single select mode. Default: `null`
@@ -40,6 +40,7 @@ keywords:
     - virtualScrollMinItemSize: `number` - Minimum item size for virtual scroll. Default: `40`
     - placeholder: `string | object` - Placeholder text. Default: `{ en: 'Select a value' }`
     - emptyStateText: `string | object` - Text to display when search returns no results. Default: `{ en: 'No results found' }`
+    - searchPlaceholder: `string | object` - Placeholder text for search input. Default: `{ en: 'Search' }`
     - fieldName: `string` - Form field name. Default: `""`
     - customValidation: `boolean` - Enable custom validation. Default: `false`
     - validation: `Formula` - Custom validation formula
@@ -74,7 +75,6 @@ keywords:
     - chipIconColor: `string` - Color of the chip icon. Default: `"white"`.
     - chipIconSize: `string` - Size of the chip icon. Default: `"14px"`.
 
-    - triggerWidth: `string` - Width of trigger. Default: `'100%'`
     - triggerHeight: `string` - Height of trigger
     - triggerBorder: `boolean` - When false, borders defined with triggerBorderAll, when true, use each triggerBorderTop..
     - triggerBorderAll: `Border` - All borders when not split
@@ -103,7 +103,6 @@ keywords:
     - dropdownBorderRadius: `string` - Border radius. Default: `'0px'`
     - dropdownBgColor: `string` - Background color
     - dropdownShadows: `string` - Box shadows. Default: `''`
-    - dropdownOverflowY: `'visible' | 'hidden' | 'auto' | 'scroll'` - Vertical overflow. Default: `'auto'`
     - dropdownPadding: `string` - Padding. Default: `'0px'`
     - dropdownRowGap: `string` - Row gap. Default: `'0px'`
     - offsetX: Length - Horizontal offset of the dropdown relative to the trigger. Default: '0px'.
@@ -162,11 +161,11 @@ There is no children.
 
 5. **Special Features:**
 
-This select contain all logic for the select and all styling is done throught properties defined bellow. **CRITIAL** : Style it perfectly and completely.
+This select contain all logic for the select and all styling is done throught properties defined above. 
 
 6. **Context:**
 
-- context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, \_data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: { value: variableValue (according to mappingValue), label: variableLabel (according to mappingLabel), disabled: bool, data: full selected data (dynamicConfiguration format) } }, utils: { type: selectType, isOpen, triggerWidth, triggerHeight } }, selectTrigger: { placeholder: Text } }
+- context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, \_data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: { value: variableValue (according to mappingValue), label: variableLabel (according to mappingLabel), disabled: bool, data: full selected data (dynamicConfiguration format) } }, utils: { type: selectType, isOpen, triggerHeight } }, selectTrigger: { placeholder: Text } }
 
 7. **Events:**
 
@@ -179,16 +178,17 @@ This select contain all logic for the select and all styling is done throught pr
 
 9. **Exemple:**
 
-Simple select example
+- Simple select example
 
-{"uid":"select-car","tag":"ww-input-select","name":"Vehicle Multi Select","settings":{"dynamicConfiguration":{"content":{"choices":[{"key":"label","type":"Text"},{"key":"value","type":"Text"},{"key":"emoji","type":"Text"},{"key":"description","type":"Text"}]}}},"props":{"default":{"side":"bottom","align":"start","choices":[{"emoji":"🚗","label":"Sedan","value":"sedan","description":"Perfect for daily commuting"}],"offsetX":"0px","offsetY":"8px","disabled":false,"readonly":false,"required":true,"autoFocus":true,"fieldName":"","optionIcon":"fas fa-check","selectType":"single","showSearch":true,"validation":"","zIndexOpen":1,"boundOffset":"0px","placeholder":{"en":"Select vehicle types","fr":"Sélectionner un type de véhicule"},"searchWidth":"100%","initialState":"closed","manualToggle":false,"mappingLabel":{"code":"context.mapping?.['emoji']+' '+context.mapping?.['label']","type":"f"},"mappingValue":{"code":"context.mapping?.['value']","type":"f"},"optionCursor":"pointer","searchBorder":false,"searchHeight":"32px","triggerWidth":"100%","closeOnSelect":true,"dropdownWidth":{"code":"context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'","__wwtype":"f"},"manualTrigger":false,"optionPadding":"8px ","searchBgColor":"#F5F5F5","searchPadding":"12px","selectOnClick":true,"triggerBorder":false,"triggerHeight":"40px","triggerMargin":"0px","virtualScroll":false,"dropdownBorder":false,"optionFontSize":"14px","optionIconSize":"16px","triggerBgColor":"#FFFFFF","triggerPadding":"12px","triggerShadows":"","dropdownBgColor":"#FFFFFF","dropdownPadding":"12px","dropdownShadows":"0px 3px 5px 2px #6666661C","mappingDisabled":{"code":"false","type":"f"},"optionFontColor":"black","optionIconColor":"#4D4D4D","searchBorderAll":"1px solid #A6A6A6","searchFontColor":"black","triggerIconOpen":"fas fa-angle-up","triggerIconSize":"16px","unselectOnClick":true,"customValidation":false,"selectedFontSize":"14px","triggerBorderAll":"1px solid #BABABA","triggerIconClose":"fas fa-angle-down","triggerIconColor":"#666666","dropdownBorderAll":"1px solid #BABABA","dropdownOverflowY":"auto","selectedFontColor":"#333","selectedTextAlign":"left","optionBgColorHover":"#f5f5f5","searchBorderRadius":"4px","closeOnClickOutside":true,"placeholderFontSize":"14px","triggerBorderRadius":"8px","virtualScrollBuffer":600,"dropdownBorderRadius":"8px","optionBgColorFocused":"#f5f5f5","placeholderFontColor":"#A1A1A1","searchPlaceholderColor":"gray","virtualScrollMinItemSize":40,"optionBorderRadius":"4px","dropdownRowGap":"4px","searchMargin":"0 0 8px 0","placeholderTextAlign":"left","emptyStateText":{"en":"No results found","fr":"Aucun résultat"}}},"styles":{"default":{"width":"300px","zIndex":1,"display":"block"}}}
+{"uid":"select-car","tag":"ww-input-select","name":"Vehicle Multi Select","settings":{"dynamicConfiguration":{"content":{"choices":[{"key":"label","type":"Text"},{"key":"value","type":"Text"},{"key":"emoji","type":"Text"},{"key":"description","type":"Text"}]}}},"props":{"default":{"side":"bottom","align":"start","choices":[{"emoji":"🚗","label":"Sedan","value":"sedan","description":"Perfect for daily commuting"}],"offsetX":"0px","offsetY":"8px","disabled":false,"readonly":false,"required":true,"autoFocus":true,"fieldName":"","optionIcon":"fas fa-check","selectType":"single","showSearch":true,"validation":"","zIndexOpen":1,"boundOffset":"0px","placeholder":{"en":"Select vehicle types","fr":"Sélectionner un type de véhicule"},"searchWidth":"100%","initialState":"closed","manualToggle":false,"mappingLabel":{"code":"context.mapping?.['emoji']+' '+context.mapping?.['label']","type":"f"},"mappingValue":{"code":"context.mapping?.['value']","type":"f"},"optionCursor":"pointer","searchBorder":false,"searchHeight":"32px","closeOnSelect":true,"dropdownWidth":{"code":"context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'","__wwtype":"f"},"manualTrigger":false,"optionPadding":"8px ","searchBgColor":"#F5F5F5","searchPadding":"12px","selectOnClick":true,"triggerBorder":false,"triggerHeight":"40px","triggerMargin":"0px","dropdownBorder":false,"optionFontSize":"14px","optionIconSize":"16px","triggerBgColor":"#FFFFFF","triggerPadding":"12px","triggerShadows":"","dropdownBgColor":"#FFFFFF","dropdownPadding":"12px","dropdownShadows":"0px 3px 5px 2px #6666661C","mappingDisabled":{"code":"false","type":"f"},"optionFontColor":"black","optionIconColor":"#4D4D4D","searchBorderAll":"1px solid #A6A6A6","searchFontColor":"black","triggerIconOpen":"fas fa-angle-up","triggerIconSize":"16px","unselectOnClick":true,"customValidation":false,"selectedFontSize":"14px","triggerBorderAll":"1px solid #BABABA","triggerIconClose":"fas fa-angle-down","triggerIconColor":"#666666","dropdownBorderAll":"1px solid #BABABA","selectedFontColor":"#333","selectedTextAlign":"left","optionBgColorHover":"#f5f5f5","searchBorderRadius":"4px","closeOnClickOutside":true,"placeholderFontSize":"14px","triggerBorderRadius":"8px","virtualScrollBuffer":600,"dropdownBorderRadius":"8px","optionBgColorFocused":"#f5f5f5","placeholderFontColor":"#A1A1A1","searchPlaceholder":{"en":"Search","fr":"Rechercher"},"searchPlaceholderColor":"gray","virtualScrollMinItemSize":40,"optionBorderRadius":"4px","dropdownRowGap":"4px","searchMargin":"0 0 8px 0","placeholderTextAlign":"left","emptyStateText":{"en":"No results found","fr":"Aucun résultat"}}},"styles":{"default":{"width":"300px","zIndex":1,"display":"block"}}}
 
-Multiselect example (changes from simple select)
+- Multiselect example (changes from simple select)
 
 {"uid":"multi-select-car","tag":"ww-input-select","name":"Vehicle Multi Select",...,"props":{"chipFontColor":"#FFFFFF","chipBgColor":"#454545","chipPadding":"2px 6px","chipBorderRadius":"8px","chipIconUnselect":"wwi wwi-cross","chipIconSize":"12px","chipIconColor":"#FFFFFF"},...}
 
-Important : "triggerHeight" have to be unset to let the component calculate it with the number of chips.
+Important for multiselect : "triggerHeight" have to be "unset" to let the component calculate it with the number of chips.
 
 10. **Notes:**
 
 - mapping are 'Formula' type ('type' and 'code' keys) not bindings.
+**CRITICAL** : You have to perfectly style this select according to the page.

@@ -140,7 +140,7 @@ export default {
 
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
-        const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
+        //const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
         const optionsMap = ref(new Map());
         const options = computed(() => Array.from(optionsMap.value.values()));
         const isOpen = ref(false);
@@ -163,6 +163,18 @@ export default {
         const showSearch = computed(() => props.content.showSearch);
 
         // Styles
+        const syncFloating = () => {}
+        const floatingStyles = computed(() => {
+            if (triggerElement.value) {
+                return {
+                    position: 'absolute',
+                    top: `${triggerElement.value.offsetHeight + parseInt(props.content.offsetY)}px`,
+                    left: `${triggerElement.value.offsetLeft + parseInt(props.content.offsetX)}px`,
+                };
+            }
+            return {};
+        });
+
         const selectStyles = computed(() => {
             if (isOpen.value && props.content.zIndexOpen) {
                 return {
@@ -190,6 +202,7 @@ export default {
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
+                'overflow': 'auto',
                 ...dropdownBorderCss,
             };
         });
@@ -307,6 +320,7 @@ export default {
 
             isOpen.value = true;
             nextTick(syncFloating);
+            console.log('openDropdown - autoFocusSearch', autoFocusSearch.value);
             if (autoFocusSearch.value) focusSearch();
         }
 
@@ -420,81 +434,6 @@ export default {
             utils: { type: selectType, isOpen, triggerWidth, triggerHeight },
         });
 
-        const methods = {
-            openDropdown: {
-                method: openDropdown,
-                /* wwEditor:start */
-                editor: { label: 'Open', group: 'Select', description: 'Open the dropdown', icon: 'select' },
-                /* wwEditor:end */
-            },
-            closeDropdown: {
-                method: closeDropdown,
-                /* wwEditor:start */
-                editor: { label: 'Close', group: 'Select', description: 'Close the dropdown', icon: 'select' },
-                /* wwEditor:end */
-            },
-            toggleDropdown: {
-                method: toggleDropdown,
-                /* wwEditor:start */
-                editor: { label: 'Toggle', group: 'Select', description: 'Toggle the dropdown', icon: 'select' },
-                /* wwEditor:end */
-            },
-            setValue: {
-                method: updateValue,
-                /* wwEditor:start */
-                editor: {
-                    label: 'Set value',
-                    group: 'Select',
-                    description: 'Set the select value or append the value in multiselect',
-                    icon: 'select',
-                    args: [
-                        {
-                            name: 'Value',
-                            type: 'any',
-                            required: true,
-                        },
-                    ],
-                },
-                /* wwEditor:end */
-            },
-            resetValue: {
-                method: resetValue,
-                /* wwEditor:start */
-                editor: { label: 'Reset value', group: 'Select', description: 'Reset the value', icon: 'select' },
-                /* wwEditor:end */
-            },
-            removeSpecificValue: {
-                method: removeSpecificValue,
-                /* wwEditor:start */
-                editor: {
-                    label: 'Remove specific value',
-                    keywords: ['Multiple'],
-                    group: 'Select',
-                    description: 'Remove a specific value from the multiple select',
-                    icon: 'select',
-                    args: [
-                        {
-                            name: 'Value to remove',
-                            type: 'any',
-                            required: true,
-                        },
-                    ],
-                },
-                /* wwEditor:end */
-            },
-            resetSearch: {
-                method: resetSearch,
-                /* wwEditor:start */
-                editor: {
-                    label: 'Reset search',
-                    group: 'Select search',
-                    description: 'Reset the search input value',
-                    icon: 'select',
-                },
-                /* wwEditor:end */
-            },
-        };
-
         watch(
             hasSearch,
             newHasSearch => {
@@ -578,17 +517,14 @@ export default {
         const currentLocalContext = ref({});
         const registerLocalContext =
             key =>
-            ({ data, methods, markdown }) => {
+            ({ data, markdown }) => {
                 const selectLocalContext = currentLocalContext.value;
                 const newLocalContext = {
                     data: {
                         ...selectLocalContext.data,
                         [key]: data,
                     },
-                    methods: {
-                        ...selectLocalContext.methods,
-                        ...methods,
-                    },
+                    methods: {},
                     markdown: {
                         ...selectLocalContext.markdown,
                         [key]: markdown,
@@ -657,7 +593,6 @@ export default {
 
         registerSelectLocalContext({
             data,
-            methods,
             markdown,
         });
 

@@ -5,7 +5,7 @@
         :style="[searchStyles]"
         :class="['ww-select-search']"
         @input="handleInputChange"
-        placeholder="Search"
+        :placeholder="searchPlaceholder"
     />
 </template>
 
@@ -34,7 +34,8 @@ export default {
             {}
         );
         const searchElementRef = ref(null);
-        const searchElement = computed(() => searchElementRef.value?.componentRef?.$el);
+        console.log('searchElementRef', searchElementRef);
+        const searchElement = computed(() => searchElementRef.value);
         const searchBy = computed(() => {
             return (props.content.searchBy || [])
                 .filter(item => item && item.filter)
@@ -42,6 +43,8 @@ export default {
                 .flat();
         });
         const autoFocus = computed(() => props.content.autoFocus);
+        updateAutoFocusSearch(autoFocus);
+
         const debouncedUpdateSearch = debounce((value, searchBy) => {
             if (updateSearch) updateSearch({ value, searchBy });
         }, 300);
@@ -77,9 +80,12 @@ export default {
             };
         });
 
+        const searchPlaceholder = computed(() => {
+            return wwLib.wwLang.getText(props.content.searchPlaceholder);
+        });
+
         // This event come from ww-input-basic => https://github.com/weweb-assets/ww-input-basic
         const handleInputChange = event => {
-            console.log('handleInputChange', event);
             debouncedUpdateSearch(event?.target?.value, searchBy);
         };
 
@@ -92,6 +98,7 @@ export default {
         });
 
         watch(autoFocus, value => {
+            console.log('autoFocus', value);
             if (updateAutoFocusSearch) updateAutoFocusSearch(value);
         });
 
@@ -109,6 +116,7 @@ export default {
             handleInputChange,
             focusInput,
             searchStyles,
+            searchPlaceholder,
         };
     },
 };

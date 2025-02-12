@@ -88,7 +88,7 @@ export default {
                 padding: props.content.triggerPadding,
                 margin: props.content.triggerMargin,
                 'background-color': props.content.triggerBgColor,
-                width: props.content.triggerWidth,
+                width: '100%',
                 height: props.content.triggerHeight,
                 'border-radius': props.content.triggerBorderRadius,
                 'box-shadow': props.content.triggerShadows,
@@ -165,7 +165,6 @@ export default {
 
         const handleChipClick = (event, value) => {
             event.stopPropagation();
-            console.log('handleChipClick', event, value);
             emit('remove-multiselect-value', value);
         };
 
