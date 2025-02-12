@@ -168,7 +168,7 @@ export default {
     options: {
         autoByContent: true,
         displayAllowedValues: ['block'],
-        ignoredStyleProperties: ['border','borderRadius','background','outline'],
+        //ignoredStyleProperties: ['border','borderRadius','background','outline'],
     },
     states: ['readonly'],
     triggerEvents: [

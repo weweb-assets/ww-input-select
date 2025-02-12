@@ -193,9 +193,10 @@ Important for multiselect : "triggerHeight" have to be "unset" to let the compon
 If user asks for multi lang support, you can use globalContext page lang and set :
 - choices: [{"emoji": "🇬🇧","value": "uk","label": {"en": "United Kingdom","fr": "Royaume uni"}},{"emoji": "🇨🇳","value": "ch","label": {"en": "China","fr":"Chine"}}]
 - dynamicConfiguration: {"content": {"choices": [{"key": "emoji","type": "Text"},{"key": "label","type": "RawObject"},{"key": "value","type": "Text"}]}}
-- mappingLabel: {"type": "f","code": "context.mapping?.['emoji']+ ' ' +context.mapping?.['label'] ?.[ globalContext.page?.['lang'] ]"}
+- mappingLabel: {"type": "js","code": "return context.mapping?.['emoji']+ ' ' +context.mapping?.['label'] ?.[ globalContext.page?.['lang'] ]"}
 
 10. **Notes:**
 
 - mapping are 'Formula' type ('type' and 'code' keys) not bindings.
+**CRITICAL** : labels are always text, no img, no icons, no html etc. Do never attempts to return html in mappingLabel.
 **CRITICAL** : You have to perfectly style this select according to the page.
