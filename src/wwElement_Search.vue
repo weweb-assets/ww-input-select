@@ -34,7 +34,6 @@ export default {
             {}
         );
         const searchElementRef = ref(null);
-        console.log('searchElementRef', searchElementRef);
         const searchElement = computed(() => searchElementRef.value);
         const searchBy = computed(() => {
             return (props.content.searchBy || [])
@@ -98,7 +97,6 @@ export default {
         });
 
         watch(autoFocus, value => {
-            console.log('autoFocus', value);
             if (updateAutoFocusSearch) updateAutoFocusSearch(value);
         });
 

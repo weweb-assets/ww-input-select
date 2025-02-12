@@ -10,12 +10,10 @@ export default function useSearch(searchState, { updateSearch }) {
     }
 
     function updateSearchElement(value) {
-        console.log('updateSearchElement', value);
         searchElement.value = value;
     }
 
     function focusSearch() {
-        console.log('focusSearch', searchElement.value);
         if (searchElement.value) {
             nextTick(() => {
                 searchElement.value.focus();

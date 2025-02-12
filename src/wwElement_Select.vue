@@ -333,7 +333,6 @@ export default {
 
             isOpen.value = true;
             nextTick(syncFloating);
-            console.log('openDropdown - autoFocusSearch', autoFocusSearch.value);
             if (autoFocusSearch.value) focusSearch();
         }
 

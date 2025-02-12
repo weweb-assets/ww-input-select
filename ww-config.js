@@ -165,12 +165,10 @@ export default {
             ['fieldName', 'customValidation', 'validation'],
         ],
     },
-    inherit: {
-        type: 'ww-layout',
-    },
     options: {
         autoByContent: true,
-        displayAllowedValues: ['flex', 'grid', 'inline-flex', 'inline-grid'],
+        displayAllowedValues: ['block'],
+        ignoredStyleProperties: ['border','borderRadius','background','outline'],
     },
     states: ['readonly'],
     triggerEvents: [
