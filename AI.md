@@ -197,6 +197,6 @@ If user asks for multi lang support, you can use globalContext page lang and set
 
 10. **Notes:**
 
-- mapping are 'Formula' type ('type' and 'code' keys) not bindings.
+**CRITICAL** : mappingLabel + mappingValue are 'Formula' type like : {"type":"js","code":"//code"). It's not bindings ! So do not use __wwtype key.
 **CRITICAL** : labels are always text, no img, no icons, no html etc. Do never attempts to return html in mappingLabel.
 **CRITICAL** : You have to perfectly style this select according to the page.
