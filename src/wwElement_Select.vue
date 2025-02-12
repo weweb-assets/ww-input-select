@@ -228,16 +228,29 @@ export default {
 
         const updateValue = value => {
             if (selectType.value === 'single') {
+                // Check if value is an array
+                if( Array.isArray(value) ) {
+                    console.warn('Single select component received an array value. Only the first value will be used.');
+                    value = value[0];
+                }
                 setValue(value);
                 emit('trigger-event', { name: 'change', event: { value } });
             } else {
+                // Check if value is an array
+                if( !Array.isArray(value) ) {
+                    value = [value];
+                }
+                    
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-                const valueIndex = currentValue.indexOf(value);
+                for(let iValue of value) {
+                    const valueIndex = currentValue.indexOf(iValue);
 
-                if (valueIndex === -1) {
-                    if (!props.content.limit || currentValue.length < props.content.limit) currentValue.push(value);
-                } else {
-                    currentValue.splice(valueIndex, 1);
+                    if (valueIndex === -1) {
+                        if (!props.content.limit || currentValue.length < props.content.limit) currentValue.push(iValue);
+                    } else {
+                        // currentValue.splice(valueIndex, 1);
+                        // No need to unselect
+                    }
                 }
 
                 setValue(currentValue);

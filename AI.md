@@ -188,6 +188,13 @@ This select contain all logic for the select and all styling is done throught pr
 
 Important for multiselect : "triggerHeight" have to be "unset" to let the component calculate it with the number of chips.
 
+- Multi lang implementation
+
+If user asks for multi lang support, you can use globalContext page lang and set :
+- choices: [{"emoji": "🇬🇧","value": "uk","label": {"en": "United Kingdom","fr": "Royaume uni"}},{"emoji": "🇨🇳","value": "ch","label": {"en": "China","fr":"Chine"}}]
+- dynamicConfiguration: {"content": {"choices": [{"key": "emoji","type": "Text"},{"key": "label","type": "RawObject"},{"key": "value","type": "Text"}]}}
+- mappingLabel: {"type": "f","code": "context.mapping?.['emoji']+ ' ' +context.mapping?.['label'] ?.[ globalContext.page?.['lang'] ]"}
+
 10. **Notes:**
 
 - mapping are 'Formula' type ('type' and 'code' keys) not bindings.
