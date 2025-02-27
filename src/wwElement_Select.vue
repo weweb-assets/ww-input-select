@@ -134,8 +134,8 @@ export default {
         const useForm = inject('_wwForm:useForm', () => {});
         useForm(
             variableValue,
-            { fieldName, validation, customValidation },
-            { elementState: props.wwElementState, emit, sidepanelFormPath: 'form' }
+            { fieldName, validation, customValidation, initialValue: initValue },
+            { elementState: props.wwElementState, emit, sidepanelFormPath: 'form', setValue }
         );
 
         const triggerElement = ref(null);
