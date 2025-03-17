@@ -21,7 +21,7 @@ export default function useDropdownFloating(triggerElement, dropdownElement) {
     const { floatingStyles, update } = useFloating(triggerElement, dropdownElement, {
         placement,
         middleware,
-        strategy: 'fixed',
+        strategy: 'absolute',
         whileElementsMounted: autoUpdate,
     });
 
