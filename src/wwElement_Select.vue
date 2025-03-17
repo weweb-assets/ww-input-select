@@ -114,6 +114,8 @@ export default {
             return false;
         });
 
+        const isInDialog = inject('isInDialog', false);
+
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
@@ -140,7 +142,7 @@ export default {
 
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
-        //const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
+        let { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
         const autoFocus = computed(() => props.content.autoFocus);
         const optionsMap = ref(new Map());
         const options = computed(() => Array.from(optionsMap.value.values()));
@@ -164,17 +166,19 @@ export default {
         const showSearch = computed(() => props.content.showSearch);
 
         // Styles
-        const syncFloating = () => {}
-        const floatingStyles = computed(() => {
-            if (triggerElement.value) {
-                return {
-                    position: 'absolute',
-                    top: `${triggerElement.value.offsetHeight + parseInt(props.content.offsetY)}px`,
-                    left: `${triggerElement.value.offsetLeft + parseInt(props.content.offsetX)}px`,
-                };
-            }
-            return {};
-        });
+        if (isInDialog) {
+            syncFloating = () => {}
+            floatingStyles = computed(() => {
+                if (triggerElement.value) {
+                    return {
+                        position: 'absolute',
+                        top: `${triggerElement.value.offsetHeight + parseInt(props.content.offsetY)}px`,
+                        left: `${triggerElement.value.offsetLeft + parseInt(props.content.offsetX)}px`,
+                    };
+                }
+                return {};
+            });
+        }
 
         const selectStyles = computed(() => {
             if (isOpen.value && props.content.zIndexOpen) {
