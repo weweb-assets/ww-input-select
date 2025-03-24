@@ -22,7 +22,7 @@
             <SelectTriger :content="content" @remove-multiselect-value="removeSpecificValue" />
         </div>
         <teleport v-if="isOpen" :to="appDivRef">
-            <div class="ww-select__dropdown__wrapper">
+            <div class="ww-select__dropdown__wrapper" :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }">
                 <div
                     class="ww-select__dropdown"
                     ref="dropdownElement"
@@ -700,6 +700,7 @@ export default {
             showSearch,
             componentKey,
             isEditing,
+            forceOpenInEditor,
             isOpen,
             triggerElement,
             dropdownElement,
@@ -782,11 +783,6 @@ export default {
     width: 100%;
 }
 
-.ww-select__dropdown {
-    //overflow: hidden;
-    pointer-events: auto;
-}
-
 .ww-select__dropdown__wrapper {
     position: fixed;
     top: 0;
@@ -795,7 +791,6 @@ export default {
     height: 100%;
     background-color: transparent;
     z-index: 9999;
-    pointer-events: auto;
 }
 
 .fake-input {
