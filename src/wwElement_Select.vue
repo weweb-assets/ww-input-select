@@ -113,7 +113,7 @@ export default {
 
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
-            selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
+            selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
         );
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -417,13 +417,13 @@ export default {
         const selectionDetails = computed(() => {
             const _optionsMap = new Map(
                 rawData.value.map(({ ...option }) => [
-                    resolveMappingFormula(toValue(mappingValue), option) || option.value,
+                    resolveMappingFormula(toValue(mappingValue), option) ?? option.value,
                     option,
                 ])
             ); // Hide optionId
             const obj = opt => ({
-                value: resolveMappingFormula(toValue(mappingValue), opt) || opt.value,
-                label: resolveMappingFormula(toValue(mappingLabel), opt) || opt.value,
+                value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value,
+                label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.value,
                 disabled: opt.disabled || false,
                 data: opt || {},
             });
@@ -537,7 +537,7 @@ export default {
         watch(
             [initValue, selectType],
             () => {
-                if (initValue.value || (Array.isArray(initValue.value) && initValue.value.length)) {
+                if ((initValue.value !== null && initValue.value !== undefined) || (Array.isArray(initValue.value) && initValue.value.length)) {
                     setValue(initValue.value);
                     nextTick(debounce(handleInitialFocus, 300));
                     emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
