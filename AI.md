@@ -155,9 +155,9 @@ keywords:
 
 - dynamicConfiguration: object({"content":{"choices":[{"key":"nameOfKey","type"="typeOfKey"}]}}) - Object that describe format of data in choices
 
-4. **Children Components:**
+4. **Slots:**
 
-There is no children.
+There is no slot.
 
 5. **Special Features:**
 
