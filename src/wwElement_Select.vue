@@ -417,13 +417,13 @@ export default {
         const selectionDetails = computed(() => {
             const _optionsMap = new Map(
                 rawData.value.map(({ ...option }) => [
-                    resolveMappingFormula(toValue(mappingValue), option) || option.value,
+                    resolveMappingFormula(toValue(mappingValue), option) ?? option.value,
                     option,
                 ])
             ); // Hide optionId
             const obj = opt => ({
-                value: resolveMappingFormula(toValue(mappingValue), opt) || opt.value,
-                label: resolveMappingFormula(toValue(mappingLabel), opt) || opt.value,
+                value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value,
+                label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.value,
                 disabled: opt.disabled || false,
                 data: opt || {},
             });

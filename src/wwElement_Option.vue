@@ -1,23 +1,4 @@
 <template>
-    <!-- <wwLocalContext
-        :data="data"
-        :methods="contextMethods"
-        :markdown="contextMarkdown"
-        element-key="selectOption"
-    >
-        <wwElement
-            v-bind="content.optionChoiceElement"
-            :states="[isFocused ? 'focused' : '', isOptionDisabled ? 'disabled' : '']"
-            class="ww-select-option"
-            ref="optionRef"
-            @click="handleClick"
-            @keydown="handleKeyDown"
-            role='option'
-            :id="optionId"
-            :aria-selected="isSelected"
-            :aria-disabled="isOptionDisabled"
-        />
-    </wwLocalContext> -->
     <div
         :class="['ww-select-option', isFocused ? 'focused' : '', isOptionDisabled ? 'disabled' : '']"
         :style="optionStyles"
@@ -113,10 +94,10 @@ export default {
         });
 
         const label = computed(
-            () => resolveMappingFormula(toValue(mappingLabel), props.localData) || props.content.label
+            () => resolveMappingFormula(toValue(mappingLabel), props.localData) ?? props.content.label
         );
         const value = computed(
-            () => resolveMappingFormula(toValue(mappingValue), props.localData) || props.content.value
+            () => resolveMappingFormula(toValue(mappingValue), props.localData) ?? props.content.value
         );
         const isOptionDisabled = computed(() => resolveMappingFormula(toValue(mappingDisabled), props.localData));
 

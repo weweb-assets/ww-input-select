@@ -17,10 +17,10 @@ keywords:
 
 2. **Properties:**
 
-    - choices: array<{ label: string, value: any }> - Array of options to display in the dropdown. Don't forget linked dynamicConfiguration in settings.
-    - mappingLabel: Formula - A formula to derive the label from each choice item, only text, no img, icons, etc. Always use 'context.mapping...'
-    - mappingValue: Formula - A formula to derive the value from each choice item. Always use 'context.mapping...'
-    - mappingDisabled: Formula - A formula applyed to each choice item to disable or not them. Always use 'context.mapping...'
+    - choices: `array<{ label: string, value: any }>` - Array of object (options) to display in the dropdown. Don't forget linked dynamicConfiguration in settings. It can not be an array of primitive values, always an array of objects.
+    - mappingLabel: `Formula` - A formula to derive the label from each choice item, only text, no img, icons, etc. Always use 'context.mapping...'
+    - mappingValue: `Formula` - A formula to derive the value from each choice item. Always use 'context.mapping...'
+    - mappingDisabled: `Formula` - A formula applyed to each choice item to disable or not them. Always use 'context.mapping...'
     - initValueSingle: `string | null` - Initial value for single select mode. Default: `null`
     - initValueMulti: `Array<string>` - Initial values for multiple select mode. Default: `[]`
     - selectType: `'single' | 'multiple'` - Type of selection. Default: `'single'`
