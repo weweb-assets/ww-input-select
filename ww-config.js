@@ -380,17 +380,6 @@ export default {
             },
             /* wwEditor:end */
         },
-        /* wwEditor:start */
-        selectTypeWarning: {
-            type: 'InfoBox',
-            section: 'settings',
-            options: {
-                title: 'Select type',
-                content:
-                    'The select configuration and layout are strongly tied to the select type. Changing the type requires understanding how to adjust the layout (specifically the options displayed in the trigger) to match the new type.',
-            },
-        },
-        /* wwEditor:end */
         disabled: {
             label: { en: 'Disabled' },
             type: 'OnOff',

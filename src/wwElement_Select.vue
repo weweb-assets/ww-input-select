@@ -19,34 +19,30 @@
             :tabindex="isDisabled ? -1 : 0"
             :aria-disabled="isDisabled"
         >
-            <SelectTriger 
-                :content="content"
-                @remove-multiselect-value="removeSpecificValue"
-            />
+            <SelectTriger :content="content" @remove-multiselect-value="removeSpecificValue" />
         </div>
-        <div
-            class="ww-select__dropdown"
-            ref="dropdownElement"
-            :style="[
-                floatingStyles || {},
-            ]"
-            v-if="isOpen"
-            :id="dropdownId"
-            :role="selectType === 'single' ? 'listbox' : 'group'"
-            :aria-multiselectable="selectType === 'multiple'"
-            :aria-label="'Select options'"
-            inherit-component-style
-        >
-            <div
-                :style="[dropdownStyles]"
-            >
-                <SelectDropdown :content="content" :wwEditorState="wwEditorState">
-                    <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
-                    <!-- List mode -->
-                    <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
-                </SelectDropdown>
+        <teleport v-if="isOpen" :to="appDivRef">
+            <div class="ww-select__dropdown__wrapper" :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }">
+                <div
+                    class="ww-select__dropdown"
+                    ref="dropdownElement"
+                    :style="[floatingStyles || {}]"
+                    :id="dropdownId"
+                    :role="selectType === 'single' ? 'listbox' : 'group'"
+                    :aria-multiselectable="selectType === 'multiple'"
+                    :aria-label="'Select options'"
+                    inherit-component-style
+                >
+                    <div :style="[dropdownStyles]">
+                        <SelectDropdown :content="content" :wwEditorState="wwEditorState">
+                            <SelectSearch v-if="showSearch" :content="content" :wwEditorState="wwEditorState" />
+                            <!-- List mode -->
+                            <SelectOptionList :content="content" :wwEditorState="wwEditorState" />
+                        </SelectDropdown>
+                    </div>
+                </div>
             </div>
-        </div>
+        </teleport>
 
         <input
             type="input"
@@ -65,8 +61,7 @@ import InputSelectDropdown from './wwElement_Dropdown.vue';
 import InputSelectOption from './wwElement_Option.vue';
 import InputSelectOptionList from './wwElement_OptionsList.vue';
 import InputSelectSearch from './wwElement_Search.vue';
-import { ref, computed, provide, watch, inject, nextTick, toValue, onMounted, onBeforeUnmount } from 'vue';
-import useDropdownFloating from './select/useFloating';
+import { ref, computed, provide, watch, inject, nextTick, toValue, onMounted, onBeforeUnmount, shallowRef } from 'vue';
 import useAccessibility from './select/useAccessibility';
 import useSearch from './select/useSearch';
 import { debounce } from './utils';
@@ -114,9 +109,11 @@ export default {
             return false;
         });
 
+        const appDivRef = shallowRef(wwLib.getFrontDocument().querySelector('#app'));
+
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
-            selectType.value === 'single' ? props.content.initValueSingle || null : props.content.initValueMulti || []
+            selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
         );
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -134,13 +131,12 @@ export default {
         const useForm = inject('_wwForm:useForm', () => {});
         useForm(
             variableValue,
-            { fieldName, validation, customValidation },
-            { elementState: props.wwElementState, emit, sidepanelFormPath: 'form' }
+            { fieldName, validation, customValidation, initialValue: initValue },
+            { elementState: props.wwElementState, emit, sidepanelFormPath: 'form', setValue }
         );
 
         const triggerElement = ref(null);
         const dropdownElement = ref(null);
-        //const { floatingStyles, syncFloating } = useDropdownFloating(triggerElement, dropdownElement);
         const autoFocus = computed(() => props.content.autoFocus);
         const optionsMap = ref(new Map());
         const options = computed(() => Array.from(optionsMap.value.values()));
@@ -162,19 +158,22 @@ export default {
         const mappingValue = computed(() => props.content.mappingValue);
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
+        const offsetX = computed(() => props.content.offsetX);
+        const offsetY = computed(() => props.content.offsetY);
 
         // Styles
-        const syncFloating = () => {}
-        const floatingStyles = computed(() => {
-            if (triggerElement.value) {
-                return {
-                    position: 'absolute',
-                    top: `${triggerElement.value.offsetHeight + parseInt(props.content.offsetY)}px`,
-                    left: `${triggerElement.value.offsetLeft + parseInt(props.content.offsetX)}px`,
-                };
-            }
-            return {};
-        });
+        const syncFloating = () => {
+            if (!triggerElement?.value) return;
+            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            floatingStyles.value = {
+                position: 'absolute',
+                top: `${
+                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
+                }px`,
+                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+            };
+        };
+        let floatingStyles = ref({});
 
         const selectStyles = computed(() => {
             if (isOpen.value && props.content.zIndexOpen) {
@@ -203,7 +202,7 @@ export default {
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
-                'overflow': 'auto',
+                overflow: 'auto',
                 ...dropdownBorderCss,
             };
         });
@@ -230,7 +229,7 @@ export default {
         const updateValue = value => {
             if (selectType.value === 'single') {
                 // Check if value is an array
-                if( Array.isArray(value) ) {
+                if (Array.isArray(value)) {
                     console.warn('Single select component received an array value. Only the first value will be used.');
                     value = value[0];
                 }
@@ -238,16 +237,17 @@ export default {
                 emit('trigger-event', { name: 'change', event: { value } });
             } else {
                 // Check if value is an array
-                if( !Array.isArray(value) ) {
+                if (!Array.isArray(value)) {
                     value = [value];
                 }
-                    
+
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-                for(let iValue of value) {
+                for (let iValue of value) {
                     const valueIndex = currentValue.indexOf(iValue);
 
                     if (valueIndex === -1) {
-                        if (!props.content.limit || currentValue.length < props.content.limit) currentValue.push(iValue);
+                        if (!props.content.limit || currentValue.length < props.content.limit)
+                            currentValue.push(iValue);
                     } else {
                         // currentValue.splice(valueIndex, 1);
                         // No need to unselect
@@ -331,6 +331,14 @@ export default {
 
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
+            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            floatingStyles.value = {
+                position: 'absolute',
+                top: `${
+                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
+                }px`,
+                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+            };
 
             isOpen.value = true;
             nextTick(syncFloating);
@@ -409,13 +417,13 @@ export default {
         const selectionDetails = computed(() => {
             const _optionsMap = new Map(
                 rawData.value.map(({ ...option }) => [
-                    resolveMappingFormula(toValue(mappingValue), option) || option.value,
+                    resolveMappingFormula(toValue(mappingValue), option) ?? option.value,
                     option,
                 ])
             ); // Hide optionId
             const obj = opt => ({
-                value: resolveMappingFormula(toValue(mappingValue), opt) || opt.value,
-                label: resolveMappingFormula(toValue(mappingLabel), opt) || opt.value,
+                value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value,
+                label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.value,
                 disabled: opt.disabled || false,
                 data: opt || {},
             });
@@ -447,6 +455,43 @@ export default {
             utils: { type: selectType, isOpen, triggerWidth, triggerHeight },
         });
 
+        let initialOverflow = null;
+        let initialBodyOverflow = null;
+        let initialPaddingRight = '0px';
+        const blockScrolling = () => {
+            const _w = wwLib.getFrontWindow();
+            const _d = wwLib.getFrontDocument();
+            if (!_w || !_d) return;
+
+            const scrollbarWidth =
+                _w.innerWidth - _d.documentElement.clientWidth;
+            initialOverflow = { ..._d.documentElement.style };
+            initialBodyOverflow = { ..._d.body.style };
+            initialPaddingRight = _d.documentElement.style.paddingRight;
+
+            _d.documentElement.style.overflow = 'hidden';
+            _d.body.style.overflow = 'hidden';
+            _d.documentElement.style.paddingRight = `${scrollbarWidth}px`;
+        };
+        const revertBlockScrolling = () => {
+            const _d = wwLib.getFrontDocument();
+            if (!_d) return;
+
+            if(initialOverflow === null) return;
+            if(initialBodyOverflow === null) return;
+
+            _d.documentElement.style.overflow = initialOverflow.overflow;
+            _d.documentElement.style.overflowX = initialOverflow.overflowX;
+            _d.documentElement.style.overflowY = initialOverflow.overflowY;
+            _d.body.style.overflow = initialBodyOverflow.overflow;
+            _d.body.style.overflowX = initialBodyOverflow.overflowX;
+            _d.body.style.overflowY = initialBodyOverflow.overflowY;
+            _d.documentElement.style.paddingRight = initialPaddingRight;
+
+            initialOverflow = null;
+            initialBodyOverflow = null;
+        };
+
         watch(
             hasSearch,
             newHasSearch => {
@@ -474,6 +519,11 @@ export default {
         watch(isOpen, () => {
             nextTick(syncFloating);
             handleInitialFocus();
+            if (isOpen.value) {
+                blockScrolling();
+            } else {
+                revertBlockScrolling();
+            }
         });
 
         watch(
@@ -487,7 +537,7 @@ export default {
         watch(
             [initValue, selectType],
             () => {
-                if (initValue.value || (Array.isArray(initValue.value) && initValue.value.length)) {
+                if ((initValue.value !== null && initValue.value !== undefined) || (Array.isArray(initValue.value) && initValue.value.length)) {
                     setValue(initValue.value);
                     nextTick(debounce(handleInitialFocus, 300));
                     emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
@@ -527,6 +577,10 @@ export default {
         watch(triggerElement, () => {
             // Observe trigger element size when updated
             observeTriggerSize();
+        });
+
+        watch([() => props.content.offsetX, () => props.content.offsetY], () => {
+            syncFloating();
         });
         /* wwEditor:end */
 
@@ -621,6 +675,7 @@ export default {
                 observeTriggerSize();
             });
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
+            wwLib.getFrontWindow().addEventListener('scroll', syncFloating);
         });
 
         onBeforeUnmount(() => {
@@ -628,6 +683,7 @@ export default {
                 resizeObserver.value.disconnect();
                 resizeObserver.value = null;
             }
+            revertBlockScrolling();
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
         });
 
@@ -640,9 +696,11 @@ export default {
         );
 
         return {
+            appDivRef,
             showSearch,
             componentKey,
             isEditing,
+            forceOpenInEditor,
             isOpen,
             triggerElement,
             dropdownElement,
@@ -725,8 +783,14 @@ export default {
     width: 100%;
 }
 
-.ww-select__dropdown {
-    //overflow: hidden;
+.ww-select__dropdown__wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    z-index: 9999;
 }
 
 .fake-input {
