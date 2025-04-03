@@ -4,11 +4,7 @@
         <div v-if="isSingleSelect" :style="triggerStyle">
             <span v-if="isOptionSelected" :style="selectedValueStyle">{{ selectedLabel }}</span>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
-            <div
-                :class="[isOpen ? content.triggerIconOpen : content.triggerIconClose]"
-                :style="triggerIconStyle"
-                aria-hidden="true"
-            ></div>
+            <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
         </div>
         <!-- MULTI SELECT -->
         <div v-else :style="triggerStyle">
@@ -21,22 +17,25 @@
                     :style="chipStyle"
                 >
                     <span>{{ option.label }}</span>
-                    <div :class="[content.chipIconUnselect]" :style="chipIconStyle" aria-hidden="true"></div>
+                    <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
             </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
-            <div
-                :class="[isOpen ? content.triggerIconOpen : content.triggerIconClose]"
-                :style="triggerIconStyle"
-                aria-hidden="true"
-            ></div>
+            <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
         </div>
         <!-- <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" /> -->
     </div>
 </template>
 
 <script>
-import { computed, inject, ref } from 'vue';
+import { computed, inject, ref, watchEffect } from 'vue';
+
+const OPEN_CHIP_PLACEHOLDER =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>';
+const CLOSE_CHIP_PLACEHOLDER =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>';
+const UNSELECT_CHIP_PLACEHOLDER =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
 export default {
     props: {
@@ -47,6 +46,8 @@ export default {
     },
     emits: ['remove-multiselect-value'],
     setup(props, { emit }) {
+        const { getIcon } = wwLib.useIcons();
+
         const registerTriggerLocalContext = inject('_wwSelect:registerTriggerLocalContext');
         const localContext = inject('_wwSelect:localContext');
 
@@ -107,6 +108,9 @@ export default {
             return {
                 'font-size': props.content.triggerIconSize,
                 color: props.content.triggerIconColor,
+                display: 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
             };
         });
 
@@ -128,7 +132,7 @@ export default {
                 color: props.content.placeholderFontColor,
                 'font-weight': props.content.placeholderFontWeight,
                 'text-align': props.content.placeholderTextAlign,
-                'width': '100%',
+                width: '100%',
             };
         });
 
@@ -156,10 +160,33 @@ export default {
             };
         });
 
+        const chipIcon = ref(null);
+        const chipIconUnselect = ref(null);
+
+        watchEffect(async () => {
+            const iconKey = isOpen.value ? 'triggerIconOpen' : 'triggerIconClose';
+            const defaultIcon = isOpen.value ? OPEN_CHIP_PLACEHOLDER : CLOSE_CHIP_PLACEHOLDER;
+
+            if (props.content[iconKey]) {
+                chipIcon.value = (await getIcon(props.content[iconKey])) || defaultIcon;
+            } else {
+                chipIcon.value = defaultIcon;
+            }
+
+            if (props.content.chipIconUnselect) {
+                chipIconUnselect.value = (await getIcon(props.content.chipIconUnselect)) || UNSELECT_CHIP_PLACEHOLDER;
+            } else {
+                chipIconUnselect.value = UNSELECT_CHIP_PLACEHOLDER;
+            }
+        });
+
         const chipIconStyle = computed(() => {
             return {
                 'font-size': props.content.chipIconSize,
                 color: props.content.chipIconColor,
+                display: 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
             };
         });
 
@@ -178,8 +205,10 @@ export default {
             triggerIconStyle,
             selectedValueStyle,
             placeholderStyle,
+            chipIcon,
             chipStyle,
             chipIconStyle,
+            chipIconUnselect,
             isOpen,
             handleChipClick,
         };

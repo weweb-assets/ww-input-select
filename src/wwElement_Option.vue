@@ -11,21 +11,19 @@
         :aria-disabled="isOptionDisabled"
     >
         <span>{{ data.label }}</span>
-        <div 
-            v-if="data.isSelected"
-            :class="[content.optionIcon]" 
-            :style="optionIconStyle"
-            aria-hidden="true"
-        ></div>
+        <div v-if="data.isSelected" v-html="optionIcon" :style="optionIconStyle" aria-hidden="true"></div>
     </div>
 </template>
 
 <script>
-import { ref, unref, toValue, inject, computed, watch, onBeforeUnmount } from 'vue';
+import { ref, unref, toValue, inject, computed, watch, onBeforeUnmount, watchEffect } from 'vue';
 import useAccessibility from './useAccessibility_Option';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
+
+const SELECT_OPTION_ICON =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>';
 
 export default {
     props: {
@@ -49,6 +47,8 @@ export default {
             return false;
         });
 
+        const { getIcon } = wwLib.useIcons();
+
         const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
 
         const registerOption = inject('_wwSelect:registerOption', () => {});
@@ -70,7 +70,6 @@ export default {
 
         // Styles
         const optionStyles = computed(() => {
-
             return {
                 padding: props.content.optionPadding,
                 'background-color': props.content.optionBgColor,
@@ -78,18 +77,26 @@ export default {
                 'font-family': props.content.optionFontFamily,
                 'font-size': props.content.optionFontSize,
                 'font-weight': props.content.optionFontWeight,
-                'cursor': props.content.optionCursor,
+                cursor: props.content.optionCursor,
                 'border-radius': props.content.optionBorderRadius,
                 '--ww-select-option-bg-color-hover': props.content.optionBgColorHover,
                 '--ww-select-option-bg-color-focused': props.content.optionBgColorFocused,
             };
         });
+
+        const optionIcon = ref(null);
+
+        watchEffect(async () => {
+            optionIcon.value = (await getIcon(props.content.optionIcon)) || SELECT_OPTION_ICON;
+        });
+
         const optionIconStyle = computed(() => {
             return {
                 'font-size': props.content.optionIconSize,
                 color: props.content.optionIconColor,
                 display: 'flex',
-                'align-items': 'center'
+                'align-items': 'center',
+                'justify-content': 'center',
             };
         });
 
@@ -225,6 +232,7 @@ export default {
             activeDescendant,
             option,
             optionStyles,
+            optionIcon,
             optionIconStyle,
             contextMethods,
             data,

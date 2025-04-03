@@ -145,7 +145,15 @@ export default {
             'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
-            ['triggerTitle', 'placeholder', 'emptyStateText','searchPlaceholder', 'initialState', 'selectType', 'selectTypeWarning'],
+            [
+                'triggerTitle',
+                'placeholder',
+                'emptyStateText',
+                'searchPlaceholder',
+                'initialState',
+                'selectType',
+                'selectTypeWarning',
+            ],
             [
                 'optionsTitle',
                 'disabled',
@@ -236,8 +244,8 @@ export default {
             },
             bindable: true,
             defaultValue: {
-                '__wwtype': 'f',
-                'code': '[{"label":"Option 1","value":"option1"},{"label":"Option 2","value":"option2"}]',
+                __wwtype: 'f',
+                code: '[{"label":"Option 1","value":"option1"},{"label":"Option 2","value":"option2"}]',
             },
             /* wwEditor:start */
             bindingValidation: {
@@ -1235,7 +1243,7 @@ export default {
                 en: 'Chip - background color',
             },
             type: 'Color',
-            defaultValue: "#363636",
+            defaultValue: '#363636',
             states: true,
             classes: true,
             bindable: true,
@@ -1276,8 +1284,8 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: {
-                "__wwtype": "f",
-                "code": '[{"label":"Option 1","value":"opt1"},{"label":"Option 2","value":"opt2"}]'
+                __wwtype: 'f',
+                code: '[{"label":"Option 1","value":"opt1"},{"label":"Option 2","value":"opt2"}]',
             },
             hidden: content => content.selectType == 'single',
         },
@@ -1291,7 +1299,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => content.chipBorder || content.selectType == 'single',
+            hidden: content => content.chipBorder || content.selectType == 'single',
         },
         chipBorderTop: {
             type: 'Border',
@@ -1303,7 +1311,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderRight: {
             type: 'Border',
@@ -1315,7 +1323,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderBottom: {
             type: 'Border',
@@ -1327,7 +1335,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderLeft: {
             type: 'Border',
@@ -1339,7 +1347,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderRadius: {
             type: 'Spacing',
@@ -1361,12 +1369,11 @@ export default {
         },
         chipIconUnselect: {
             label: { en: 'Chip - Unselect icon', fr: 'Chip - Icône désélection' },
-            type: 'Icon',
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'wwi wwi-cross',
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -1408,7 +1415,6 @@ export default {
             /* wwEditor:end */
             hidden: content => content.selectType == 'single',
         },
-        
 
         /* ------------------------------------
             TRIGGER STYLES
@@ -1442,7 +1448,10 @@ export default {
                 en: 'Trigger - Height',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -1483,7 +1492,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "1px solid #B0B0B0",
+            defaultValue: '1px solid #B0B0B0',
             hidden: content => content.triggerBorder,
         },
         triggerBorderTop: {
@@ -1600,12 +1609,12 @@ export default {
         },
         triggerIconOpen: {
             label: { en: 'Trigger - Open icon', fr: 'Trigger - Icône ouverte' },
-            type: 'Icon',
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'fas fa-angle-up',
+            defaultValue: null,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -1615,12 +1624,12 @@ export default {
         },
         triggerIconClose: {
             label: { en: 'Trigger - Close icon', fr: 'Trigger - Icône fermée' },
-            type: 'Icon',
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'fas fa-angle-down',
+            defaultValue: null,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -1676,7 +1685,10 @@ export default {
                 en: 'Dropdown - Width',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -1684,7 +1696,10 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: { __wwtype: 'f', code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'` },
+            defaultValue: {
+                __wwtype: 'f',
+                code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'`,
+            },
         },
         dropdownMaxHeight: {
             type: 'Length',
@@ -1692,7 +1707,10 @@ export default {
                 en: 'Dropdown - Max-height',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -1734,7 +1752,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "1px solid #B0B0B0",
+            defaultValue: '1px solid #B0B0B0',
             hidden: content => content.dropdownBorder,
         },
         dropdownBorderTop: {
@@ -1807,7 +1825,7 @@ export default {
                 en: 'Dropdown - Border Dropdown background color',
             },
             type: 'Color',
-            defaultValue: "#FFFFFF",
+            defaultValue: '#FFFFFF',
             states: true,
             classes: true,
             bindable: true,
@@ -1853,7 +1871,6 @@ export default {
             responsive: true,
             defaultValue: '0px',
         },
-
 
         /* ------------------------------------
             OPTION STYLES
@@ -1994,45 +2011,45 @@ export default {
             defaultValue: '#f5f5f5',
         },
         optionCursor: {
-            label: { en: "Option - cursor" },
-            type: "TextSelect",
+            label: { en: 'Option - cursor' },
+            type: 'TextSelect',
             options: {
                 options: [
-                    { value: "auto", label: "Auto" },
-                    { value: "default", label: "Default" },
-                    { value: "pointer", label: "Pointer" },
-                    { value: "none", label: "None" },
-                    { value: "not-allowed", label: "Not allowed" },
-                    { value: "help", label: "Help" },
-                    { value: "text", label: "Text" },
-                    { value: "move", label: "Move" },
-                    { value: "grab", label: "Grab" },
-                    { value: "grabbing", label: "Grabbing", default: true },
-                    { value: "n-resize", label: "Arrow up" },
-                    { value: "s-resize", label: "Arrow down" },
-                    { value: "w-resize", label: "Arrow left" },
-                    { value: "e-resize", label: "Arrow right" },
-                    { value: "ne-resize", label: "Arrow top-right" },
-                    { value: "nw-resize", label: "Arrow top-left" },
-                    { value: "se-resize", label: "Arrow bottom-right" },
-                    { value: "sw-resize", label: "Arrow bottom-left" },
-                    { value: "ew-resize", label: "Arrow left-right" },
-                    { value: "ns-resize", label: "Arrow up-down" },
-                    { value: "nesw-resize", label: "Arrow top-right to bottom-left" },
-                    { value: "nwse-resize", label: "Arrow top-left to bottom-right" },
-                    { value: "zoom-in", label: "Zoom in" },
-                    { value: "zoom-out", label: "Zoom out" },
-                    { value: "col-resize", label: "Column resize" },
-                    { value: "row-resize", label: "Row resize" },
-                    { value: "all-scroll", label: "All-scroll" },
-                    { value: "context-menu", label: "Context menu" },
-                    { value: "cell", label: "Cell" },
-                    { value: "crosshair", label: "Crosshair" },
-                    { value: "vertical-text", label: "Vertical text" },
-                    { value: "alias", label: "Alias" },
-                    { value: "copy", label: "Copy" },
-                    { value: "progress", label: "Progress" },
-                    { value: "wait", label: "Wait" },
+                    { value: 'auto', label: 'Auto' },
+                    { value: 'default', label: 'Default' },
+                    { value: 'pointer', label: 'Pointer' },
+                    { value: 'none', label: 'None' },
+                    { value: 'not-allowed', label: 'Not allowed' },
+                    { value: 'help', label: 'Help' },
+                    { value: 'text', label: 'Text' },
+                    { value: 'move', label: 'Move' },
+                    { value: 'grab', label: 'Grab' },
+                    { value: 'grabbing', label: 'Grabbing', default: true },
+                    { value: 'n-resize', label: 'Arrow up' },
+                    { value: 's-resize', label: 'Arrow down' },
+                    { value: 'w-resize', label: 'Arrow left' },
+                    { value: 'e-resize', label: 'Arrow right' },
+                    { value: 'ne-resize', label: 'Arrow top-right' },
+                    { value: 'nw-resize', label: 'Arrow top-left' },
+                    { value: 'se-resize', label: 'Arrow bottom-right' },
+                    { value: 'sw-resize', label: 'Arrow bottom-left' },
+                    { value: 'ew-resize', label: 'Arrow left-right' },
+                    { value: 'ns-resize', label: 'Arrow up-down' },
+                    { value: 'nesw-resize', label: 'Arrow top-right to bottom-left' },
+                    { value: 'nwse-resize', label: 'Arrow top-left to bottom-right' },
+                    { value: 'zoom-in', label: 'Zoom in' },
+                    { value: 'zoom-out', label: 'Zoom out' },
+                    { value: 'col-resize', label: 'Column resize' },
+                    { value: 'row-resize', label: 'Row resize' },
+                    { value: 'all-scroll', label: 'All-scroll' },
+                    { value: 'context-menu', label: 'Context menu' },
+                    { value: 'cell', label: 'Cell' },
+                    { value: 'crosshair', label: 'Crosshair' },
+                    { value: 'vertical-text', label: 'Vertical text' },
+                    { value: 'alias', label: 'Alias' },
+                    { value: 'copy', label: 'Copy' },
+                    { value: 'progress', label: 'Progress' },
+                    { value: 'wait', label: 'Wait' },
                 ],
             },
             states: true,
@@ -2041,20 +2058,20 @@ export default {
             responsive: true,
             /* wwEditor:start */
             bindingValidation: {
-                type: "string",
-                tooltip: "A string that represent the cursor type",
+                type: 'string',
+                tooltip: 'A string that represent the cursor type',
             },
             /* wwEditor:end */
-            defaultValue: "pointer",
+            defaultValue: 'pointer',
         },
         optionIcon: {
             label: { en: 'Option - Checked icon', fr: 'Option - Icône check' },
-            type: 'Icon',
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'fas fa-check',
+            defaultValue: null,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -2213,7 +2230,10 @@ export default {
                 en: 'Search - Width',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -2230,7 +2250,10 @@ export default {
                 en: 'Search - Height',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -2285,8 +2308,8 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "1px solid #A3A3A3",
-            hidden: content => content.searchBorder || !content.showSearch,
+            defaultValue: '1px solid #A3A3A3',
+            hidden: content => content.searchBorder || !content.showSearch,
         },
         searchBorderTop: {
             type: 'Border',
@@ -2298,7 +2321,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderRight: {
             type: 'Border',
@@ -2310,7 +2333,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderBottom: {
             type: 'Border',
@@ -2322,7 +2345,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderLeft: {
             type: 'Border',
@@ -2334,7 +2357,7 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderRadius: {
             type: 'Spacing',
@@ -2363,7 +2386,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "8px 12px",
+            defaultValue: '8px 12px',
             hidden: content => !content.showSearch,
         },
         searchMargin: {
@@ -2375,7 +2398,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "0px 0px 8px 0px",
+            defaultValue: '0px 0px 8px 0px',
             hidden: content => !content.showSearch,
         },
         searchOutline: {
@@ -2478,7 +2501,7 @@ export default {
                 en: 'Search - background color',
             },
             type: 'Color',
-            defaultValue: "#FAFAFA",
+            defaultValue: '#FAFAFA',
             states: true,
             classes: true,
             bindable: true,
@@ -2490,7 +2513,7 @@ export default {
                 en: 'Search - Placeholder color',
             },
             type: 'Color',
-            defaultValue: "#737373",
+            defaultValue: '#737373',
             states: true,
             classes: true,
             bindable: true,

@@ -22,7 +22,10 @@
             <SelectTriger :content="content" @remove-multiselect-value="removeSpecificValue" />
         </div>
         <teleport v-if="isOpen" :to="appDivRef">
-            <div class="ww-select__dropdown__wrapper" :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }">
+            <div
+                class="ww-select__dropdown__wrapper"
+                :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }"
+            >
                 <div
                     class="ww-select__dropdown"
                     ref="dropdownElement"
@@ -158,8 +161,6 @@ export default {
         const mappingValue = computed(() => props.content.mappingValue);
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
-        const offsetX = computed(() => props.content.offsetX);
-        const offsetY = computed(() => props.content.offsetY);
 
         // Styles
         const syncFloating = () => {
@@ -290,6 +291,8 @@ export default {
 
                 setValue(currentValue);
             }
+
+            emit('trigger-event', { name: 'change', event: { value: variableValue.value } });
         };
 
         function removeSpecificValue(valueToRemove) {
@@ -310,6 +313,7 @@ export default {
             if (valueIndex !== -1) {
                 currentValue.splice(valueIndex, 1);
                 setValue(currentValue);
+                emit('trigger-event', { name: 'change', event: { value: currentValue } });
             }
 
             setTimeout(() => {
@@ -362,6 +366,7 @@ export default {
 
         function resetValue() {
             setValue(initValue.value || null);
+            emit('trigger-event', { name: 'change', event: { value: initValue.value || null } });
         }
 
         function handleClickOutside(event) {
@@ -461,10 +466,9 @@ export default {
         const blockScrolling = () => {
             const _w = wwLib.getFrontWindow();
             const _d = wwLib.getFrontDocument();
-            if (!_w || !_d) return;
+            if (!_w || !_d) return;
 
-            const scrollbarWidth =
-                _w.innerWidth - _d.documentElement.clientWidth;
+            const scrollbarWidth = _w.innerWidth - _d.documentElement.clientWidth;
             initialOverflow = { ..._d.documentElement.style };
             initialBodyOverflow = { ..._d.body.style };
             initialPaddingRight = _d.documentElement.style.paddingRight;
@@ -477,8 +481,8 @@ export default {
             const _d = wwLib.getFrontDocument();
             if (!_d) return;
 
-            if(initialOverflow === null) return;
-            if(initialBodyOverflow === null) return;
+            if (initialOverflow === null) return;
+            if (initialBodyOverflow === null) return;
 
             _d.documentElement.style.overflow = initialOverflow.overflow;
             _d.documentElement.style.overflowX = initialOverflow.overflowX;
@@ -537,14 +541,17 @@ export default {
         watch(
             [initValue, selectType],
             () => {
-                if ((initValue.value !== null && initValue.value !== undefined) || (Array.isArray(initValue.value) && initValue.value.length)) {
+                if (
+                    (initValue.value !== null && initValue.value !== undefined) ||
+                    (Array.isArray(initValue.value) && initValue.value.length)
+                ) {
                     setValue(initValue.value);
                     nextTick(debounce(handleInitialFocus, 300));
-                    emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
                 } else {
                     setValue(null);
-                    emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
                 }
+
+                emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
             },
             { immediate: true },
             { deep: true }
