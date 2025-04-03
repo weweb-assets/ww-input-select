@@ -79,6 +79,7 @@ export default {
                 'font-weight': props.content.optionFontWeight,
                 cursor: props.content.optionCursor,
                 'border-radius': props.content.optionBorderRadius,
+                border: props.content.optionBorder,
                 '--ww-select-option-bg-color-hover': props.content.optionBgColorHover,
                 '--ww-select-option-bg-color-focused': props.content.optionBgColorFocused,
             };

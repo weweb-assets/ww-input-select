@@ -113,6 +113,7 @@ keywords:
     - optionFontWeight: `number | null` - Font weight
     - optionFontColor: `string` - Text color. Default: `'black'`
     - optionPadding: `string` - Padding. Default: `'0px'`
+    - optionBorder: `string` - Border of the option. Default `'0px solid #000000'`
     - optionBorderRadius: `string` - Border radius. Default: `'0px'`
     - optionBgColor: `string` - Background color
     - optionBgColorFocused: `string` - Background color when focused. Default: `'#f5f5f5'`
@@ -153,7 +154,7 @@ keywords:
 
 3. **Settings:**
 
-- dynamicConfiguration: object({"content":{"choices":[{"key":"nameOfKey","type"="typeOfKey"}]}}) - Object that describe format of data in choices
+-   dynamicConfiguration: object({"content":{"choices":[{"key":"nameOfKey","type"="typeOfKey"}]}}) - Object that describe format of data in choices
 
 4. **Children Components:**
 
@@ -161,42 +162,43 @@ There is no children.
 
 5. **Special Features:**
 
-This select contain all logic for the select and all styling is done throught properties defined above. 
+This select contain all logic for the select and all styling is done throught properties defined above.
 
 6. **Context:**
 
-- context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, \_data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: { value: variableValue (according to mappingValue), label: variableLabel (according to mappingLabel), disabled: bool, data: full selected data (dynamicConfiguration format) } }, utils: { type: selectType, isOpen, triggerHeight } }, selectTrigger: { placeholder: Text } }
+-   context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, \_data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: { value: variableValue (according to mappingValue), label: variableLabel (according to mappingLabel), disabled: bool, data: full selected data (dynamicConfiguration format) } }, utils: { type: selectType, isOpen, triggerHeight } }, selectTrigger: { placeholder: Text } }
 
 7. **Events:**
 
-- change: Triggered when selection changes. Payload: { value: any }
-- initValueChange: Triggered when initial value changes. Payload: { value: any }
+-   change: Triggered when selection changes. Payload: { value: any }
+-   initValueChange: Triggered when initial value changes. Payload: { value: any }
 
 8. **Variables:**
 
-- value: any|array - Current selected value(s). Type depends on selectType (single/multiple)
+-   value: any|array - Current selected value(s). Type depends on selectType (single/multiple)
 
 9. **Exemple:**
 
-- Simple select example
+-   Simple select example
 
-{"uid":"select-car","tag":"ww-input-select","name":"Vehicle Multi Select","settings":{"dynamicConfiguration":{"content":{"choices":[{"key":"label","type":"Text"},{"key":"value","type":"Text"},{"key":"emoji","type":"Text"},{"key":"description","type":"Text"}]}}},"props":{"default":{"side":"bottom","align":"start","choices":[{"emoji":"🚗","label":"Sedan","value":"sedan","description":"Perfect for daily commuting"}],"offsetX":"0px","offsetY":"8px","disabled":false,"readonly":false,"required":true,"autoFocus":true,"fieldName":"","optionIcon":"fas fa-check","selectType":"single","showSearch":true,"validation":"","zIndexOpen":1,"boundOffset":"0px","placeholder":{"en":"Select vehicle types","fr":"Sélectionner un type de véhicule"},"searchWidth":"100%","initialState":"closed","manualToggle":false,"mappingLabel":{"code":"context.mapping?.['emoji']+' '+context.mapping?.['label']","type":"f"},"mappingValue":{"code":"context.mapping?.['value']","type":"f"},"optionCursor":"pointer","searchBorder":false,"searchHeight":"32px","closeOnSelect":true,"dropdownWidth":{"code":"context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'","__wwtype":"f"},"manualTrigger":false,"optionPadding":"8px ","searchBgColor":"#F5F5F5","searchPadding":"12px","selectOnClick":true,"triggerBorder":false,"triggerHeight":"40px","triggerMargin":"0px","dropdownBorder":false,"optionFontSize":"14px","optionIconSize":"16px","triggerBgColor":"#FFFFFF","triggerPadding":"12px","triggerShadows":"","dropdownBgColor":"#FFFFFF","dropdownPadding":"12px","dropdownShadows":"0px 3px 5px 2px #6666661C","mappingDisabled":{"code":"false","type":"f"},"optionFontColor":"black","optionIconColor":"#4D4D4D","searchBorderAll":"1px solid #A6A6A6","searchFontColor":"black","triggerIconOpen":"fas fa-angle-up","triggerIconSize":"16px","unselectOnClick":true,"customValidation":false,"selectedFontSize":"14px","triggerBorderAll":"1px solid #BABABA","triggerIconClose":"fas fa-angle-down","triggerIconColor":"#666666","dropdownBorderAll":"1px solid #BABABA","selectedFontColor":"#333","selectedTextAlign":"left","optionBgColorHover":"#f5f5f5","searchBorderRadius":"4px","closeOnClickOutside":true,"placeholderFontSize":"14px","triggerBorderRadius":"8px","virtualScrollBuffer":600,"dropdownBorderRadius":"8px","optionBgColorFocused":"#f5f5f5","placeholderFontColor":"#A1A1A1","searchPlaceholder":{"en":"Search","fr":"Rechercher"},"searchPlaceholderColor":"gray","virtualScrollMinItemSize":40,"optionBorderRadius":"4px","dropdownRowGap":"4px","searchMargin":"0 0 8px 0","placeholderTextAlign":"left","emptyStateText":{"en":"No results found","fr":"Aucun résultat"}}},"styles":{"default":{"width":"300px","zIndex":1,"display":"block"}}}
+{"uid":"select-car","tag":"ww-input-select","name":"Vehicle Multi Select","settings":{"dynamicConfiguration":{"content":{"choices":[{"key":"label","type":"Text"},{"key":"value","type":"Text"},{"key":"emoji","type":"Text"},{"key":"description","type":"Text"}]}}},"props":{"default":{"side":"bottom","align":"start","choices":[{"emoji":"🚗","label":"Sedan","value":"sedan","description":"Perfect for daily commuting"}],"offsetX":"0px","offsetY":"8px","disabled":false,"readonly":false,"required":true,"autoFocus":true,"fieldName":"","optionIcon":"fas fa-check","selectType":"single","showSearch":true,"validation":"","zIndexOpen":1,"boundOffset":"0px","placeholder":{"en":"Select vehicle types","fr":"Sélectionner un type de véhicule"},"searchWidth":"100%","initialState":"closed","manualToggle":false,"mappingLabel":{"code":"context.mapping?.['emoji']+' '+context.mapping?.['label']","type":"f"},"mappingValue":{"code":"context.mapping?.['value']","type":"f"},"optionCursor":"pointer","searchBorder":false,"searchHeight":"32px","closeOnSelect":true,"dropdownWidth":{"code":"context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'","\_\_wwtype":"f"},"manualTrigger":false,"optionPadding":"8px ","searchBgColor":"#F5F5F5","searchPadding":"12px","selectOnClick":true,"triggerBorder":false,"triggerHeight":"40px","triggerMargin":"0px","dropdownBorder":false,"optionFontSize":"14px","optionIconSize":"16px","triggerBgColor":"#FFFFFF","triggerPadding":"12px","triggerShadows":"","dropdownBgColor":"#FFFFFF","dropdownPadding":"12px","dropdownShadows":"0px 3px 5px 2px #6666661C","mappingDisabled":{"code":"false","type":"f"},"optionFontColor":"black","optionIconColor":"#4D4D4D","searchBorderAll":"1px solid #A6A6A6","searchFontColor":"black","triggerIconOpen":"fas fa-angle-up","triggerIconSize":"16px","unselectOnClick":true,"customValidation":false,"selectedFontSize":"14px","triggerBorderAll":"1px solid #BABABA","triggerIconClose":"fas fa-angle-down","triggerIconColor":"#666666","dropdownBorderAll":"1px solid #BABABA","selectedFontColor":"#333","selectedTextAlign":"left","optionBgColorHover":"#f5f5f5","searchBorderRadius":"4px","closeOnClickOutside":true,"placeholderFontSize":"14px","triggerBorderRadius":"8px","virtualScrollBuffer":600,"dropdownBorderRadius":"8px","optionBgColorFocused":"#f5f5f5","placeholderFontColor":"#A1A1A1","searchPlaceholder":{"en":"Search","fr":"Rechercher"},"searchPlaceholderColor":"gray","virtualScrollMinItemSize":40,"optionBorder":"0px solid #000000", "optionBorderRadius":"4px","dropdownRowGap":"4px","searchMargin":"0 0 8px 0","placeholderTextAlign":"left","emptyStateText":{"en":"No results found","fr":"Aucun résultat"}}},"styles":{"default":{"width":"300px","zIndex":1,"display":"block"}}}
 
-- Multiselect example (changes from simple select)
+-   Multiselect example (changes from simple select)
 
 {"uid":"multi-select-car","tag":"ww-input-select","name":"Vehicle Multi Select",...,"props":{"chipFontColor":"#FFFFFF","chipBgColor":"#454545","chipPadding":"2px 6px","chipBorderRadius":"8px","chipIconUnselect":"wwi wwi-cross","chipIconSize":"12px","chipIconColor":"#FFFFFF","closeOnSelect":false,...}...}
 
 Important for multiselect : "triggerHeight" have to be "unset" to let the component calculate it with the number of chips.
 
-- Multi lang implementation
+-   Multi lang implementation
 
 If user asks for multi lang support, you can use globalContext page lang and set :
-- choices: [{"emoji": "🇬🇧","value": "uk","label": {"en": "United Kingdom","fr": "Royaume uni"}},{"emoji": "🇨🇳","value": "ch","label": {"en": "China","fr":"Chine"}}]
-- dynamicConfiguration: {"content": {"choices": [{"key": "emoji","type": "Text"},{"key": "label","type": "RawObject"},{"key": "value","type": "Text"}]}}
-- mappingLabel: {"type": "js","code": "return context.mapping?.['emoji']+ ' ' +context.mapping?.['label'] ?.[ globalContext.page?.['lang'] ]"}
+
+-   choices: [{"emoji": "🇬🇧","value": "uk","label": {"en": "United Kingdom","fr": "Royaume uni"}},{"emoji": "🇨🇳","value": "ch","label": {"en": "China","fr":"Chine"}}]
+-   dynamicConfiguration: {"content": {"choices": [{"key": "emoji","type": "Text"},{"key": "label","type": "RawObject"},{"key": "value","type": "Text"}]}}
+-   mappingLabel: {"type": "js","code": "return context.mapping?.['emoji']+ ' ' +context.mapping?.['label'] ?.[ globalContext.page?.['lang'] ]"}
 
 10. **Notes:**
 
-**CRITICAL** : mappingLabel + mappingValue are 'Formula' type like : {"type":"js","code":"//code"). It's not bindings ! So do not use __wwtype key.
+**CRITICAL** : mappingLabel + mappingValue are 'Formula' type like : {"type":"js","code":"//code"). It's not bindings ! So do not use \_\_wwtype key.
 **CRITICAL** : labels are always text, no img, no icons, no html etc. Do never attempts to return html in mappingLabel.
 **CRITICAL** : You have to perfectly style this select according to the page.

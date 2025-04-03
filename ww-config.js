@@ -95,6 +95,7 @@ export default {
                 'optionFontWeight',
                 'optionFontColor',
                 'optionPadding',
+                'optionBorder',
                 'optionBorderRadius',
                 'optionBgColor',
                 'optionBgColorFocused',
@@ -1957,6 +1958,17 @@ export default {
             classes: true,
             responsive: true,
             bindable: true,
+        },
+        optionBorder: {
+            type: 'Border',
+            label: {
+                en: 'Option - Border',
+            },
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         optionBorderRadius: {
             type: 'Spacing',
