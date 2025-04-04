@@ -313,9 +313,9 @@ export default {
             if (valueIndex !== -1) {
                 currentValue.splice(valueIndex, 1);
                 setValue(currentValue);
-                emit('trigger-event', { name: 'change', event: { value: currentValue } });
             }
 
+            emit('trigger-event', { name: 'change', event: { value: currentValue } });
             setTimeout(() => {
                 shouldCloseDropdown.value = true;
             }, 200);
