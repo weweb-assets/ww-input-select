@@ -30,9 +30,9 @@
 <script>
 import { computed, inject, ref, watchEffect } from 'vue';
 
-const OPEN_CHIP_PLACEHOLDER =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>';
 const CLOSE_CHIP_PLACEHOLDER =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>';
+const OPEN_CHIP_PLACEHOLDER =
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>';
 const UNSELECT_CHIP_PLACEHOLDER =
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18M6 6l12 12"/></svg>';
@@ -165,8 +165,8 @@ export default {
         const chipIconUnselect = ref(null);
 
         watchEffect(async () => {
-            const iconKey = isOpen.value ? 'triggerIconOpen' : 'triggerIconClose';
-            const defaultIcon = isOpen.value ? OPEN_CHIP_PLACEHOLDER : CLOSE_CHIP_PLACEHOLDER;
+            const iconKey = isOpen.value ? 'triggerIconClose' : 'triggerIconOpen';
+            const defaultIcon = isOpen.value ? CLOSE_CHIP_PLACEHOLDER : OPEN_CHIP_PLACEHOLDER;
 
             if (props.content[iconKey]) {
                 chipIcon.value = (await getIcon(props.content[iconKey])) || defaultIcon;
