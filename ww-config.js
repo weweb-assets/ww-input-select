@@ -95,6 +95,7 @@ export default {
                 'optionFontWeight',
                 'optionFontColor',
                 'optionPadding',
+                'optionBorder',
                 'optionBorderRadius',
                 'optionBgColor',
                 'optionBgColorFocused',
@@ -145,7 +146,15 @@ export default {
             'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
-            ['triggerTitle', 'placeholder', 'emptyStateText','searchPlaceholder', 'initialState', 'selectType', 'selectTypeWarning'],
+            [
+                'triggerTitle',
+                'placeholder',
+                'emptyStateText',
+                'searchPlaceholder',
+                'initialState',
+                'selectType',
+                'selectTypeWarning',
+            ],
             [
                 'optionsTitle',
                 'disabled',
@@ -236,8 +245,8 @@ export default {
             },
             bindable: true,
             defaultValue: {
-                '__wwtype': 'f',
-                'code': '[{"label":"Option 1","value":"option1"},{"label":"Option 2","value":"option2"}]',
+                __wwtype: 'f',
+                code: '[{"label":"Option 1","value":"option1"},{"label":"Option 2","value":"option2"}]',
             },
             /* wwEditor:start */
             bindingValidation: {
@@ -966,7 +975,7 @@ export default {
         },
         selectedFontFamily: {
             label: {
-                en: 'Selected - Font family',
+                en: 'Font family',
             },
             type: 'FontFamily',
             defaultValue: undefined,
@@ -979,7 +988,7 @@ export default {
         selectedFontSize: {
             type: 'Length',
             label: {
-                en: 'Selected - Font size',
+                en: 'Font size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -995,8 +1004,8 @@ export default {
         },
         selectedFontWeight: {
             label: {
-                en: 'Selected - Font weight',
-                fr: 'Selected - Graisse',
+                en: 'Font weight',
+                fr: 'Graisse',
             },
             type: 'TextSelect',
             states: true,
@@ -1022,7 +1031,7 @@ export default {
         },
         selectedFontColor: {
             label: {
-                en: 'Selected - Font color',
+                en: 'Font color',
             },
             type: 'Color',
             defaultValue: '#333',
@@ -1033,7 +1042,7 @@ export default {
             hidden: content => content.selectType !== 'single',
         },
         selectedTextAlign: {
-            label: { en: 'Selected - Text align' },
+            label: { en: 'Text align' },
             type: 'TextSelect',
             options: {
                 options: [
@@ -1059,7 +1068,7 @@ export default {
         },
         placeholderFontFamily: {
             label: {
-                en: 'Placeholder - Font family',
+                en: 'Font family',
             },
             type: 'FontFamily',
             defaultValue: undefined,
@@ -1071,7 +1080,7 @@ export default {
         placeholderFontSize: {
             type: 'Length',
             label: {
-                en: 'Placeholder - Font size',
+                en: 'Font size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1086,8 +1095,8 @@ export default {
         },
         placeholderFontWeight: {
             label: {
-                en: 'Placeholder - Font weight',
-                fr: 'Placeholder - Graisse',
+                en: 'Font weight',
+                fr: 'Graisse',
             },
             type: 'TextSelect',
             options: {
@@ -1112,7 +1121,7 @@ export default {
         },
         placeholderFontColor: {
             label: {
-                en: 'Placeholder - Font color',
+                en: 'Font color',
             },
             type: 'Color',
             defaultValue: '#333',
@@ -1122,7 +1131,7 @@ export default {
             responsive: true,
         },
         placeholderTextAlign: {
-            label: { en: 'Placeholder - Text align' },
+            label: { en: 'Text align' },
             type: 'TextSelect',
             options: {
                 options: [
@@ -1152,7 +1161,7 @@ export default {
         },
         chipFontFamily: {
             label: {
-                en: 'Chip - Font family',
+                en: 'Font family',
             },
             type: 'FontFamily',
             defaultValue: undefined,
@@ -1165,7 +1174,7 @@ export default {
         chipFontSize: {
             type: 'Length',
             label: {
-                en: 'Chip - Font size',
+                en: 'Font size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1181,8 +1190,8 @@ export default {
         },
         chipFontWeight: {
             label: {
-                en: 'Chip - Font weight',
-                fr: 'Chip - Graisse',
+                en: 'Font weight',
+                fr: 'Graisse',
             },
             type: 'TextSelect',
             options: {
@@ -1208,7 +1217,7 @@ export default {
         },
         chipFontColor: {
             label: {
-                en: 'Chip - Font color',
+                en: 'Font color',
             },
             type: 'Color',
             defaultValue: 'white',
@@ -1221,7 +1230,7 @@ export default {
         chipPadding: {
             type: 'Spacing',
             label: {
-                en: 'Chip - Padding',
+                en: 'Padding',
             },
             states: true,
             classes: true,
@@ -1232,10 +1241,10 @@ export default {
         },
         chipBgColor: {
             label: {
-                en: 'Chip - background color',
+                en: 'background color',
             },
             type: 'Color',
-            defaultValue: "#363636",
+            defaultValue: '#363636',
             states: true,
             classes: true,
             bindable: true,
@@ -1245,7 +1254,7 @@ export default {
         chipBorder: {
             type: 'Border',
             label: {
-                en: 'Chip - border',
+                en: 'border',
             },
             defaultValue: undefined,
             states: true,
@@ -1256,7 +1265,7 @@ export default {
         },
         chipBorder: {
             type: 'TextRadioGroup',
-            label: { en: 'Chip - Borders' },
+            label: { en: 'Borders' },
             options: {
                 choices: [
                     {
@@ -1276,8 +1285,8 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: {
-                "__wwtype": "f",
-                "code": '[{"label":"Option 1","value":"opt1"},{"label":"Option 2","value":"opt2"}]'
+                __wwtype: 'f',
+                code: '[{"label":"Option 1","value":"opt1"},{"label":"Option 2","value":"opt2"}]',
             },
             hidden: content => content.selectType == 'single',
         },
@@ -1291,60 +1300,60 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => content.chipBorder || content.selectType == 'single',
+            hidden: content => content.chipBorder || content.selectType == 'single',
         },
         chipBorderTop: {
             type: 'Border',
             label: {
-                en: 'Chip - Border Top',
+                en: 'Border Top',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderRight: {
             type: 'Border',
             label: {
-                en: 'Chip - Border Right',
+                en: 'Border Right',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderBottom: {
             type: 'Border',
             label: {
-                en: 'Chip - Border Bottom',
+                en: 'Border Bottom',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderLeft: {
             type: 'Border',
             label: {
-                en: 'Chip - Border Left',
+                en: 'Border Left',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.chipBorder || content.selectType == 'single',
+            hidden: content => !content.chipBorder || content.selectType == 'single',
         },
         chipBorderRadius: {
             type: 'Spacing',
             label: {
-                en: 'Chip - Border radius',
+                en: 'Border radius',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1360,13 +1369,12 @@ export default {
             hidden: content => content.selectType == 'single',
         },
         chipIconUnselect: {
-            label: { en: 'Chip - Unselect icon', fr: 'Chip - Icône désélection' },
-            type: 'Icon',
+            label: { en: 'Unselect icon', fr: 'Icône désélection' },
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'wwi wwi-cross',
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -1376,7 +1384,7 @@ export default {
             hidden: content => content.selectType == 'single',
         },
         chipIconColor: {
-            label: { en: 'Chip - Icon color' },
+            label: { en: 'Icon color' },
             type: 'Color',
             defaultValue: 'white',
             states: true,
@@ -1388,7 +1396,7 @@ export default {
         chipIconSize: {
             type: 'Length',
             label: {
-                en: 'Chip - Icon size',
+                en: 'Icon size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1408,7 +1416,6 @@ export default {
             /* wwEditor:end */
             hidden: content => content.selectType == 'single',
         },
-        
 
         /* ------------------------------------
             TRIGGER STYLES
@@ -1423,7 +1430,7 @@ export default {
         // triggerWidth: {
         //     type: 'Length',
         //     label: {
-        //         en: 'Trigger - Width',
+        //         en: 'Width',
         //     },
         //     options: {
         //         unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
@@ -1439,10 +1446,13 @@ export default {
         triggerHeight: {
             type: 'Length',
             label: {
-                en: 'Trigger - Height',
+                en: 'Height',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -1453,7 +1463,7 @@ export default {
         },
         triggerBorder: {
             type: 'TextRadioGroup',
-            label: { en: 'Trigger - Borders' },
+            label: { en: 'Borders' },
             options: {
                 choices: [
                     {
@@ -1483,13 +1493,13 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "1px solid #B0B0B0",
+            defaultValue: '1px solid #B0B0B0',
             hidden: content => content.triggerBorder,
         },
         triggerBorderTop: {
             type: 'Border',
             label: {
-                en: 'Trigger - Border Top',
+                en: 'Border Top',
             },
             states: true,
             classes: true,
@@ -1501,7 +1511,7 @@ export default {
         triggerBorderRight: {
             type: 'Border',
             label: {
-                en: 'Trigger - Border Right',
+                en: 'Border Right',
             },
             states: true,
             classes: true,
@@ -1513,7 +1523,7 @@ export default {
         triggerBorderBottom: {
             type: 'Border',
             label: {
-                en: 'Trigger - Border Bottom',
+                en: 'Border Bottom',
             },
             states: true,
             classes: true,
@@ -1525,7 +1535,7 @@ export default {
         triggerBorderLeft: {
             type: 'Border',
             label: {
-                en: 'Trigger - Border Left',
+                en: 'Border Left',
             },
             states: true,
             classes: true,
@@ -1537,7 +1547,7 @@ export default {
         triggerBorderRadius: {
             type: 'Spacing',
             label: {
-                en: 'Trigger - Border radius',
+                en: 'Border radius',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1553,7 +1563,7 @@ export default {
         },
         triggerBgColor: {
             label: {
-                en: 'Trigger - background color',
+                en: 'background color',
             },
             type: 'Color',
             defaultValue: 'white',
@@ -1565,7 +1575,7 @@ export default {
         triggerShadows: {
             type: 'Shadows',
             label: {
-                en: 'Trigger - Shadows',
+                en: 'Shadows',
             },
             options: {
                 nullable: true,
@@ -1579,7 +1589,7 @@ export default {
         triggerPadding: {
             type: 'Spacing',
             label: {
-                en: 'Trigger - Padding',
+                en: 'Padding',
             },
             states: true,
             classes: true,
@@ -1590,7 +1600,7 @@ export default {
         triggerMargin: {
             type: 'Spacing',
             label: {
-                en: 'Trigger - Margin',
+                en: 'Margin',
             },
             states: true,
             classes: true,
@@ -1599,13 +1609,13 @@ export default {
             defaultValue: '0px',
         },
         triggerIconOpen: {
-            label: { en: 'Trigger - Open icon', fr: 'Trigger - Icône ouverte' },
-            type: 'Icon',
+            label: { en: 'Open icon', fr: 'Icône ouverte' },
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'fas fa-angle-up',
+            defaultValue: null,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -1614,13 +1624,13 @@ export default {
             /* wwEditor:end */
         },
         triggerIconClose: {
-            label: { en: 'Trigger - Close icon', fr: 'Trigger - Icône fermée' },
-            type: 'Icon',
+            label: { en: 'Close icon', fr: 'Icône fermée' },
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'fas fa-angle-down',
+            defaultValue: null,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -1629,7 +1639,7 @@ export default {
             /* wwEditor:end */
         },
         triggerIconColor: {
-            label: { en: 'Trigger - Icon color' },
+            label: { en: 'Icon color' },
             type: 'Color',
             defaultValue: 'black',
             states: true,
@@ -1640,7 +1650,7 @@ export default {
         triggerIconSize: {
             type: 'Length',
             label: {
-                en: 'Trigger - Icon size',
+                en: 'Icon size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1673,10 +1683,13 @@ export default {
         dropdownWidth: {
             type: 'Length',
             label: {
-                en: 'Dropdown - Width',
+                en: 'Width',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -1684,15 +1697,21 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: { __wwtype: 'f', code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'` },
+            defaultValue: {
+                __wwtype: 'f',
+                code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'`,
+            },
         },
         dropdownMaxHeight: {
             type: 'Length',
             label: {
-                en: 'Dropdown - Max-height',
+                en: 'Max-height',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -1704,7 +1723,7 @@ export default {
         },
         dropdownBorder: {
             type: 'TextRadioGroup',
-            label: { en: 'Dropdown - Borders' },
+            label: { en: 'Borders' },
             options: {
                 choices: [
                     {
@@ -1734,13 +1753,13 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "1px solid #B0B0B0",
+            defaultValue: '1px solid #B0B0B0',
             hidden: content => content.dropdownBorder,
         },
         dropdownBorderTop: {
             type: 'Border',
             label: {
-                en: 'Dropdown - Border Top',
+                en: 'Border Top',
             },
             states: true,
             classes: true,
@@ -1752,7 +1771,7 @@ export default {
         dropdownBorderRight: {
             type: 'Border',
             label: {
-                en: 'Dropdown - Border Right',
+                en: 'Border Right',
             },
             states: true,
             classes: true,
@@ -1764,7 +1783,7 @@ export default {
         dropdownBorderBottom: {
             type: 'Border',
             label: {
-                en: 'Dropdown - Border Bottom',
+                en: 'Border Bottom',
             },
             states: true,
             classes: true,
@@ -1776,7 +1795,7 @@ export default {
         dropdownBorderLeft: {
             type: 'Border',
             label: {
-                en: 'Dropdown - Border Left',
+                en: 'Border Left',
             },
             states: true,
             classes: true,
@@ -1788,7 +1807,7 @@ export default {
         dropdownBorderRadius: {
             type: 'Spacing',
             label: {
-                en: 'Dropdown - Border Border radius',
+                en: 'Border Border radius',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1804,10 +1823,10 @@ export default {
         },
         dropdownBgColor: {
             label: {
-                en: 'Dropdown - Border Dropdown background color',
+                en: 'Border Dropdown background color',
             },
             type: 'Color',
-            defaultValue: "#FFFFFF",
+            defaultValue: '#FFFFFF',
             states: true,
             classes: true,
             bindable: true,
@@ -1816,7 +1835,7 @@ export default {
         dropdownShadows: {
             type: 'Shadows',
             label: {
-                en: 'Dropdown - Shadows',
+                en: 'Shadows',
             },
             options: {
                 nullable: true,
@@ -1830,7 +1849,7 @@ export default {
         dropdownPadding: {
             type: 'Spacing',
             label: {
-                en: 'Dropdown - Padding',
+                en: 'Padding',
             },
             states: true,
             classes: true,
@@ -1841,7 +1860,7 @@ export default {
         dropdownRowGap: {
             type: 'Length',
             label: {
-                en: 'Dropdown - Row gap',
+                en: 'Row gap',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1853,7 +1872,6 @@ export default {
             responsive: true,
             defaultValue: '0px',
         },
-
 
         /* ------------------------------------
             OPTION STYLES
@@ -1867,7 +1885,7 @@ export default {
         },
         optionFontFamily: {
             label: {
-                en: 'Option - Font family',
+                en: 'Font family',
             },
             type: 'FontFamily',
             defaultValue: undefined,
@@ -1880,7 +1898,7 @@ export default {
         optionFontSize: {
             type: 'Length',
             label: {
-                en: 'Option - Font size',
+                en: 'Font size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1896,7 +1914,7 @@ export default {
         optionFontWeight: {
             label: {
                 en: 'Font weight',
-                fr: 'Option - Graisse',
+                fr: 'Graisse',
             },
             type: 'TextSelect',
             options: {
@@ -1921,7 +1939,7 @@ export default {
         },
         optionFontColor: {
             label: {
-                en: 'Option - Text color',
+                en: 'Text color',
             },
             type: 'Color',
             defaultValue: 'black',
@@ -1933,7 +1951,7 @@ export default {
         optionPadding: {
             type: 'Spacing',
             label: {
-                en: 'Option - padding',
+                en: 'padding',
             },
             defaultValue: '8px',
             states: true,
@@ -1941,10 +1959,21 @@ export default {
             responsive: true,
             bindable: true,
         },
+        optionBorder: {
+            type: 'Border',
+            label: {
+                en: 'Border',
+            },
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
         optionBorderRadius: {
             type: 'Spacing',
             label: {
-                en: 'Option - Border radius',
+                en: 'Border radius',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -1960,7 +1989,7 @@ export default {
         },
         optionBgColor: {
             label: {
-                en: 'Option - background color',
+                en: 'background color',
             },
             type: 'Color',
             defaultValue: 'white',
@@ -1971,7 +2000,7 @@ export default {
         },
         optionBgColorFocused: {
             label: {
-                en: 'Option - Focus background',
+                en: 'Focus background',
             },
             type: 'Color',
             defaultValue: undefined,
@@ -1983,7 +2012,7 @@ export default {
         },
         optionBgColorHover: {
             label: {
-                en: 'Option - Hover background',
+                en: 'Hover background',
             },
             type: 'Color',
             defaultValue: undefined,
@@ -1994,45 +2023,45 @@ export default {
             defaultValue: '#f5f5f5',
         },
         optionCursor: {
-            label: { en: "Option - cursor" },
-            type: "TextSelect",
+            label: { en: 'cursor' },
+            type: 'TextSelect',
             options: {
                 options: [
-                    { value: "auto", label: "Auto" },
-                    { value: "default", label: "Default" },
-                    { value: "pointer", label: "Pointer" },
-                    { value: "none", label: "None" },
-                    { value: "not-allowed", label: "Not allowed" },
-                    { value: "help", label: "Help" },
-                    { value: "text", label: "Text" },
-                    { value: "move", label: "Move" },
-                    { value: "grab", label: "Grab" },
-                    { value: "grabbing", label: "Grabbing", default: true },
-                    { value: "n-resize", label: "Arrow up" },
-                    { value: "s-resize", label: "Arrow down" },
-                    { value: "w-resize", label: "Arrow left" },
-                    { value: "e-resize", label: "Arrow right" },
-                    { value: "ne-resize", label: "Arrow top-right" },
-                    { value: "nw-resize", label: "Arrow top-left" },
-                    { value: "se-resize", label: "Arrow bottom-right" },
-                    { value: "sw-resize", label: "Arrow bottom-left" },
-                    { value: "ew-resize", label: "Arrow left-right" },
-                    { value: "ns-resize", label: "Arrow up-down" },
-                    { value: "nesw-resize", label: "Arrow top-right to bottom-left" },
-                    { value: "nwse-resize", label: "Arrow top-left to bottom-right" },
-                    { value: "zoom-in", label: "Zoom in" },
-                    { value: "zoom-out", label: "Zoom out" },
-                    { value: "col-resize", label: "Column resize" },
-                    { value: "row-resize", label: "Row resize" },
-                    { value: "all-scroll", label: "All-scroll" },
-                    { value: "context-menu", label: "Context menu" },
-                    { value: "cell", label: "Cell" },
-                    { value: "crosshair", label: "Crosshair" },
-                    { value: "vertical-text", label: "Vertical text" },
-                    { value: "alias", label: "Alias" },
-                    { value: "copy", label: "Copy" },
-                    { value: "progress", label: "Progress" },
-                    { value: "wait", label: "Wait" },
+                    { value: 'auto', label: 'Auto' },
+                    { value: 'default', label: 'Default' },
+                    { value: 'pointer', label: 'Pointer' },
+                    { value: 'none', label: 'None' },
+                    { value: 'not-allowed', label: 'Not allowed' },
+                    { value: 'help', label: 'Help' },
+                    { value: 'text', label: 'Text' },
+                    { value: 'move', label: 'Move' },
+                    { value: 'grab', label: 'Grab' },
+                    { value: 'grabbing', label: 'Grabbing', default: true },
+                    { value: 'n-resize', label: 'Arrow up' },
+                    { value: 's-resize', label: 'Arrow down' },
+                    { value: 'w-resize', label: 'Arrow left' },
+                    { value: 'e-resize', label: 'Arrow right' },
+                    { value: 'ne-resize', label: 'Arrow top-right' },
+                    { value: 'nw-resize', label: 'Arrow top-left' },
+                    { value: 'se-resize', label: 'Arrow bottom-right' },
+                    { value: 'sw-resize', label: 'Arrow bottom-left' },
+                    { value: 'ew-resize', label: 'Arrow left-right' },
+                    { value: 'ns-resize', label: 'Arrow up-down' },
+                    { value: 'nesw-resize', label: 'Arrow top-right to bottom-left' },
+                    { value: 'nwse-resize', label: 'Arrow top-left to bottom-right' },
+                    { value: 'zoom-in', label: 'Zoom in' },
+                    { value: 'zoom-out', label: 'Zoom out' },
+                    { value: 'col-resize', label: 'Column resize' },
+                    { value: 'row-resize', label: 'Row resize' },
+                    { value: 'all-scroll', label: 'All-scroll' },
+                    { value: 'context-menu', label: 'Context menu' },
+                    { value: 'cell', label: 'Cell' },
+                    { value: 'crosshair', label: 'Crosshair' },
+                    { value: 'vertical-text', label: 'Vertical text' },
+                    { value: 'alias', label: 'Alias' },
+                    { value: 'copy', label: 'Copy' },
+                    { value: 'progress', label: 'Progress' },
+                    { value: 'wait', label: 'Wait' },
                 ],
             },
             states: true,
@@ -2041,20 +2070,20 @@ export default {
             responsive: true,
             /* wwEditor:start */
             bindingValidation: {
-                type: "string",
-                tooltip: "A string that represent the cursor type",
+                type: 'string',
+                tooltip: 'A string that represent the cursor type',
             },
             /* wwEditor:end */
-            defaultValue: "pointer",
+            defaultValue: 'pointer',
         },
         optionIcon: {
-            label: { en: 'Option - Checked icon', fr: 'Option - Icône check' },
-            type: 'Icon',
+            label: { en: 'Checked icon', fr: 'Icône check' },
+            type: 'SystemIcon',
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: 'fas fa-check',
+            defaultValue: null,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
@@ -2063,7 +2092,7 @@ export default {
             /* wwEditor:end */
         },
         optionIconColor: {
-            label: { en: 'Option - Icon color' },
+            label: { en: 'Icon color' },
             type: 'Color',
             defaultValue: 'black',
             states: true,
@@ -2074,7 +2103,7 @@ export default {
         optionIconSize: {
             type: 'Length',
             label: {
-                en: 'Option - Icon size',
+                en: 'Icon size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -2106,7 +2135,7 @@ export default {
         },
         emptyStateFontFamily: {
             label: {
-                en: 'Empty state - Font family',
+                en: 'Font family',
             },
             type: 'FontFamily',
             defaultValue: undefined,
@@ -2118,7 +2147,7 @@ export default {
         emptyStateFontSize: {
             type: 'Length',
             label: {
-                en: 'Empty state - Font size',
+                en: 'Font size',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -2133,8 +2162,8 @@ export default {
         },
         emptyStateFontWeight: {
             label: {
-                en: 'Empty state - Font weight',
-                fr: 'Empty state - Graisse',
+                en: 'Font weight',
+                fr: 'Graisse',
             },
             type: 'TextSelect',
             options: {
@@ -2159,7 +2188,7 @@ export default {
         },
         emptyStateFontColor: {
             label: {
-                en: 'Empty state - Text color',
+                en: 'Text color',
             },
             type: 'Color',
             defaultValue: 'black',
@@ -2171,7 +2200,7 @@ export default {
         emptyStatePadding: {
             type: 'Spacing',
             label: {
-                en: 'Empty state - padding',
+                en: 'padding',
             },
             defaultValue: '0px',
             states: true,
@@ -2180,7 +2209,7 @@ export default {
             bindable: true,
         },
         emptyStateTextAlign: {
-            label: { en: 'Empty state - Text align' },
+            label: { en: 'Text align' },
             type: 'TextSelect',
             options: {
                 options: [
@@ -2210,10 +2239,13 @@ export default {
         searchWidth: {
             type: 'Length',
             label: {
-                en: 'Search - Width',
+                en: 'Width',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -2227,10 +2259,13 @@ export default {
         searchHeight: {
             type: 'Length',
             label: {
-                en: 'Search - Height',
+                en: 'Height',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }, { value: '%', label: '%', min: 1, max: 100 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                ],
                 noRange: true,
                 useVar: true,
             },
@@ -2243,7 +2278,7 @@ export default {
         searchBorder: {
             type: 'Border',
             label: {
-                en: 'Search - border',
+                en: 'border',
             },
             defaultValue: undefined,
             states: true,
@@ -2254,7 +2289,7 @@ export default {
         },
         searchBorder: {
             type: 'TextRadioGroup',
-            label: { en: 'Search - Borders' },
+            label: { en: 'Borders' },
             options: {
                 choices: [
                     {
@@ -2285,61 +2320,61 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "1px solid #A3A3A3",
-            hidden: content => content.searchBorder || !content.showSearch,
+            defaultValue: '1px solid #A3A3A3',
+            hidden: content => content.searchBorder || !content.showSearch,
         },
         searchBorderTop: {
             type: 'Border',
             label: {
-                en: 'Search - Border Top',
+                en: 'Border Top',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderRight: {
             type: 'Border',
             label: {
-                en: 'Search - Border Right',
+                en: 'Border Right',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderBottom: {
             type: 'Border',
             label: {
-                en: 'Search - Border Bottom',
+                en: 'Border Bottom',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderLeft: {
             type: 'Border',
             label: {
-                en: 'Search - Border Left',
+                en: 'Border Left',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
             defaultValue: undefined,
-            hidden: content => !content.searchBorder || !content.showSearch,
+            hidden: content => !content.searchBorder || !content.showSearch,
         },
         searchBorderRadius: {
             type: 'Spacing',
             label: {
-                en: 'Search - Border radius',
+                en: 'Border radius',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -2357,31 +2392,31 @@ export default {
         searchPadding: {
             type: 'Spacing',
             label: {
-                en: 'Search - Padding',
+                en: 'Padding',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "8px 12px",
+            defaultValue: '8px 12px',
             hidden: content => !content.showSearch,
         },
         searchMargin: {
             type: 'Spacing',
             label: {
-                en: 'Search - Margin',
+                en: 'Margin',
             },
             states: true,
             classes: true,
             bindable: true,
             responsive: true,
-            defaultValue: "0px 0px 8px 0px",
+            defaultValue: '0px 0px 8px 0px',
             hidden: content => !content.showSearch,
         },
         searchOutline: {
             type: 'Border',
             label: {
-                en: 'Search - Outline',
+                en: 'Outline',
             },
             states: true,
             classes: true,
@@ -2393,7 +2428,7 @@ export default {
         searchOutlineOffset: {
             type: 'Length',
             label: {
-                en: 'Search - Outline offset',
+                en: 'Outline offset',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -2408,7 +2443,7 @@ export default {
         },
         searchFontFamily: {
             label: {
-                en: 'Search - Font family',
+                en: 'Font family',
             },
             type: 'FontFamily',
             defaultValue: undefined,
@@ -2420,7 +2455,7 @@ export default {
         },
         searchFontSize: {
             label: {
-                en: 'Search - Font size',
+                en: 'Font size',
             },
             type: 'Length',
             options: {
@@ -2436,8 +2471,8 @@ export default {
         },
         searchFontWeight: {
             label: {
-                en: 'Search - Font weight',
-                fr: 'Search - Graisse',
+                en: 'Font weight',
+                fr: 'Graisse',
             },
             type: 'TextSelect',
             options: {
@@ -2463,7 +2498,7 @@ export default {
         },
         searchFontColor: {
             label: {
-                en: 'Search - Font color',
+                en: 'Font color',
             },
             type: 'Color',
             defaultValue: 'black',
@@ -2475,10 +2510,10 @@ export default {
         },
         searchBgColor: {
             label: {
-                en: 'Search - background color',
+                en: 'background color',
             },
             type: 'Color',
-            defaultValue: "#FAFAFA",
+            defaultValue: '#FAFAFA',
             states: true,
             classes: true,
             bindable: true,
@@ -2487,10 +2522,10 @@ export default {
         },
         searchPlaceholderColor: {
             label: {
-                en: 'Search - Placeholder color',
+                en: 'Placeholder color',
             },
             type: 'Color',
-            defaultValue: "#737373",
+            defaultValue: '#737373',
             states: true,
             classes: true,
             bindable: true,
