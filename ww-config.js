@@ -2024,7 +2024,7 @@ export default {
             defaultValue: '#f5f5f5',
         },
         optionCursor: {
-            label: { en: 'Option - cursor' },
+            label: { en: 'cursor' },
             type: 'TextSelect',
             options: {
                 options: [
