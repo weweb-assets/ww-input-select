@@ -1969,6 +1969,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            defaultValue: '1px solid #B0B0B0',
         },
         optionBorderRadius: {
             type: 'Spacing',
