@@ -11,12 +11,7 @@
         :aria-disabled="isOptionDisabled"
     >
         <span>{{ data.label }}</span>
-        <div 
-            v-if="data.isSelected"
-            :class="[content.optionIcon]" 
-            :style="optionIconStyle"
-            aria-hidden="true"
-        ></div>
+        <div v-if="data.isSelected" :class="[content.optionIcon]" :style="optionIconStyle" aria-hidden="true"></div>
     </div>
 </template>
 
@@ -70,7 +65,6 @@ export default {
 
         // Styles
         const optionStyles = computed(() => {
-
             return {
                 padding: props.content.optionPadding,
                 'background-color': props.content.optionBgColor,
@@ -78,7 +72,8 @@ export default {
                 'font-family': props.content.optionFontFamily,
                 'font-size': props.content.optionFontSize,
                 'font-weight': props.content.optionFontWeight,
-                'cursor': props.content.optionCursor,
+                cursor: props.content.optionCursor,
+                border: props.content.optionBorder,
                 'border-radius': props.content.optionBorderRadius,
                 '--ww-select-option-bg-color-hover': props.content.optionBgColorHover,
                 '--ww-select-option-bg-color-focused': props.content.optionBgColorFocused,
@@ -89,7 +84,7 @@ export default {
                 'font-size': props.content.optionIconSize,
                 color: props.content.optionIconColor,
                 display: 'flex',
-                'align-items': 'center'
+                'align-items': 'center',
             };
         });
 
