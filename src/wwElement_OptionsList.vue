@@ -13,11 +13,10 @@
                 :active="active"
                 :size-dependencies="JSON.stringify(item)"
                 :data-index="index"
-            >   
+            >
                 <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
-                    <div
-                        :style="index != filteredOptions.length - 1 ? { paddingBottom: content.dropdownRowGap } : {}"
-                    >
+                    <!-- Illusion margin bottom with a parrent div with with paddingBottom because of the DynamicScroller -->
+                    <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionsRowGap } : {}">
                         <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
                     </div>
                 </wwLayoutItemContext>
@@ -33,15 +32,14 @@
             :index="index"
             :data="item"
         >
-            <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+            <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionsRowGap } : {}">
+                <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+            </div>
         </wwLayoutItemContext>
     </div> -->
 
-    <div 
-        v-show="filteredOptions.length === 0 || showEmptyStateInEditor"
-        :style="emptyStateStyle"
-    >
-        <span>{{emptyStateText}}</span>
+    <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor" :style="emptyStateStyle">
+        <span>{{ emptyStateText }}</span>
         <!-- <wwElement v-bind="content.emptyStateContainer" /> -->
     </div>
 </template>
@@ -152,7 +150,7 @@ export default {
         });
 
         // Styles
-        const emptyStateStyle = computed(() => {            
+        const emptyStateStyle = computed(() => {
             return {
                 'font-family': props.content.emptyStateFontFamily,
                 'font-size': props.content.emptyStateFontSize,
@@ -160,7 +158,7 @@ export default {
                 color: props.content.emptyStateFontColor,
                 padding: props.content.emptyStatePadding,
                 'text-align': props.content.emptyStateTextAlign,
-                'width': '100%',
+                width: '100%',
             };
         });
 
