@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { computed, inject, ref, watchEffect } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 
 const CLOSE_CHIP_PLACEHOLDER =
     '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>';
@@ -106,7 +106,7 @@ export default {
 
         const triggerIconStyle = computed(() => {
             return {
-                'font-size': props.content.triggerIconSize,
+                width: props.content.triggerIconSize,
                 color: props.content.triggerIconColor,
                 display: 'flex',
                 'align-items': 'center',
@@ -164,26 +164,36 @@ export default {
         const chipIcon = ref(null);
         const chipIconUnselect = ref(null);
 
-        watchEffect(async () => {
-            const iconKey = isOpen.value ? 'triggerIconClose' : 'triggerIconOpen';
-            const defaultIcon = isOpen.value ? CLOSE_CHIP_PLACEHOLDER : OPEN_CHIP_PLACEHOLDER;
+        watch(
+            [isOpen, () => props.content.triggerIconOpen, () => props.content.triggerIconClose],
+            async () => {
+                const iconKey = isOpen.value ? 'triggerIconClose' : 'triggerIconOpen';
+                const defaultIcon = isOpen.value ? CLOSE_CHIP_PLACEHOLDER : OPEN_CHIP_PLACEHOLDER;
 
-            if (props.content[iconKey]) {
-                chipIcon.value = (await getIcon(props.content[iconKey])) || defaultIcon;
-            } else {
-                chipIcon.value = defaultIcon;
-            }
+                if (props.content[iconKey]) {
+                    chipIcon.value = (await getIcon(props.content[iconKey])) || defaultIcon;
+                } else {
+                    chipIcon.value = defaultIcon;
+                }
+            },
+            { immediate: true }
+        );
 
-            if (props.content.chipIconUnselect) {
-                chipIconUnselect.value = (await getIcon(props.content.chipIconUnselect)) || UNSELECT_CHIP_PLACEHOLDER;
-            } else {
-                chipIconUnselect.value = UNSELECT_CHIP_PLACEHOLDER;
-            }
-        });
+        watch(
+            () => props.content.chipIconUnselect,
+            async newValue => {
+                if (newValue) {
+                    chipIconUnselect.value = (await getIcon(newValue)) || UNSELECT_CHIP_PLACEHOLDER;
+                } else {
+                    chipIconUnselect.value = UNSELECT_CHIP_PLACEHOLDER;
+                }
+            },
+            { immediate: true }
+        );
 
         const chipIconStyle = computed(() => {
             return {
-                'font-size': props.content.chipIconSize,
+                width: props.content.chipIconSize,
                 color: props.content.chipIconColor,
                 display: 'flex',
                 'align-items': 'center',
