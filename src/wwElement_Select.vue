@@ -22,7 +22,10 @@
             <SelectTriger :content="content" @remove-multiselect-value="removeSpecificValue" />
         </div>
         <teleport v-if="isOpen" :to="appDivRef">
-            <div class="ww-select__dropdown__wrapper" :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }">
+            <div
+                class="ww-select__dropdown__wrapper"
+                :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }"
+            >
                 <div
                     class="ww-select__dropdown"
                     ref="dropdownElement"
@@ -293,7 +296,7 @@ export default {
         };
 
         function removeSpecificValue(valueToRemove) {
-            if (selectType.value !== 'multiple') return;
+            if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) return;
 
             /* This is a workaround to prevent the dropdown from closing when removing a value.
              * The issue is that the click event that triggers this function also bubbles up
@@ -461,10 +464,9 @@ export default {
         const blockScrolling = () => {
             const _w = wwLib.getFrontWindow();
             const _d = wwLib.getFrontDocument();
-            if (!_w || !_d) return;
+            if (!_w || !_d) return;
 
-            const scrollbarWidth =
-                _w.innerWidth - _d.documentElement.clientWidth;
+            const scrollbarWidth = _w.innerWidth - _d.documentElement.clientWidth;
             initialOverflow = { ..._d.documentElement.style };
             initialBodyOverflow = { ..._d.body.style };
             initialPaddingRight = _d.documentElement.style.paddingRight;
@@ -477,8 +479,8 @@ export default {
             const _d = wwLib.getFrontDocument();
             if (!_d) return;
 
-            if(initialOverflow === null) return;
-            if(initialBodyOverflow === null) return;
+            if (initialOverflow === null) return;
+            if (initialBodyOverflow === null) return;
 
             _d.documentElement.style.overflow = initialOverflow.overflow;
             _d.documentElement.style.overflowX = initialOverflow.overflowX;
@@ -537,7 +539,10 @@ export default {
         watch(
             [initValue, selectType],
             () => {
-                if ((initValue.value !== null && initValue.value !== undefined) || (Array.isArray(initValue.value) && initValue.value.length)) {
+                if (
+                    (initValue.value !== null && initValue.value !== undefined) ||
+                    (Array.isArray(initValue.value) && initValue.value.length)
+                ) {
                     setValue(initValue.value);
                     nextTick(debounce(handleInitialFocus, 300));
                     emit('trigger-event', { name: 'initValueChange', event: { value: initValue.value } });
