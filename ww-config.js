@@ -93,7 +93,7 @@ export default {
                 'optionFontSize',
                 'optionFontWeight',
                 'optionFontColor',
-                'optionsRowGap',
+                'optionSpacing',
                 'optionPadding',
                 'optionBorder',
                 'optionBorderRadius',
@@ -1934,10 +1934,10 @@ export default {
             bindable: true,
             responsive: true,
         },
-        optionsRowGap: {
+        optionSpacing: {
             type: 'Length',
             label: {
-                en: 'Row gap',
+                en: 'Spacing',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],

@@ -16,7 +16,7 @@
             >
                 <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
                     <!-- Illusion margin bottom with a parrent div with with paddingBottom because of the DynamicScroller -->
-                    <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionsRowGap } : {}">
+                    <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionSpacing } : {}">
                         <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
                     </div>
                 </wwLayoutItemContext>
@@ -32,7 +32,7 @@
             :index="index"
             :data="item"
         >
-            <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionsRowGap } : {}">
+            <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionSpacing } : {}">
                 <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
             </div>
         </wwLayoutItemContext>
