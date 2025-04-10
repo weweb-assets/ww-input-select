@@ -93,7 +93,7 @@ export default {
 
         const optionIconStyle = computed(() => {
             return {
-                'font-size': props.content.optionIconSize,
+                width: props.content.optionIconSize,
                 color: props.content.optionIconColor,
                 display: 'flex',
                 'align-items': 'center',
@@ -251,6 +251,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     &:hover {
         background-color: var(--ww-select-option-bg-color-hover) !important;
     }

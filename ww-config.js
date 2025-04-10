@@ -85,7 +85,6 @@ export default {
                 'dropdownBgColor',
                 'dropdownShadows',
                 'dropdownPadding',
-                'dropdownRowGap',
                 'zIndexOpen',
             ],
             [
@@ -94,6 +93,7 @@ export default {
                 'optionFontSize',
                 'optionFontWeight',
                 'optionFontColor',
+                'optionSpacing',
                 'optionPadding',
                 'optionBorder',
                 'optionBorderRadius',
@@ -1857,21 +1857,6 @@ export default {
             responsive: true,
             defaultValue: '8px',
         },
-        dropdownRowGap: {
-            type: 'Length',
-            label: {
-                en: 'Row gap',
-            },
-            options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
-                useVar: true,
-            },
-            states: true,
-            classes: true,
-            bindable: true,
-            responsive: true,
-            defaultValue: '0px',
-        },
 
         /* ------------------------------------
             OPTION STYLES
@@ -1947,6 +1932,21 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+        },
+        optionSpacing: {
+            type: 'Length',
+            label: {
+                en: 'Spacing',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                useVar: true,
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: '0px',
         },
         optionPadding: {
             type: 'Spacing',
