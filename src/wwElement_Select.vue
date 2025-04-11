@@ -296,7 +296,7 @@ export default {
         };
 
         function removeSpecificValue(valueToRemove) {
-            if (selectType.value !== 'multiple') return;
+            if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) return;
 
             /* This is a workaround to prevent the dropdown from closing when removing a value.
              * The issue is that the click event that triggers this function also bubbles up
