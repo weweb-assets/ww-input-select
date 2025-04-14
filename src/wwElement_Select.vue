@@ -88,7 +88,7 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event'],
+    emits: ['trigger-event', 'update:content', 'update:sidepanel-content'],
     setup(props, { emit }) {
         /* wwEditor:start */
         useEditorHint();
@@ -351,7 +351,6 @@ export default {
 
         function closeDropdown() {
             if (!shouldCloseDropdown.value) return;
-            if (isDisabled.value || isReadonly.value) return;
 
             resetSearch();
             resetFocus();
@@ -576,11 +575,6 @@ export default {
             else closeDropdown();
         });
 
-        watch(forceOpenInEditor, () => {
-            if (forceOpenInEditor.value) openDropdown();
-            else closeDropdown();
-        });
-
         watch(triggerElement, () => {
             // Observe trigger element size when updated
             observeTriggerSize();
@@ -588,6 +582,42 @@ export default {
 
         watch([() => props.content.offsetX, () => props.content.offsetY], () => {
             syncFloating();
+        });
+
+        watch(forceOpenInEditor, () => {
+            if (forceOpenInEditor.value) {
+                openDropdown();
+
+                if (isReadonly.value) {
+                    wwLib.wwNotification.open({
+                        text: `The select can't be forced open because it's readonly.`,
+                        duration: 3000,
+                    });
+
+                    setTimeout(() => {
+                        emit('update:sidepanel-content', {
+                            path: 'forceOpenInEditor',
+                            value: false,
+                        });
+                    }, 300);
+                }
+            } else {
+                closeDropdown();
+            }
+        });
+
+        watch(isReadonly, () => {
+            if (isReadonly.value && forceOpenInEditor.value) {
+                emit('update:sidepanel-content', {
+                    path: 'forceOpenInEditor',
+                    value: false,
+                });
+
+                wwLib.wwNotification.open({
+                    text: `Force open in editor has been disabled because the select is readonly.`,
+                    duration: 3000,
+                });
+            }
         });
         /* wwEditor:end */
 
