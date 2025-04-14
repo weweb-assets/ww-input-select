@@ -315,6 +315,7 @@ export default {
                 setValue(currentValue);
             }
 
+            emit('trigger-event', { name: 'change', event: { value: currentValue } });
             setTimeout(() => {
                 shouldCloseDropdown.value = true;
             }, 200);
