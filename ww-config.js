@@ -10,6 +10,7 @@ export default {
     editor: {
         label: 'Select',
         icon: 'select',
+        deprecated: 'Use a select input from the Elements panel instead of this one.',
         customStylePropertiesOrder: [
             [
                 'selectedTitle',
