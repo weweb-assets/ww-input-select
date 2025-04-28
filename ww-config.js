@@ -146,6 +146,7 @@ export default {
             'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
+            'allowScrollingWhenOpen',
             [
                 'triggerTitle',
                 'placeholder',
@@ -797,6 +798,24 @@ export default {
             type: 'OnOff',
             defaultValue: false,
             editorOnly: true,
+            section: 'settings',
+        },
+        allowScrollingWhenOpen: {
+            label: { en: 'Allow scrolling when open' },
+            type: 'OnOff',
+            defaultValue: false,
+            states: true,
+            bindable: true,
+            responsive: true,
+            propertyHelp: {
+                tooltip:
+                    'This should be disabled in some edge cases like in popups, datagrid, etc.',
+            },
+            bindingValidation: {
+                type: 'boolean',
+                tooltip:
+                    'This should be disabled in some edge cases like in popups, datagrid, etc. A boolean value: \n\n`true` or `false`',
+            },
             section: 'settings',
         },
         optionProperties: {

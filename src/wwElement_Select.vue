@@ -161,6 +161,7 @@ export default {
         const mappingValue = computed(() => props.content.mappingValue);
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
+        const allowScrollingWhenOpen = computed(() => props.content.allowScrollingWhenOpen);
 
         // Styles
         const syncFloating = () => {
@@ -524,9 +525,9 @@ export default {
             nextTick(syncFloating);
             handleInitialFocus();
             if (isOpen.value) {
-                blockScrolling();
+                if (!allowScrollingWhenOpen.value) blockScrolling();
             } else {
-                revertBlockScrolling();
+                if (!allowScrollingWhenOpen.value) revertBlockScrolling();
             }
         });
 
