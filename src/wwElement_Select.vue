@@ -478,18 +478,19 @@ export default {
         };
         const revertBlockScrolling = () => {
             const _d = wwLib.getFrontDocument();
+
             if (!_d) return;
 
             if (initialOverflow === null) return;
             if (initialBodyOverflow === null) return;
 
-            _d.documentElement.style.overflow = initialOverflow.overflow;
-            _d.documentElement.style.overflowX = initialOverflow.overflowX;
-            _d.documentElement.style.overflowY = initialOverflow.overflowY;
-            _d.body.style.overflow = initialBodyOverflow.overflow;
-            _d.body.style.overflowX = initialBodyOverflow.overflowX;
-            _d.body.style.overflowY = initialBodyOverflow.overflowY;
-            _d.documentElement.style.paddingRight = initialPaddingRight;
+            _d.documentElement.style.overflow = initialOverflow.overflow || '';
+            _d.documentElement.style.overflowX = initialOverflow.overflowX || '';
+            _d.documentElement.style.overflowY = initialOverflow.overflowY || '';
+            _d.body.style.overflow = initialBodyOverflow.overflow || '';
+            _d.body.style.overflowX = initialBodyOverflow.overflowX || '';
+            _d.body.style.overflowY = initialBodyOverflow.overflowY || '';
+            _d.documentElement.style.paddingRight = initialPaddingRight || '';
 
             initialOverflow = null;
             initialBodyOverflow = null;
