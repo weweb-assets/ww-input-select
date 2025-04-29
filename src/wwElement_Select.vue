@@ -161,6 +161,7 @@ export default {
         const mappingValue = computed(() => props.content.mappingValue);
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
+        const allowScrollingWhenOpen = computed(() => props.content.allowScrollingWhenOpen);
         const offsetX = computed(() => props.content.offsetX);
         const offsetY = computed(() => props.content.offsetY);
 
@@ -459,39 +460,72 @@ export default {
         });
 
         let initialOverflow = null;
-        let initialBodyOverflow = null;
+        let initialBodyStyle = null;
+        let initialTouchAction = null;
         let initialPaddingRight = '0px';
+        let supportsPassive = false;
+        let wheelOpt = false;
+        let wheelEvent = '';
+
+        // Initialize passive event support detection
+        try {
+            window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+                get: function () { supportsPassive = true; } 
+            }));
+        } catch(e) {}
+
+        wheelOpt = supportsPassive ? { passive: false } : false;
+        wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+
+        const preventDefault = (e) => {
+            e.preventDefault();
+        };
+
+        const preventDefaultForScrollKeys = (e) => {
+            const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+            if (keys[e.keyCode]) {
+                preventDefault(e);
+                return false;
+            }
+        };
+
         const blockScrolling = () => {
             const _w = wwLib.getFrontWindow();
             const _d = wwLib.getFrontDocument();
+
             if (!_w || !_d) return;
 
-            const scrollbarWidth = _w.innerWidth - _d.documentElement.clientWidth;
             initialOverflow = { ..._d.documentElement.style };
-            initialBodyOverflow = { ..._d.body.style };
-            initialPaddingRight = _d.documentElement.style.paddingRight;
+            initialBodyStyle = { ..._d.body.style };
+            _d.body.style.touchAction = 'none';
 
-            _d.documentElement.style.overflow = 'hidden';
-            _d.body.style.overflow = 'hidden';
-            _d.documentElement.style.paddingRight = `${scrollbarWidth}px`;
+            // Add event listeners to prevent scrolling
+            _w.addEventListener('DOMMouseScroll', preventDefault, false);
+            _w.addEventListener(wheelEvent, preventDefault, wheelOpt);
+            _w.addEventListener('touchmove', preventDefault, wheelOpt);
+            _w.addEventListener('keydown', preventDefaultForScrollKeys, false);
         };
+
         const revertBlockScrolling = () => {
             const _d = wwLib.getFrontDocument();
-            if (!_d) return;
+            const _w = wwLib.getFrontWindow();
+
+            if (!_d || !_w) return;
 
             if (initialOverflow === null) return;
-            if (initialBodyOverflow === null) return;
+            if (initialBodyStyle === null) return;
 
-            _d.documentElement.style.overflow = initialOverflow.overflow;
-            _d.documentElement.style.overflowX = initialOverflow.overflowX;
-            _d.documentElement.style.overflowY = initialOverflow.overflowY;
-            _d.body.style.overflow = initialBodyOverflow.overflow;
-            _d.body.style.overflowX = initialBodyOverflow.overflowX;
-            _d.body.style.overflowY = initialBodyOverflow.overflowY;
-            _d.documentElement.style.paddingRight = initialPaddingRight;
+            _d.body.style.touchAction = initialTouchAction || '';
+            _d.body.style['touch-action'] = initialTouchAction || '';
+
+            // Remove event listeners
+            _w.removeEventListener('DOMMouseScroll', preventDefault, false);
+            _w.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+            _w.removeEventListener('touchmove', preventDefault, wheelOpt);
+            _w.removeEventListener('keydown', preventDefaultForScrollKeys, false);
 
             initialOverflow = null;
-            initialBodyOverflow = null;
+            initialBodyStyle = null;
         };
 
         watch(
@@ -522,9 +556,9 @@ export default {
             nextTick(syncFloating);
             handleInitialFocus();
             if (isOpen.value) {
-                blockScrolling();
+                if (!allowScrollingWhenOpen.value) blockScrolling();
             } else {
-                revertBlockScrolling();
+                if (!allowScrollingWhenOpen.value) revertBlockScrolling();
             }
         });
 
