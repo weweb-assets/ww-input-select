@@ -143,7 +143,7 @@ A customizable select element that supports single and multiple selection with a
 - searchBorderLeft: `Border` - Left border when split
 - searchBorderRadius: `string` - Border radius. Default: `'0px'`
 - searchPadding: `string` - Padding. Default: `'0px'`
-- searchMargin: `string` - Margin. Default: `'0px'`
+- searchMargin: `string` - Margin. Avoid horizontal margin as dropdown padding already give space between search and dropdown. Default: `'0px'`
 - searchOutline: `Border` - Outline style
 - searchOutlineOffset: `string` - Outline offset
 - searchFontFamily: `string` - Font family
@@ -197,4 +197,9 @@ If user asks for multi lang support, you can use globalContext page lang and set
 - dynamicConfiguration: {"content": {"choices": [{"key": "emoji","type": "Text"},{"key": "label","type": "RawObject"},{"key": "value","type": "Text"}]}}
 - mappingLabel: {"js": "return context.mapping?.['emoji']+ ' ' +context.mapping?.['label'] ?.[ globalContext.page?.['lang'] ]"}
 
-</elements>
+***Notes:***
+
+**CRITICAL** : mappingLabel + mappingValue are 'Formula' type like : {"type":"js","code":"//code"). It's not bindings ! So do not use __wwtype key.
+**CRITICAL** : If choices is an array of *objetcs*, you better use a specific field for mappingLabel and mappingValue like context.mapping?.['id'] etc. Do not use the whole context.mapping in this case.
+**CRITICAL** : labels are always text, no img, no icons, no html etc. Do never attempts to return html in mappingLabel.
+**CRITICAL** : You have to perfectly style this select according to the page.
