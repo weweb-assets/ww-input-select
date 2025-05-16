@@ -166,13 +166,7 @@ Note: chip properties for multiselect, and selected properties for single select
 - initValueChange: Triggered when initial value changes. Payload: { value: any }
 
 ***Context:***
-- context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, _data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: { value: variableValue (according to mappingValue), label: variableLabel (according to mappingLabel), disabled: bool, data: full selected data (dynamicConfiguration format) } }, utils: { type: selectType, isOpen, triggerHeight } }, selectTrigger: { placeholder: Text } }
-
-***Notes:***
-- CRITICAL: mappingLabel + mappingValue are binding type like: {"js":"//code"}.
-- CRITICAL: labels are always text, no img, no icons, no html etc. Do never attempt to return html in mappingLabel.
-- CRITICAL: You have to perfectly style this select according to the page.
-- For multiselect, "triggerHeight" should be "unset" to let the component calculate it with the number of chips.
+- context.local.data.select: { select: { options: array<{ label: Text, value: value (according to mappingValue), disabled: bool, isSelected: bool, _data: rawData defined in choices }>, active: { value: variableValue (according to mappingValue), details: { value: variableValue (according to mappingValue), label: variableLabel (according to mappingLabel), disabled: bool, data: full selected data (dynamicConfiguration format) } }, utils: { type: selectType, isOpen, triggerHeight, triggerWidth } }, selectTrigger: { placeholder: Text } }
 
 ***Example:***
 
@@ -199,7 +193,7 @@ If user asks for multi lang support, you can use globalContext page lang and set
 
 ***Notes:***
 
-**CRITICAL** : mappingLabel + mappingValue are 'Formula' type like : {"type":"js","code":"//code"). It's not bindings ! So do not use __wwtype key.
 **CRITICAL** : If choices is an array of *objetcs*, you better use a specific field for mappingLabel and mappingValue like context.mapping?.['id'] etc. Do not use the whole context.mapping in this case.
 **CRITICAL** : labels are always text, no img, no icons, no html etc. Do never attempts to return html in mappingLabel.
 **CRITICAL** : You have to perfectly style this select according to the page.
+**CRITICAL** : For multiselect, "triggerHeight" should be "unset" to let the component calculate it with the number of chips.
