@@ -20,6 +20,7 @@ import { ref, unref, toValue, inject, computed, watch, onBeforeUnmount, watchEff
 import useAccessibility from './useAccessibility_Option';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
+import { areValuesEqual } from './utils';
 /* wwEditor:end */
 
 const SELECT_OPTION_ICON =
@@ -114,8 +115,8 @@ export default {
 
         const isSelected = computed(() =>
             selectType.value === 'single'
-                ? selectValue.value === value.value
-                : Array.isArray(selectValue.value) && selectValue.value.includes(value.value)
+                ? areValuesEqual(selectValue.value, value.value)
+                : Array.isArray(selectValue.value) && selectValue.value.some(v => areValuesEqual(v, value.value))
         );
 
         const { optionId, handleKeyDown, focusFromOptionId } = useAccessibility({
