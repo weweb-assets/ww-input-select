@@ -138,7 +138,7 @@ export default {
             ],
         ],
         customSettingsPropertiesOrder: [
-            'forceOpenInEditor',
+            'toggleSelect',
             'showEmptyStateInEditor',
             'choices',
             'mappingLabel',
@@ -197,11 +197,6 @@ export default {
             args: [],
         },
         {
-            label: 'Toggle',
-            action: 'actionToggleDropdown',
-            args: [],
-        },
-        {
             label: 'Set value',
             action: 'actionUpdateValue',
             args: [
@@ -233,8 +228,22 @@ export default {
             action: 'actionResetSearch',
             args: [],
         },
+        {
+            label: 'Toggle force open in editor',
+            action: 'toggleForceOpenInEditor',
+            args: [],
+        },
     ],
     properties: {
+        toggleSelect: {
+            type: 'Button',
+            editorOnly: true,
+            section: 'settings',
+            options: {
+                text: { en: 'Toggle' },
+                action: 'toggleForceOpenInEditor',
+            },
+        },
         // >>>>>>>>>>> SELECT <<<<<<<<<<
         choices: {
             label: {
@@ -427,13 +436,6 @@ export default {
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
             /* wwEditor:end */
-            section: 'settings',
-        },
-        forceOpenInEditor: {
-            label: { en: 'Force open in editor' },
-            type: 'OnOff',
-            defaultValue: false,
-            editorOnly: true,
             section: 'settings',
         },
         initialState: {
@@ -808,8 +810,7 @@ export default {
             bindable: true,
             responsive: true,
             propertyHelp: {
-                tooltip:
-                    'This should be disabled in some edge cases like in popups, datagrid, etc.',
+                tooltip: 'This should be disabled in some edge cases like in popups, datagrid, etc.',
             },
             bindingValidation: {
                 type: 'boolean',
