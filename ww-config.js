@@ -2011,7 +2011,7 @@ export default {
                 en: 'background color',
             },
             type: 'Color',
-            defaultValue: 'white',
+            defaultValue: undefined,
             states: true,
             classes: true,
             bindable: true,

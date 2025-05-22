@@ -67,7 +67,8 @@ import InputSelectSearch from './wwElement_Search.vue';
 import { ref, computed, provide, watch, inject, nextTick, toValue, onMounted, onBeforeUnmount, shallowRef } from 'vue';
 import useAccessibility from './select/useAccessibility';
 import useSearch from './select/useSearch';
-import { debounce } from './utils';
+import { debounce, findValueIndex, areValuesEqual } from './utils';
+
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
@@ -245,7 +246,8 @@ export default {
 
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
                 for (let iValue of value) {
-                    const valueIndex = currentValue.indexOf(iValue);
+                    // Find index using the utility function
+                    const valueIndex = findValueIndex(currentValue, iValue);
 
                     if (valueIndex === -1) {
                         if (!props.content.limit || currentValue.length < props.content.limit)
@@ -279,7 +281,17 @@ export default {
                 }
             } else {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-                const valueIndex = currentValue.indexOf(value);
+                
+                // Find the index with proper object comparison if needed
+                let valueIndex = -1;
+                if (typeof value === 'object' && value !== null) {
+                    valueIndex = currentValue.findIndex(item => {
+                        if (typeof item !== 'object' || item === null) return false;
+                        return JSON.stringify(item) === JSON.stringify(value);
+                    });
+                } else {
+                    valueIndex = currentValue.indexOf(value);
+                }
 
                 if (valueIndex >= 0) {
                     // Unelect ?
@@ -309,7 +321,9 @@ export default {
             shouldCloseDropdown.value = false;
 
             const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-            const valueIndex = currentValue.indexOf(valueToRemove);
+            
+            // Find index using the utility function
+            const valueIndex = findValueIndex(currentValue, valueToRemove);
 
             if (valueIndex !== -1) {
                 currentValue.splice(valueIndex, 1);
@@ -425,29 +439,45 @@ export default {
                     resolveMappingFormula(toValue(mappingValue), option) ?? option.value,
                     option,
                 ])
-            ); // Hide optionId
-            const obj = opt => ({
+            );
+            
+            // Format option for display
+            const formatOption = opt => ({
                 value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value,
                 label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.value,
                 disabled: opt.disabled || false,
                 data: opt || {},
             });
 
+            // Find option by value using the utility function
+            const findOptionByValue = (value) => {
+                // Use the utility function to find an entry with matching key
+                const entry = Array.from(_optionsMap.entries()).find(([key, _]) => 
+                    areValuesEqual(key, value)
+                );
+                return entry ? entry[1] : null;
+            };
+            
+            // Handle single select
             if (selectType.value === 'single') {
-                const option = _optionsMap.get(variableValue.value);
-                if (!option) return null;
-                return obj(option);
-            } else {
+                const option = findOptionByValue(variableValue.value);
+                return option ? formatOption(option) : null;
+            } 
+            // Handle multiple select
+            else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
                 return selectedValues.map(value => {
-                    const option = _optionsMap.get(value);
-                    if (!option)
+                    const option = findOptionByValue(value);
+                    
+                    if (!option) {
                         return {
                             value,
                             isInOptions: false,
                             info: 'This value is not in the defined options',
                         };
-                    return obj(option);
+                    }
+                    
+                    return formatOption(option);
                 });
             }
         });
