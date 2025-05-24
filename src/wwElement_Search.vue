@@ -89,15 +89,11 @@ export default {
         };
 
         const handleSearchFocus = () => {
-            if (isSearchBarFocused) {
-                isSearchBarFocused.value = true;
-            }
+            isSearchBarFocused.value = true;
         };
 
         const handleSearchBlur = () => {
-            if (isSearchBarFocused) {
-                isSearchBarFocused.value = false;
-            }
+            isSearchBarFocused.value = false;
         };
 
         watch(searchElement, value => {
