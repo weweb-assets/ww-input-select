@@ -19,7 +19,6 @@ export default function useSearch(searchState, { updateSearch }) {
                 searchElement.value.focus();
             }
         });
-        
     }
 
     function updateAutoFocusSearch(value) {

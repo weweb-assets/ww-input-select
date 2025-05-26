@@ -1,7 +1,6 @@
 import { watch, inject } from 'vue';
 
 export default function useTabTriggerHint(emit) {
-
     const missingTabOrField = inject('_wwTabsMissingTabOrFieldObj');
 
     watch(
