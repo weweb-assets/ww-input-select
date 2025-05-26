@@ -106,17 +106,19 @@ export default {
         const label = computed(() => {
             // Handle primitive values (strings, numbers) vs objects
             const isPrimitive = typeof props.localData !== 'object' || props.localData === null;
+            console.log('🐛 [Option Label] localData:', props.localData, 'isPrimitive:', isPrimitive, 'mappingLabel:', toValue(mappingLabel));
 
             if (isPrimitive) {
                 // For primitive values, use the value as the label
+                console.log('🐛 [Option Label] Primitive - returning localData:', props.localData);
                 return props.localData;
             } else {
                 // For objects, use the mapping formula
-                return (
-                    resolveMappingFormula(toValue(mappingLabel), props.localData) ??
-                    props.content.label ??
-                    props.localData
-                );
+                const resolvedLabel = resolveMappingFormula(toValue(mappingLabel), props.localData);
+                console.log('🐛 [Option Label] Object - resolveMappingFormula result:', resolvedLabel);
+                const result = resolvedLabel ?? props.content.label ?? props.localData;
+                console.log('🐛 [Option Label] Object - final result:', result);
+                return result;
             }
         });
 

@@ -16,7 +16,7 @@
                     @click="e => handleChipClick(e, option.value)"
                     :style="chipStyle"
                 >
-                    <span>{{ option.label }}</span>
+                    <span>{{ logChipLabel(option) }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
             </div>
@@ -55,7 +55,10 @@ export default {
 
         const placeholder = computed(() => wwLib.wwLang.getText(props.content.placeholder));
         const selectedLabel = computed(() => {
-            return localContext.value?.data?.select?.active?.details?.label;
+            const label = localContext.value?.data?.select?.active?.details?.label;
+            console.log('🐛 [Trigger] selectedLabel - localContext active details:', localContext.value?.data?.select?.active?.details);
+            console.log('🐛 [Trigger] selectedLabel - computed label:', label);
+            return label;
         });
         const isOptionSelected = computed(
             () =>
@@ -207,6 +210,13 @@ export default {
             emit('remove-multiselect-value', value);
         };
 
+        const logChipLabel = (option) => {
+            console.log('🐛 [Trigger Chip] option object:', option);
+            console.log('🐛 [Trigger Chip] option.label:', option.label);
+            console.log('🐛 [Trigger Chip] typeof option.label:', typeof option.label);
+            return option.label;
+        };
+
         return {
             isSingleSelect,
             data,
@@ -223,6 +233,7 @@ export default {
             chipIconUnselect,
             isOpen,
             handleChipClick,
+            logChipLabel,
         };
     },
 };
