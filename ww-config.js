@@ -1897,7 +1897,6 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            hidden: content => !content.showSearch,
         },
         optionFontSize: {
             type: 'Length',
