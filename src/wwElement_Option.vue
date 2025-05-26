@@ -104,8 +104,6 @@ export default {
         });
 
         const label = computed(() => {
-            console.log('🐛 [Option Label] localData:', props.localData, 'mappingLabel:', toValue(mappingLabel));
-            
             // Check if this is a wrapped primitive from OptionsList (has only 'value' and 'id' properties)
             const isWrappedPrimitive = props.localData && 
                                      typeof props.localData === 'object' && 
@@ -115,7 +113,6 @@ export default {
             
             if (isWrappedPrimitive) {
                 // For wrapped primitives, use the inner value as the label
-                console.log('🐛 [Option Label] Wrapped primitive - returning value:', props.localData.value);
                 return props.localData.value;
             }
             
@@ -124,21 +121,14 @@ export default {
 
             if (isPrimitive) {
                 // For primitive values, use the value as the label
-                console.log('🐛 [Option Label] Primitive - returning localData:', props.localData);
                 return props.localData;
             } else {
                 // For objects, use the mapping formula
-                const resolvedLabel = resolveMappingFormula(toValue(mappingLabel), props.localData);
-                console.log('🐛 [Option Label] Object - resolveMappingFormula result:', resolvedLabel);
-                const result = resolvedLabel ?? props.content.label ?? props.localData;
-                console.log('🐛 [Option Label] Object - final result:', result);
-                return result;
+                return resolveMappingFormula(toValue(mappingLabel), props.localData) ?? props.content.label ?? props.localData;
             }
         });
 
         const value = computed(() => {
-            console.log('🐛 [Option Value] localData:', props.localData, 'mappingValue:', toValue(mappingValue));
-            
             // Check if this is a wrapped primitive from OptionsList (has only 'value' and 'id' properties)
             const isWrappedPrimitive = props.localData && 
                                      typeof props.localData === 'object' && 
@@ -148,7 +138,6 @@ export default {
             
             if (isWrappedPrimitive) {
                 // For wrapped primitives, use the inner value
-                console.log('🐛 [Option Value] Wrapped primitive - returning value:', props.localData.value);
                 return props.localData.value;
             }
             
@@ -157,15 +146,10 @@ export default {
 
             if (isPrimitive) {
                 // For primitive values, use the value itself
-                console.log('🐛 [Option Value] Primitive - returning localData:', props.localData);
                 return props.localData;
             } else {
                 // For objects, use the mapping formula
-                const resolvedValue = resolveMappingFormula(toValue(mappingValue), props.localData);
-                console.log('🐛 [Option Value] Object - resolveMappingFormula result:', resolvedValue);
-                const result = resolvedValue ?? props.content.value ?? props.localData;
-                console.log('🐛 [Option Value] Object - final result:', result);
-                return result;
+                return resolveMappingFormula(toValue(mappingValue), props.localData) ?? props.content.value ?? props.localData;
             }
         });
         const isOptionDisabled = computed(() => resolveMappingFormula(toValue(mappingDisabled), props.localData));

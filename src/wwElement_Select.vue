@@ -434,29 +434,20 @@ export default {
         };
 
         const selectionDetails = computed(() => {
-            console.log('🐛 [SelectionDetails] rawData.value:', rawData.value);
-            console.log('🐛 [SelectionDetails] mappingLabel formula:', toValue(mappingLabel));
-            console.log('🐛 [SelectionDetails] mappingValue formula:', toValue(mappingValue));
-            
             const _optionsMap = new Map(
                 rawData.value.map(option => {
                     // Handle primitive values (strings, numbers) vs objects
                     const isPrimitive = typeof option !== 'object' || option === null;
-                    console.log('🐛 [SelectionDetails] Processing option:', option, 'isPrimitive:', isPrimitive);
 
                     let mappedValue, mappedOption;
                     if (isPrimitive) {
                         // For primitive values, the option IS the value and label
                         mappedValue = option;
                         mappedOption = option;
-                        console.log('🐛 [SelectionDetails] Primitive - mappedValue:', mappedValue, 'mappedOption:', mappedOption);
                     } else {
                         // For objects, use the mapping formulas
-                        const resolvedValue = resolveMappingFormula(toValue(mappingValue), option);
-                        console.log('🐛 [SelectionDetails] Object - resolveMappingFormula result:', resolvedValue, 'for option:', option);
-                        mappedValue = resolvedValue ?? option.value ?? option;
+                        mappedValue = resolveMappingFormula(toValue(mappingValue), option) ?? option.value ?? option;
                         mappedOption = option;
-                        console.log('🐛 [SelectionDetails] Object - final mappedValue:', mappedValue, 'mappedOption:', mappedOption);
                     }
 
                     return [mappedValue, mappedOption];
@@ -466,32 +457,23 @@ export default {
             // Format option for display
             const formatOption = opt => {
                 const isPrimitive = typeof opt !== 'object' || opt === null;
-                console.log('🐛 [FormatOption] Input opt:', opt, 'isPrimitive:', isPrimitive);
 
                 if (isPrimitive) {
                     // For primitive values, use the value as both value and label
-                    const result = {
+                    return {
                         value: opt,
                         label: opt,
                         disabled: false,
                         data: opt,
                     };
-                    console.log('🐛 [FormatOption] Primitive result:', result);
-                    return result;
                 } else {
                     // For objects, use the mapping formulas
-                    const resolvedValue = resolveMappingFormula(toValue(mappingValue), opt);
-                    const resolvedLabel = resolveMappingFormula(toValue(mappingLabel), opt);
-                    console.log('🐛 [FormatOption] Object - resolvedValue:', resolvedValue, 'resolvedLabel:', resolvedLabel);
-                    
-                    const result = {
-                        value: resolvedValue ?? opt.value ?? opt,
-                        label: resolvedLabel ?? opt.label ?? opt.value ?? opt,
+                    return {
+                        value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value ?? opt,
+                        label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.label ?? opt.value ?? opt,
                         disabled: opt.disabled || false,
                         data: opt || {},
                     };
-                    console.log('🐛 [FormatOption] Object result:', result);
-                    return result;
                 }
             };
 
@@ -505,36 +487,25 @@ export default {
             // Handle single select
             if (selectType.value === 'single') {
                 const option = findOptionByValue(variableValue.value);
-                console.log('🐛 [SelectionDetails] Single select - found option:', option, 'for value:', variableValue.value);
-                const result = option ? formatOption(option) : null;
-                console.log('🐛 [SelectionDetails] Single select - final result:', result);
-                return result;
+                return option ? formatOption(option) : null;
             }
             // Handle multiple select
             else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
-                console.log('🐛 [SelectionDetails] Multiple select - selectedValues:', selectedValues);
-                const result = selectedValues.map(value => {
+                return selectedValues.map(value => {
                     const option = findOptionByValue(value);
-                    console.log('🐛 [SelectionDetails] Multiple select - found option:', option, 'for value:', value);
 
                     if (!option) {
-                        const fallback = {
+                        return {
                             value,
                             label: value,
                             isInOptions: false,
                             info: 'This value is not in the defined options',
                         };
-                        console.log('🐛 [SelectionDetails] Multiple select - fallback result:', fallback);
-                        return fallback;
                     }
 
-                    const formatted = formatOption(option);
-                    console.log('🐛 [SelectionDetails] Multiple select - formatted result:', formatted);
-                    return formatted;
+                    return formatOption(option);
                 });
-                console.log('🐛 [SelectionDetails] Multiple select - final result array:', result);
-                return result;
             }
         });
 
