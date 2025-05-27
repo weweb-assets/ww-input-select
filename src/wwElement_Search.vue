@@ -5,6 +5,8 @@
         :style="[searchStyles]"
         :class="['ww-select-search']"
         @input="handleInputChange"
+        @focus="handleSearchFocus"
+        @blur="handleSearchBlur"
         :placeholder="searchPlaceholder"
     />
 </template>
@@ -29,7 +31,7 @@ export default {
         /* wwEditor:start */
         useEditorHint(emit);
         /* wwEditor:end */
-        const { updateHasSearch, updateSearchElement, updateSearch, autoFocusSearch, focusSearch } = inject(
+        const { updateHasSearch, updateSearchElement, updateSearch, autoFocusSearch, focusSearch, isSearchBarFocused } = inject(
             '_wwSelect:useSearch',
             {}
         );
@@ -86,6 +88,14 @@ export default {
             debouncedUpdateSearch(event?.target?.value, searchBy);
         };
 
+        const handleSearchFocus = () => {
+            isSearchBarFocused.value = true;
+        };
+
+        const handleSearchBlur = () => {
+            isSearchBarFocused.value = false;
+        };
+
         watch(searchElement, value => {
             if (updateSearchElement) updateSearchElement(value);
         });
@@ -102,6 +112,8 @@ export default {
         return {
             searchElementRef,
             handleInputChange,
+            handleSearchFocus,
+            handleSearchBlur,
             searchStyles,
             searchPlaceholder,
         };
