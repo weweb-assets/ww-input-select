@@ -5,7 +5,7 @@ export function debounce(fn, delay) {
         timeoutId = setTimeout(() => fn(...args), delay);
     };
 }
- 
+
 export function findValueIndex(array, value) {
     if (typeof value === 'object' && value !== null) {
         return array.findIndex(item => {

@@ -272,12 +272,12 @@ export default {
             }),
             defaultValue: {
                 type: 'f',
-                code: "context.mapping?.['label']",
+                code: "context.mapping?.['label'] || context.mapping",
             },
             /* wwEditor:start */
             propertyHelp: {
                 tooltip:
-                    'The label of the current option item. This will not automatically show this label on the screen, its purpose is accessibility and allowing easy bounding of the choice label. <br/> <br/> This will be executed for each item in the options to return the label. ',
+                    'The label of the current option item. For primitive values (strings, numbers), use context.mapping directly. For objects, use context.mapping?.["label"]. This will be executed for each item in the options to return the label. ',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -290,12 +290,12 @@ export default {
             }),
             defaultValue: {
                 type: 'f',
-                code: "context.mapping?.['value']",
+                code: "context.mapping?.['value'] || context.mapping",
             },
             /* wwEditor:start */
             propertyHelp: {
                 tooltip:
-                    'The value of the current option item. This will be used to identify the option in the Select. <br/> <br/> This will be executed for each item in the options to return the value.',
+                    'The value of the current option item. For primitive values (strings, numbers), use context.mapping directly. For objects, use context.mapping?.["value"]. This will be executed for each item in the options to return the value.',
             },
             /* wwEditor:end */
             section: 'settings',

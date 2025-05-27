@@ -117,7 +117,7 @@ export default {
 
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
-            selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
+            selectType.value === 'single' ? (props.content.initValueSingle ?? null) : props.content.initValueMulti || []
         );
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -281,7 +281,7 @@ export default {
                 }
             } else {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-                
+
                 // Find the index with proper object comparison if needed
                 let valueIndex = -1;
                 if (typeof value === 'object' && value !== null) {
@@ -321,7 +321,7 @@ export default {
             shouldCloseDropdown.value = false;
 
             const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-            
+
             // Find index using the utility function
             const valueIndex = findValueIndex(currentValue, valueToRemove);
 
@@ -435,48 +435,75 @@ export default {
 
         const selectionDetails = computed(() => {
             const _optionsMap = new Map(
-                rawData.value.map(({ ...option }) => [
-                    resolveMappingFormula(toValue(mappingValue), option) ?? option.value,
-                    option,
-                ])
+                rawData.value.map(option => {
+                    // Handle primitive values (strings, numbers) vs objects
+                    const isPrimitive = typeof option !== 'object' || option === null;
+
+                    let mappedValue, mappedOption;
+                    if (isPrimitive) {
+                        // For primitive values, the option IS the value and label
+                        mappedValue = option;
+                        mappedOption = option;
+                    } else {
+                        // For objects, use the mapping formulas
+                        mappedValue = resolveMappingFormula(toValue(mappingValue), option) ?? option.value ?? option;
+                        mappedOption = option;
+                    }
+
+                    return [mappedValue, mappedOption];
+                })
             );
-            
+
             // Format option for display
-            const formatOption = opt => ({
-                value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value,
-                label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.value,
-                disabled: opt.disabled || false,
-                data: opt || {},
-            });
+            const formatOption = opt => {
+                const isPrimitive = typeof opt !== 'object' || opt === null;
+
+                if (isPrimitive) {
+                    // For primitive values, use the value as both value and label
+                    return {
+                        value: opt,
+                        label: opt,
+                        disabled: false,
+                        data: opt,
+                    };
+                } else {
+                    // For objects, use the mapping formulas
+                    return {
+                        value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value ?? opt,
+                        label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.label ?? opt.value ?? opt,
+                        disabled: opt.disabled || false,
+                        data: opt || {},
+                    };
+                }
+            };
 
             // Find option by value using the utility function
-            const findOptionByValue = (value) => {
+            const findOptionByValue = value => {
                 // Use the utility function to find an entry with matching key
-                const entry = Array.from(_optionsMap.entries()).find(([key, _]) => 
-                    areValuesEqual(key, value)
-                );
+                const entry = Array.from(_optionsMap.entries()).find(([key, _]) => areValuesEqual(key, value));
                 return entry ? entry[1] : null;
             };
-            
+
             // Handle single select
             if (selectType.value === 'single') {
                 const option = findOptionByValue(variableValue.value);
                 return option ? formatOption(option) : null;
-            } 
+            }
             // Handle multiple select
             else {
                 const selectedValues = Array.isArray(variableValue.value) ? variableValue.value : [];
                 return selectedValues.map(value => {
                     const option = findOptionByValue(value);
-                    
+
                     if (!option) {
                         return {
                             value,
+                            label: value,
                             isInOptions: false,
                             info: 'This value is not in the defined options',
                         };
                     }
-                    
+
                     return formatOption(option);
                 });
             }
@@ -500,19 +527,25 @@ export default {
 
         // Initialize passive event support detection
         try {
-            window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-                get: function () { supportsPassive = true; } 
-            }));
-        } catch(e) {}
+            window.addEventListener(
+                'test',
+                null,
+                Object.defineProperty({}, 'passive', {
+                    get: function () {
+                        supportsPassive = true;
+                    },
+                })
+            );
+        } catch (e) {}
 
         wheelOpt = supportsPassive ? { passive: false } : false;
         wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
-        const preventDefault = (e) => {
+        const preventDefault = e => {
             e.preventDefault();
         };
 
-        const preventDefaultForScrollKeys = (e) => {
+        const preventDefaultForScrollKeys = e => {
             const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
             if (keys[e.keyCode]) {
                 preventDefault(e);

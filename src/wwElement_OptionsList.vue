@@ -107,14 +107,11 @@ export default {
         });
 
         const memoizedFilter = useMemoize((options, filterValue) => {
-            const searchBy = searchState.value?.searchBy?.length
-                ? searchState.value?.searchBy
-                : Object.keys(options[0]);
             return options.filter(option => {
-                return searchBy.some(key => {
-                    const optionValue = option[key];
-                    if (!optionValue) return false;
-                    const normalizedOption = optionValue
+                // Handle primitive values directly
+                const isPrimitive = typeof option !== 'object' || option === null;
+                if (isPrimitive) {
+                    const normalizedOption = option
                         .toString()
                         .normalize('NFD')
                         .replace(/[\u0300-\u036f]/g, '')
@@ -123,9 +120,28 @@ export default {
                         .normalize('NFD')
                         .replace(/[\u0300-\u036f]/g, '')
                         .toLowerCase();
-
                     return normalizedOption.includes(normalizedFilter);
-                });
+                } else {
+                    // For objects, use the existing search logic
+                    const searchBy = searchState.value?.searchBy?.length
+                        ? searchState.value?.searchBy
+                        : Object.keys(option);
+                    return searchBy.some(key => {
+                        const optionValue = option[key];
+                        if (!optionValue) return false;
+                        const normalizedOption = optionValue
+                            .toString()
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .toLowerCase();
+                        const normalizedFilter = filterValue
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .toLowerCase();
+
+                        return normalizedOption.includes(normalizedFilter);
+                    });
+                }
             });
         });
 
@@ -136,7 +152,17 @@ export default {
         });
 
         const dynamicScrollerItems = computed(() => {
-            return filteredOptions.value.map((item, index) => ({ ...item, id: item.id ?? `id_${index}` }));
+            return filteredOptions.value.map((item, index) => {
+                // Handle primitive values properly - don't spread them as they become indexed objects
+                const isPrimitive = typeof item !== 'object' || item === null;
+                if (isPrimitive) {
+                    // For primitives, create a simple object wrapper
+                    return { value: item, id: `id_${index}` };
+                } else {
+                    // For objects, use the existing spread logic
+                    return { ...item, id: item.id ?? `id_${index}` };
+                }
+            });
         });
 
         watch(filteredOptions, () => {
