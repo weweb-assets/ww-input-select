@@ -979,7 +979,7 @@ export default {
             type: 'Formula',
             defaultValue: '',
             states: true,
-            bindable: true,
+            bindable: false,
             responsive: true,
             hidden: (content, sidePanelContent) => !sidePanelContent.form?.uid || !content.customValidation,
         },
