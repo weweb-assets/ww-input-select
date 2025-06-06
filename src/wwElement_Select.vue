@@ -270,6 +270,7 @@ export default {
             if (!option && !options?.length > 1) return;
             if (option?.[1]?.disabled) return;
 
+            let eventValue;
             if (selectType.value === 'single') {
                 if (variableValue.value === value) {
                     // Unselect ?
@@ -279,6 +280,7 @@ export default {
                     setValue(value);
                     if (props.content.closeOnSelect) closeDropdown();
                 }
+                eventValue = variableValue.value;
             } else {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
                 
@@ -303,9 +305,10 @@ export default {
                 }
 
                 setValue(currentValue);
+                eventValue = currentValue;
             }
 
-            emit('trigger-event', { name: 'change', event: { value: variableValue.value } });
+            emit('trigger-event', { name: 'change', event: { value: eventValue } });
         };
 
         function removeSpecificValue(valueToRemove) {
