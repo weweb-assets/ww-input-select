@@ -142,10 +142,21 @@ export default {
         );
 
         const handleClick = () => {
+            console.log('Option click:', {
+                isSelected: isSelected.value,
+                canInteract: canInteract.value,
+                unselectOnClick: props.content.unselectOnClick,
+                selectOnClick: props.content.selectOnClick,
+                selectType: selectType.value,
+                currentValue: value.value
+            });
+            
             if (isSelected.value && canInteract.value && props.content.unselectOnClick) {
+                console.log('Calling unselect for option:', value.value);
                 unselect();
                 focusFromOptionId(null);
             } else if (!isSelected.value && canInteract.value && props.content.selectOnClick) {
+                console.log('Calling updateValue for option:', value.value);
                 updateValue(value.value);
                 focusFromOptionId(optionId);
                 focusSelectElement();
@@ -154,14 +165,29 @@ export default {
 
         // Maybe => move this to the select component (selectType too + new isSelected function in the select)
         const unselect = () => {
+            console.log('Unselect called with:', {
+                canInteract: canInteract.value,
+                selectType: selectType.value,
+                currentSelectValue: selectValue.value,
+                optionValue: value.value
+            });
+            
             if (canInteract.value) {
                 if (selectType.value === 'single') {
+                    console.log('Single select: calling updateValue(null)');
                     updateValue(null);
                 } else {
                     const currentValue = Array.isArray(selectValue.value) ? [...selectValue.value] : [];
                     const newValue = currentValue.filter(v => v !== value.value);
+                    console.log('Multiple select:', {
+                        currentValue,
+                        valueToRemove: value.value,
+                        newValue
+                    });
                     updateValue(newValue);
                 }
+            } else {
+                console.log('Cannot interact, unselect aborted');
             }
         };
 

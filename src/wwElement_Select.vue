@@ -230,12 +230,19 @@ export default {
         };
 
         const updateValue = value => {
+            console.log('updateValue called with:', {
+                value,
+                selectType: selectType.value,
+                currentVariableValue: variableValue.value
+            });
+            
             if (selectType.value === 'single') {
                 // Check if value is an array
                 if (Array.isArray(value)) {
                     console.warn('Single select component received an array value. Only the first value will be used.');
                     value = value[0];
                 }
+                console.log('Single select: setting value to:', value);
                 setValue(value);
                 emit('trigger-event', { name: 'change', event: { value } });
             } else {
@@ -245,19 +252,31 @@ export default {
                 }
 
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
+                console.log('Multiple select processing:', {
+                    incomingValue: value,
+                    currentValue: currentValue
+                });
+                
                 for (let iValue of value) {
                     // Find index using the utility function
                     const valueIndex = findValueIndex(currentValue, iValue);
+                    console.log('Processing value:', iValue, 'found at index:', valueIndex);
 
                     if (valueIndex === -1) {
-                        if (!props.content.limit || currentValue.length < props.content.limit)
+                        if (!props.content.limit || currentValue.length < props.content.limit) {
+                            console.log('Adding value:', iValue);
                             currentValue.push(iValue);
+                        } else {
+                            console.log('Limit reached, not adding:', iValue);
+                        }
                     } else {
+                        console.log('Value already exists at index', valueIndex, '- NOT REMOVING (commented out)');
                         // currentValue.splice(valueIndex, 1);
                         // No need to unselect
                     }
                 }
 
+                console.log('Final value for multiple select:', currentValue);
                 setValue(currentValue);
                 emit('trigger-event', { name: 'change', event: { value: currentValue } });
             }
