@@ -156,10 +156,12 @@ export default {
         const unselect = () => {
             if (canInteract.value) {
                 if (selectType.value === 'single') {
-                    setValue(null);
+                    updateValue(null);
                 } else {
                     const currentValue = Array.isArray(selectValue.value) ? [...selectValue.value] : [];
-                    setValue(currentValue.filter(v => v !== value.value));
+                    const newValue = currentValue.filter(v => v !== value.value);
+                    setValue(newValue);
+                    emit('trigger-event', { name: 'change', event: { value: newValue } });
                 }
             }
         };
