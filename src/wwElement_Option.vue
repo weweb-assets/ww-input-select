@@ -184,7 +184,9 @@ export default {
                         valueToRemove: value.value,
                         newValue
                     });
-                    updateValue(newValue);
+                    console.log('Bypassing updateValue, calling setValue and emit directly');
+                    setValue(newValue);
+                    emit('trigger-event', { name: 'change', event: { value: newValue } });
                 }
             } else {
                 console.log('Cannot interact, unselect aborted');
