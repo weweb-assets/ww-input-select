@@ -270,14 +270,21 @@ export default {
             if (!option && !options?.length > 1) return;
             if (option?.[1]?.disabled) return;
 
+            const originalValue = selectType.value === 'single' ? variableValue.value : [...(Array.isArray(variableValue.value) ? variableValue.value : [])];
+            let valueChanged = false;
             let eventValue;
+
             if (selectType.value === 'single') {
                 if (variableValue.value === value) {
                     // Unselect ?
-                    if (props.content.unselectOnClick) setValue(null);
+                    if (props.content.unselectOnClick) {
+                        setValue(null);
+                        valueChanged = true;
+                    }
                 } else if (props.content.selectOnClick) {
                     // Select ?
                     setValue(value);
+                    valueChanged = true;
                     if (props.content.closeOnSelect) closeDropdown();
                 }
                 eventValue = variableValue.value;
@@ -297,10 +304,14 @@ export default {
 
                 if (valueIndex >= 0) {
                     // Unelect ?
-                    if (props.content.unselectOnClick) currentValue.splice(valueIndex, 1);
+                    if (props.content.unselectOnClick) {
+                        currentValue.splice(valueIndex, 1);
+                        valueChanged = true;
+                    }
                 } else if (props.content.selectOnClick) {
                     // Select ?
                     currentValue.push(value);
+                    valueChanged = true;
                     if (props.content.closeOnSelect) closeDropdown();
                 }
 
@@ -308,7 +319,10 @@ export default {
                 eventValue = currentValue;
             }
 
-            emit('trigger-event', { name: 'change', event: { value: eventValue } });
+            // Only emit change event if the value actually changed
+            if (valueChanged) {
+                emit('trigger-event', { name: 'change', event: { value: eventValue } });
+            }
         };
 
         function removeSpecificValue(valueToRemove) {
