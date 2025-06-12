@@ -329,7 +329,11 @@ export default {
         };
 
         function removeSpecificValue(valueToRemove) {
-            if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) return;
+            console.log('[Select removeSpecificValue] Called with value:', valueToRemove);
+            if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) {
+                console.log('[Select removeSpecificValue] Blocked - type:', selectType.value, 'disabled:', isDisabled.value, 'readonly:', isReadonly.value);
+                return;
+            }
 
             /* This is a workaround to prevent the dropdown from closing when removing a value.
              * The issue is that the click event that triggers this function also bubbles up
@@ -350,6 +354,7 @@ export default {
                 setValue(currentValue);
             }
 
+            console.log('[Select removeSpecificValue] Emitting change event with value:', currentValue);
             emit('trigger-event', { name: 'change', event: { value: currentValue } });
             setTimeout(() => {
                 shouldCloseDropdown.value = true;
@@ -747,6 +752,7 @@ export default {
         provide('_wwSelect:searchState', searchState);
         provide('_wwSelect:optionProperties', optionProperties);
         provide('_wwSelect:updateValue', updateValue);
+        provide('_wwSelect:removeSpecificValue', removeSpecificValue);
         provide('_wwSelect:registerOption', registerOption);
         provide('_wwSelect:unregisterOption', unregisterOption);
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);

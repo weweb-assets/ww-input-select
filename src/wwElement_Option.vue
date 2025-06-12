@@ -62,6 +62,7 @@ export default {
         const isDisabled = inject('_wwSelect:isDisabled', ref(false));
         const isReadonly = inject('_wwSelect:isReadonly', ref(false));
         const updateValue = inject('_wwSelect:updateValue', () => {});
+        const removeSpecificValue = inject('_wwSelect:removeSpecificValue', () => {});
         const focusSelectElement = inject('_wwSelect:focusSelectElement', () => {});
         const activeDescendant = inject('_wwSelect:activeDescendant', ref(null));
 
@@ -160,12 +161,8 @@ export default {
                     console.log('[Option Unselect] Single select: calling updateValue(null)');
                     updateValue(null);
                 } else {
-                    console.log('[Option Unselect] Multiple select: manually handling unselect');
-                    const currentValue = Array.isArray(selectValue.value) ? [...selectValue.value] : [];
-                    const newValue = currentValue.filter(v => v !== value.value);
-                    console.log('[Option Unselect] Multiple select: emitting change event with newValue:', newValue);
-                    setValue(newValue);
-                    emit('trigger-event', { name: 'change', event: { value: newValue } });
+                    console.log('[Option Unselect] Multiple select: calling removeSpecificValue');
+                    removeSpecificValue(value.value);
                 }
             } else {
                 console.log('[Option Unselect] Cannot interact - canInteract is false');
