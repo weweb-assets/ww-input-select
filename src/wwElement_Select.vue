@@ -360,12 +360,14 @@ export default {
             // Close dropdown if closeOnSelect is enabled, just like regular selection
             if (props.content.closeOnSelect) {
                 console.log('[Select removeSpecificValue] Closing dropdown due to closeOnSelect setting');
-                closeDropdown();
-            }
-            
-            setTimeout(() => {
+                // Re-enable closing first, then close
                 shouldCloseDropdown.value = true;
-            }, 200);
+                closeDropdown();
+            } else {
+                nextTick(() => {
+                    shouldCloseDropdown.value = true;
+                });
+            }
         }
 
         const {
