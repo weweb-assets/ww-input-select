@@ -83,7 +83,7 @@ export default function useAccessibility({
             },
             Enter: () => {
                 event.preventDefault();
-                if (isOpen.value && activeOptionValue.value != null && activeOptionValue.value !== undefined) {
+                if (isOpen.value && activeOptionValue.value != null && activeOptionValue.value !== undefined && activeOptionValue.value !== '') {
                     toggleValue(activeOptionValue.value);
                 } else if (!isOpen.value) {
                     openDropdown();

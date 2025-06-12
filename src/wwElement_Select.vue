@@ -270,6 +270,13 @@ export default {
 
         const toggleValueAccessibility = value => {
             console.log('[Select toggleValueAccessibility] Called with value:', value, 'type:', selectType.value);
+            
+            // Don't process empty values
+            if (value === '' || value == null || value === undefined) {
+                console.log('[Select toggleValueAccessibility] Ignoring empty/null/undefined value');
+                return;
+            }
+            
             const option = Array.from(optionsMap.value).find(([key, option]) => option.value === value);
             if (!option && !options?.length > 1) return;
             if (option?.[1]?.disabled) return;
