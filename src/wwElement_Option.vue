@@ -156,16 +156,11 @@ export default {
         // Maybe => move this to the select component (selectType too + new isSelected function in the select)
         const unselect = () => {
             if (canInteract.value) {
-                console.log('[Option Unselect] Starting unselect for type:', selectType.value, 'value:', value.value);
                 if (selectType.value === 'single') {
-                    console.log('[Option Unselect] Single select: calling updateValue(null)');
                     updateValue(null);
                 } else {
-                    console.log('[Option Unselect] Multiple select: calling removeSpecificValue');
                     removeSpecificValue(value.value);
                 }
-            } else {
-                console.log('[Option Unselect] Cannot interact - canInteract is false');
             }
         };
 

@@ -230,14 +230,12 @@ export default {
         };
 
         const updateValue = value => {
-            console.log('[Select updateValue] Called with value:', value, 'type:', selectType.value);
             if (selectType.value === 'single') {
                 // Check if value is an array
                 if (Array.isArray(value)) {
                     console.warn('Single select component received an array value. Only the first value will be used.');
                     value = value[0];
                 }
-                console.log('[Select updateValue] Single select: setting value and emitting change event:', value);
                 setValue(value);
                 emit('trigger-event', { name: 'change', event: { value } });
             } else {
@@ -260,7 +258,6 @@ export default {
                     }
                 }
 
-                console.log('[Select updateValue] Multiple select: setting value and emitting change event:', currentValue);
                 setValue(currentValue);
                 emit('trigger-event', { name: 'change', event: { value: currentValue } });
             }
@@ -269,11 +266,8 @@ export default {
         };
 
         const toggleValueAccessibility = value => {
-            console.log('[Select toggleValueAccessibility] Called with value:', value, 'type:', selectType.value);
-            
             // Don't process empty values
             if (value === '' || value == null || value === undefined) {
-                console.log('[Select toggleValueAccessibility] Ignoring empty/null/undefined value');
                 return;
             }
             
@@ -289,11 +283,9 @@ export default {
                 if (variableValue.value === value) {
                     // Unselect ?
                     if (props.content.unselectOnClick) {
-                        console.log('[Select toggleValueAccessibility] Single unselect via keyboard');
                         setValue(null);
                         valueChanged = true;
                         if (props.content.closeOnSelect) {
-                            console.log('[Select toggleValueAccessibility] Closing dropdown due to closeOnSelect');
                             closeDropdown();
                         }
                     }
@@ -321,11 +313,9 @@ export default {
                 if (valueIndex >= 0) {
                     // Unelect ?
                     if (props.content.unselectOnClick) {
-                        console.log('[Select toggleValueAccessibility] Multiple unselect via keyboard');
                         currentValue.splice(valueIndex, 1);
                         valueChanged = true;
                         if (props.content.closeOnSelect) {
-                            console.log('[Select toggleValueAccessibility] Closing dropdown due to closeOnSelect');
                             closeDropdown();
                         }
                     }
@@ -347,9 +337,7 @@ export default {
         };
 
         function removeSpecificValue(valueToRemove) {
-            console.log('[Select removeSpecificValue] Called with value:', valueToRemove);
             if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) {
-                console.log('[Select removeSpecificValue] Blocked - type:', selectType.value, 'disabled:', isDisabled.value, 'readonly:', isReadonly.value);
                 return;
             }
 
@@ -372,12 +360,10 @@ export default {
                 setValue(currentValue);
             }
 
-            console.log('[Select removeSpecificValue] Emitting change event with value:', currentValue);
             emit('trigger-event', { name: 'change', event: { value: currentValue } });
             
             // Close dropdown if closeOnSelect is enabled, just like regular selection
             if (props.content.closeOnSelect) {
-                console.log('[Select removeSpecificValue] Closing dropdown due to closeOnSelect setting');
                 // Re-enable closing first, then close
                 shouldCloseDropdown.value = true;
                 closeDropdown();
