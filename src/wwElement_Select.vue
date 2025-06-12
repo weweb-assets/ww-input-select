@@ -269,6 +269,7 @@ export default {
         };
 
         const toggleValueAccessibility = value => {
+            console.log('[Select toggleValueAccessibility] Called with value:', value, 'type:', selectType.value);
             const option = Array.from(optionsMap.value).find(([key, option]) => option.value === value);
             if (!option && !options?.length > 1) return;
             if (option?.[1]?.disabled) return;
@@ -281,8 +282,13 @@ export default {
                 if (variableValue.value === value) {
                     // Unselect ?
                     if (props.content.unselectOnClick) {
+                        console.log('[Select toggleValueAccessibility] Single unselect via keyboard');
                         setValue(null);
                         valueChanged = true;
+                        if (props.content.closeOnSelect) {
+                            console.log('[Select toggleValueAccessibility] Closing dropdown due to closeOnSelect');
+                            closeDropdown();
+                        }
                     }
                 } else if (props.content.selectOnClick) {
                     // Select ?
@@ -308,8 +314,13 @@ export default {
                 if (valueIndex >= 0) {
                     // Unelect ?
                     if (props.content.unselectOnClick) {
+                        console.log('[Select toggleValueAccessibility] Multiple unselect via keyboard');
                         currentValue.splice(valueIndex, 1);
                         valueChanged = true;
+                        if (props.content.closeOnSelect) {
+                            console.log('[Select toggleValueAccessibility] Closing dropdown due to closeOnSelect');
+                            closeDropdown();
+                        }
                     }
                 } else if (props.content.selectOnClick) {
                     // Select ?
