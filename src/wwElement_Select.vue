@@ -356,6 +356,13 @@ export default {
 
             console.log('[Select removeSpecificValue] Emitting change event with value:', currentValue);
             emit('trigger-event', { name: 'change', event: { value: currentValue } });
+            
+            // Close dropdown if closeOnSelect is enabled, just like regular selection
+            if (props.content.closeOnSelect) {
+                console.log('[Select removeSpecificValue] Closing dropdown due to closeOnSelect setting');
+                closeDropdown();
+            }
+            
             setTimeout(() => {
                 shouldCloseDropdown.value = true;
             }, 200);
