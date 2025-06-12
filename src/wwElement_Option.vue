@@ -155,14 +155,20 @@ export default {
         // Maybe => move this to the select component (selectType too + new isSelected function in the select)
         const unselect = () => {
             if (canInteract.value) {
+                console.log('[Option Unselect] Starting unselect for type:', selectType.value, 'value:', value.value);
                 if (selectType.value === 'single') {
+                    console.log('[Option Unselect] Single select: calling updateValue(null)');
                     updateValue(null);
                 } else {
+                    console.log('[Option Unselect] Multiple select: manually handling unselect');
                     const currentValue = Array.isArray(selectValue.value) ? [...selectValue.value] : [];
                     const newValue = currentValue.filter(v => v !== value.value);
+                    console.log('[Option Unselect] Multiple select: emitting change event with newValue:', newValue);
                     setValue(newValue);
                     emit('trigger-event', { name: 'change', event: { value: newValue } });
                 }
+            } else {
+                console.log('[Option Unselect] Cannot interact - canInteract is false');
             }
         };
 

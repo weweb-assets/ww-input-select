@@ -230,12 +230,14 @@ export default {
         };
 
         const updateValue = value => {
+            console.log('[Select updateValue] Called with value:', value, 'type:', selectType.value);
             if (selectType.value === 'single') {
                 // Check if value is an array
                 if (Array.isArray(value)) {
                     console.warn('Single select component received an array value. Only the first value will be used.');
                     value = value[0];
                 }
+                console.log('[Select updateValue] Single select: setting value and emitting change event:', value);
                 setValue(value);
                 emit('trigger-event', { name: 'change', event: { value } });
             } else {
@@ -258,6 +260,7 @@ export default {
                     }
                 }
 
+                console.log('[Select updateValue] Multiple select: setting value and emitting change event:', currentValue);
                 setValue(currentValue);
                 emit('trigger-event', { name: 'change', event: { value: currentValue } });
             }
