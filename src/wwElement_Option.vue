@@ -62,6 +62,7 @@ export default {
         const isDisabled = inject('_wwSelect:isDisabled', ref(false));
         const isReadonly = inject('_wwSelect:isReadonly', ref(false));
         const updateValue = inject('_wwSelect:updateValue', () => {});
+        const removeSpecificValue = inject('_wwSelect:removeSpecificValue', () => {});
         const focusSelectElement = inject('_wwSelect:focusSelectElement', () => {});
         const activeDescendant = inject('_wwSelect:activeDescendant', ref(null));
 
@@ -199,10 +200,9 @@ export default {
         const unselect = () => {
             if (canInteract.value) {
                 if (selectType.value === 'single') {
-                    setValue(null);
+                    updateValue(null);
                 } else {
-                    const currentValue = Array.isArray(selectValue.value) ? [...selectValue.value] : [];
-                    setValue(currentValue.filter(v => v !== value.value));
+                    removeSpecificValue(value.value);
                 }
             }
         };

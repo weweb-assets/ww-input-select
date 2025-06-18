@@ -266,19 +266,36 @@ export default {
         };
 
         const toggleValueAccessibility = value => {
+            // Don't process empty values
+            if (value === '' || value == null || value === undefined) {
+                return;
+            }
+            
             const option = Array.from(optionsMap.value).find(([key, option]) => option.value === value);
             if (!option && !options?.length > 1) return;
             if (option?.[1]?.disabled) return;
 
+            const originalValue = selectType.value === 'single' ? variableValue.value : [...(Array.isArray(variableValue.value) ? variableValue.value : [])];
+            let valueChanged = false;
+            let eventValue;
+
             if (selectType.value === 'single') {
                 if (variableValue.value === value) {
                     // Unselect ?
-                    if (props.content.unselectOnClick) setValue(null);
+                    if (props.content.unselectOnClick) {
+                        setValue(null);
+                        valueChanged = true;
+                        if (props.content.closeOnSelect) {
+                            closeDropdown();
+                        }
+                    }
                 } else if (props.content.selectOnClick) {
                     // Select ?
                     setValue(value);
+                    valueChanged = true;
                     if (props.content.closeOnSelect) closeDropdown();
                 }
+                eventValue = variableValue.value;
             } else {
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
 
@@ -295,21 +312,34 @@ export default {
 
                 if (valueIndex >= 0) {
                     // Unelect ?
-                    if (props.content.unselectOnClick) currentValue.splice(valueIndex, 1);
+                    if (props.content.unselectOnClick) {
+                        currentValue.splice(valueIndex, 1);
+                        valueChanged = true;
+                        if (props.content.closeOnSelect) {
+                            closeDropdown();
+                        }
+                    }
                 } else if (props.content.selectOnClick) {
                     // Select ?
                     currentValue.push(value);
+                    valueChanged = true;
                     if (props.content.closeOnSelect) closeDropdown();
                 }
 
                 setValue(currentValue);
+                eventValue = currentValue;
             }
 
-            emit('trigger-event', { name: 'change', event: { value: variableValue.value } });
+            // Only emit change event if the value actually changed
+            if (valueChanged) {
+                emit('trigger-event', { name: 'change', event: { value: eventValue } });
+            }
         };
 
         function removeSpecificValue(valueToRemove) {
-            if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) return;
+            if (selectType.value !== 'multiple' || isDisabled.value || isReadonly.value) {
+                return;
+            }
 
             /* This is a workaround to prevent the dropdown from closing when removing a value.
              * The issue is that the click event that triggers this function also bubbles up
@@ -331,9 +361,17 @@ export default {
             }
 
             emit('trigger-event', { name: 'change', event: { value: currentValue } });
-            setTimeout(() => {
+            
+            // Close dropdown if closeOnSelect is enabled, just like regular selection
+            if (props.content.closeOnSelect) {
+                // Re-enable closing first, then close
                 shouldCloseDropdown.value = true;
-            }, 200);
+                closeDropdown();
+            } else {
+                nextTick(() => {
+                    shouldCloseDropdown.value = true;
+                });
+            }
         }
 
         const {
@@ -760,6 +798,7 @@ export default {
         provide('_wwSelect:searchState', searchState);
         provide('_wwSelect:optionProperties', optionProperties);
         provide('_wwSelect:updateValue', updateValue);
+        provide('_wwSelect:removeSpecificValue', removeSpecificValue);
         provide('_wwSelect:registerOption', registerOption);
         provide('_wwSelect:unregisterOption', unregisterOption);
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);
