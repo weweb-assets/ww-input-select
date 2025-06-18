@@ -996,9 +996,3 @@ export default {
     width: 100%;
 }
 </style>
-
-<style lang="scss">
-.ww-element:focus-visible {
-    outline: none;
-}
-</style>
