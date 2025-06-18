@@ -938,6 +938,11 @@ export default {
 
 .ww-select {
     position: relative;
+    outline: none;
+}
+
+.ww-select:focus-visible {
+    outline: none;
 }
 
 .ww-select-z-index {
@@ -946,6 +951,11 @@ export default {
 
 .ww-select__trigger {
     width: 100%;
+    outline: none;
+}
+
+.ww-select__trigger:focus-visible {
+    outline: none;
 }
 
 .ww-select__dropdown__wrapper {
@@ -984,5 +994,11 @@ export default {
     position: absolute;
     right: 0;
     width: 100%;
+}
+</style>
+
+<style lang="scss">
+.ww-element:focus-visible {
+    outline: none;
 }
 </style>
