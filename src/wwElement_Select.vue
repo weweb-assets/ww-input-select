@@ -92,21 +92,6 @@ export default {
     emits: ['trigger-event', 'update:content', 'update:sidepanel-content'],
     setup(props, { emit }) {
         /* wwEditor:start */
-        // Migration: Convert bindable validation to non-bindable
-        const componentRawContent = inject('componentRawContent', null);
-        if (componentRawContent?.validation?.__wwtype) {
-            const rawFormula = componentRawContent.validation;
-            emit('update:content:effect', {
-                validation: {
-                    type: rawFormula.__wwtype, // Preserve 'f' or 'js'
-                    code: rawFormula.code,
-                    ...(rawFormula.filter && { filter: rawFormula.filter }),
-                    ...(rawFormula.sort && { sort: rawFormula.sort }),
-                    ...(rawFormula.__wwmap && { __wwmap: rawFormula.__wwmap })
-                }
-            });
-        }
-
         useEditorHint();
         /* wwEditor:end */
         /* wwEditor:start */
