@@ -140,8 +140,11 @@ export default {
         customSettingsPropertiesOrder: [
             'forceOpenInEditor',
             'showEmptyStateInEditor',
+            'optionType',
             'choices',
             'mappingLabel',
+            'mappingIcon',
+            'mappingImage',
             'mappingValue',
             'mappingDisabled',
             'initValueSingle',
@@ -243,6 +246,22 @@ export default {
     ],
     properties: {
         // >>>>>>>>>>> SELECT <<<<<<<<<<
+        optionType: {
+            label: { en: 'Option type' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'text', label: 'Text' },
+                    { value: 'iconText', label: 'Icon + Text' },
+                    { value: 'imageText', label: 'Image + Text' },
+                ],
+            },
+            defaultValue: 'text',
+            bindable: true,
+            responsive: true,
+            states: true,
+            section: 'settings',
+        },
         choices: {
             label: {
                 en: 'Options',
@@ -288,6 +307,42 @@ export default {
             },
             /* wwEditor:end */
             section: 'settings',
+        },
+        mappingIcon: {
+            label: 'Icon per item',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+            defaultValue: {
+                type: 'f',
+                code: "context.mapping?.['icon'] || null",
+            },
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'The icon (system icon code) of the current option item. Used in Icon + Text mode.',
+            },
+            /* wwEditor:end */
+            section: 'settings',
+            hidden: content => content.optionType !== 'iconText',
+        },
+        mappingImage: {
+            label: 'Image per item',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+            defaultValue: {
+                type: 'f',
+                code: "context.mapping?.['image'] || null",
+            },
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'The image URL of the current option item. Used in Image + Text mode.',
+            },
+            /* wwEditor:end */
+            section: 'settings',
+            hidden: content => content.optionType !== 'imageText',
         },
         mappingValue: {
             label: 'Value per item',
@@ -815,8 +870,7 @@ export default {
             bindable: true,
             responsive: true,
             propertyHelp: {
-                tooltip:
-                    'This should be disabled in some edge cases like in popups, datagrid, etc.',
+                tooltip: 'This should be disabled in some edge cases like in popups, datagrid, etc.',
             },
             bindingValidation: {
                 type: 'boolean',

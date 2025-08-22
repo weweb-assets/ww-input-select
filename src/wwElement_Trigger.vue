@@ -2,7 +2,16 @@
     <div class="ww-input-select__trigger">
         <!-- SINGLE SELECT -->
         <div v-if="isSingleSelect" :style="triggerStyle">
-            <span v-if="isOptionSelected" :style="selectedValueStyle">{{ selectedLabel }}</span>
+            <div v-if="isOptionSelected" class="ww-input-select__selected">
+                <div
+                    v-if="selectedIconHtml"
+                    v-html="selectedIconHtml"
+                    :style="selectedMediaIconStyle"
+                    aria-hidden="true"
+                ></div>
+                <img v-else-if="selectedImageUrl" :src="selectedImageUrl" :style="selectedMediaImageStyle" alt="" />
+                <span :style="selectedValueStyle">{{ selectedLabel }}</span>
+            </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
         </div>
@@ -16,6 +25,7 @@
                     @click="e => handleChipClick(e, option.value)"
                     :style="chipStyle"
                 >
+                    <img v-if="option.image" :src="option.image" :style="chipMediaImageStyle" alt="" />
                     <span>{{ option.label }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
@@ -50,6 +60,7 @@ export default {
 
         const registerTriggerLocalContext = inject('_wwSelect:registerTriggerLocalContext');
         const localContext = inject('_wwSelect:localContext');
+        const optionType = inject('_wwSelect:optionType', ref('text'));
 
         const isSingleSelect = computed(() => props.content.selectType === 'single');
 
@@ -57,6 +68,31 @@ export default {
         const selectedLabel = computed(() => {
             return localContext.value?.data?.select?.active?.details?.label;
         });
+        const selectedIconCode = computed(() => {
+            if (optionType.value !== 'iconText') return null;
+            return localContext.value?.data?.select?.active?.details?.icon || null;
+        });
+        const selectedImageUrl = computed(() => {
+            if (optionType.value !== 'imageText') return null;
+            const url = localContext.value?.data?.select?.active?.details?.image || null;
+            if (!url) return null;
+            try {
+                const str = String(url);
+                if (str.startsWith('designs/')) return `${wwLib.wwUtils.getCdnPrefix()}${str}`;
+                return str;
+            } catch (e) {
+                return null;
+            }
+        });
+        const selectedIconHtml = ref(null);
+        watch(
+            selectedIconCode,
+            async code => {
+                if (code) selectedIconHtml.value = (await getIcon(code)) || null;
+                else selectedIconHtml.value = null;
+            },
+            { immediate: true }
+        );
         const isOptionSelected = computed(
             () =>
                 !!localContext.value?.data?.select?.active?.details?.label ||
@@ -112,6 +148,27 @@ export default {
                 'align-items': 'center',
                 'justify-content': 'center',
                 'pointer-events': 'none',
+            };
+        });
+
+        const selectedMediaIconStyle = computed(() => {
+            return {
+                width: props.content.triggerIconSize,
+                color: props.content.selectedFontColor,
+                display: 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'pointer-events': 'none',
+                'margin-right': '8px',
+            };
+        });
+        const selectedMediaImageStyle = computed(() => {
+            return {
+                width: props.content.triggerIconSize,
+                height: props.content.triggerIconSize,
+                'object-fit': 'cover',
+                'border-radius': '4px',
+                'margin-right': '8px',
             };
         });
 
@@ -202,6 +259,22 @@ export default {
             };
         });
 
+        const chipMediaIconStyle = computed(() => ({
+            width: props.content.chipIconSize,
+            color: props.content.chipFontColor,
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+            'pointer-events': 'none',
+        }));
+        const chipMediaImageStyle = computed(() => ({
+            width: props.content.chipIconSize,
+            height: props.content.chipIconSize,
+            'object-fit': 'cover',
+            'border-radius': '4px',
+        }));
+        const chipIconFromOption = iconCode => (iconCode ? getIcon(iconCode) : null);
+
         const handleChipClick = (event, value) => {
             event.stopPropagation();
             emit('remove-multiselect-value', value);
@@ -211,6 +284,10 @@ export default {
             isSingleSelect,
             data,
             selectedLabel,
+            selectedIconHtml,
+            selectedMediaIconStyle,
+            selectedMediaImageStyle,
+            selectedImageUrl,
             isOptionSelected,
             localContext,
             triggerStyle,
@@ -221,6 +298,9 @@ export default {
             chipStyle,
             chipIconStyle,
             chipIconUnselect,
+            chipMediaIconStyle,
+            chipMediaImageStyle,
+            chipIconFromOption,
             isOpen,
             handleChipClick,
         };
