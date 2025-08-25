@@ -33,7 +33,6 @@
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
         </div>
-        <!-- <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" /> -->
     </div>
 </template>
 
@@ -164,10 +163,10 @@ export default {
         });
         const selectedMediaImageStyle = computed(() => {
             return {
-                width: props.content.triggerIconSize,
-                height: props.content.triggerIconSize,
+                width: props.content.triggerImageSize || props.content.triggerIconSize,
+                height: props.content.triggerImageSize || props.content.triggerIconSize,
                 'object-fit': 'cover',
-                'border-radius': '4px',
+                'border-radius': props.content.triggerImageRadius || '4px',
                 'margin-right': '8px',
             };
         });
@@ -268,10 +267,10 @@ export default {
             'pointer-events': 'none',
         }));
         const chipMediaImageStyle = computed(() => ({
-            width: props.content.chipIconSize,
-            height: props.content.chipIconSize,
+            width: props.content.chipImageSize || props.content.chipIconSize,
+            height: props.content.chipImageSize || props.content.chipIconSize,
             'object-fit': 'cover',
-            'border-radius': '4px',
+            'border-radius': props.content.chipImageRadius || '4px',
         }));
         const chipIconFromOption = iconCode => (iconCode ? getIcon(iconCode) : null);
 
@@ -315,6 +314,28 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    .ww-input-select__selected {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        min-width: 0;
+
+        & > div,
+        & > img {
+            flex-shrink: 0;
+        }
+
+        & > span {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
 
     .ww-input-select__chip_container {
         display: flex;

@@ -46,6 +46,8 @@ export default {
                 'chipIconUnselect',
                 'chipIconColor',
                 'chipIconSize',
+                'chipImageSize',
+                'chipImageRadius',
             ],
             [
                 'triggerStylesTitle',
@@ -65,6 +67,8 @@ export default {
                 'triggerIconOpen',
                 'triggerIconSize',
                 'triggerIconColor',
+                'triggerImageSize',
+                'triggerImageRadius',
             ],
             [
                 'dropdownStylesTitle',
@@ -104,6 +108,8 @@ export default {
                 'optionIcon',
                 'optionIconSize',
                 'optionIconColor',
+                'optionImageSize',
+                'optionImageRadius',
             ],
             [
                 'emptyStateStylesTitle',
@@ -1496,6 +1502,47 @@ export default {
             /* wwEditor:end */
             hidden: content => content.selectType == 'single',
         },
+        chipImageSize: {
+            type: 'Length',
+            label: {
+                en: 'Image size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the image size in chips: `14`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType == 'single',
+        },
+        chipImageRadius: {
+            type: 'Spacing',
+            label: {
+                en: 'Image radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                isCorner: true,
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '4px',
+            hidden: content => content.selectType == 'single',
+        },
 
         /* ------------------------------------
             TRIGGER STYLES
@@ -1748,6 +1795,45 @@ export default {
                 tooltip: 'A number that defines the icon size: `12`',
             },
             /* wwEditor:end */
+        },
+        triggerImageSize: {
+            type: 'Length',
+            label: {
+                en: 'Image size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '16px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the image size in trigger: `16`',
+            },
+            /* wwEditor:end */
+        },
+        triggerImageRadius: {
+            type: 'Spacing',
+            label: {
+                en: 'Image radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                isCorner: true,
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '4px',
         },
 
         /* ------------------------------------
@@ -2200,6 +2286,45 @@ export default {
                 tooltip: 'A number that defines the icon size: `12`',
             },
             /* wwEditor:end */
+        },
+        optionImageSize: {
+            type: 'Length',
+            label: {
+                en: 'Image size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '16px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the image size in options: `16`',
+            },
+            /* wwEditor:end */
+        },
+        optionImageRadius: {
+            type: 'Spacing',
+            label: {
+                en: 'Image radius',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                isCorner: true,
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '4px',
         },
 
         /* ------------------------------------

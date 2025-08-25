@@ -14,7 +14,7 @@
         :aria-disabled="isOptionDisabled"
     >
         <div class="ww-select-option__content">
-            <div class="ww-select-option__media" v-if="displayIconHtml || displayImageUrl">
+            <div class="ww-select-option__media" v-if="displayIconHtml || displayImageUrl" :style="mediaWrapperStyle">
                 <div v-if="displayIconHtml" v-html="displayIconHtml" :style="mediaIconStyle" aria-hidden="true"></div>
                 <img v-else-if="displayImageUrl" :src="displayImageUrl" :style="mediaImageStyle" alt="" />
             </div>
@@ -164,12 +164,20 @@ export default {
 
         const mediaImageStyle = computed(() => {
             return {
-                width: props.content.optionIconSize,
-                height: props.content.optionIconSize,
+                width: props.content.optionImageSize || props.content.optionIconSize,
+                height: props.content.optionImageSize || props.content.optionIconSize,
                 'object-fit': 'cover',
-                'border-radius': '4px',
-                'margin-right': '8px',
             };
+        });
+
+        const mediaWrapperStyle = computed(() => {
+            return displayImageUrl.value
+                ? {
+                      'border-radius': props.content.optionImageRadius || '4px',
+                      overflow: 'hidden',
+                      'margin-right': '8px',
+                  }
+                : {};
         });
 
         const label = computed(() => {
@@ -385,6 +393,7 @@ export default {
             mediaIconStyle,
             displayImageUrl,
             mediaImageStyle,
+            mediaWrapperStyle,
             contextMethods,
             data,
             contextMarkdown,
