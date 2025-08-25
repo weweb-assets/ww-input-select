@@ -20,12 +20,18 @@
             <div v-if="isOptionSelected" class="ww-input-select__chip_container">
                 <div
                     class="ww-input-select__chip"
-                    v-for="option in localContext?.data?.select?.active?.details"
+                    v-for="option in selectedChips"
                     :key="option.value"
                     @click="e => handleChipClick(e, option.value)"
                     :style="chipStyle"
                 >
-                    <img v-if="option.image" :src="option.image" :style="chipMediaImageStyle" alt="" />
+                    <div
+                        v-if="option.iconHtml"
+                        v-html="option.iconHtml"
+                        :style="chipMediaIconStyle"
+                        aria-hidden="true"
+                    ></div>
+                    <img v-else-if="option.imageUrl" :src="option.imageUrl" :style="chipMediaImageStyle" alt="" />
                     <span>{{ option.label }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
@@ -97,6 +103,46 @@ export default {
                 !!localContext.value?.data?.select?.active?.details?.label ||
                 localContext.value?.data?.select?.active?.details?.length > 0
         );
+
+        const selectedDetails = computed(() => {
+            const details = localContext.value?.data?.select?.active?.details;
+            return Array.isArray(details) ? details : [];
+        });
+
+        const selectedChips = ref([]);
+
+        watch(
+            [selectedDetails, optionType],
+            async ([details]) => {
+                const enriched = [];
+                for (const d of details) {
+                    let iconHtml = null;
+                    let imageUrl = null;
+
+                    if (optionType.value === 'iconText' && d?.icon) {
+                        try {
+                            iconHtml = (await getIcon(d.icon)) || null;
+                        } catch (e) {
+                            iconHtml = null;
+                        }
+                    }
+
+                    if (optionType.value === 'imageText' && d?.image) {
+                        try {
+                            const str = String(d.image);
+                            imageUrl = str.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${str}` : str;
+                        } catch (e) {
+                            imageUrl = null;
+                        }
+                    }
+
+                    enriched.push({ ...d, iconHtml, imageUrl });
+                }
+                selectedChips.value = enriched;
+            },
+            { immediate: true, deep: true }
+        );
+
         const isOpen = computed(() => localContext.value?.data?.select?.utils?.isOpen);
         const data = ref({
             placeholder,
@@ -289,6 +335,7 @@ export default {
             selectedImageUrl,
             isOptionSelected,
             localContext,
+            selectedChips,
             triggerStyle,
             triggerIconStyle,
             selectedValueStyle,
