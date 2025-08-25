@@ -1531,7 +1531,10 @@ export default {
                 en: 'Image radius',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                ],
                 isCorner: true,
                 noRange: true,
                 useVar: true,
@@ -1824,7 +1827,10 @@ export default {
                 en: 'Image radius',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                ],
                 isCorner: true,
                 noRange: true,
                 useVar: true,
@@ -2315,7 +2321,10 @@ export default {
                 en: 'Image radius',
             },
             options: {
-                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                ],
                 isCorner: true,
                 noRange: true,
                 useVar: true,
