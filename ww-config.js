@@ -267,6 +267,15 @@ export default {
             responsive: true,
             states: true,
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "text", "iconText", or "imageText"',
+            },
+            propertyHelp: {
+                tooltip: 'Define how each option is displayed.\nPossible values: text, iconText, imageText',
+            },
+            /* wwEditor:end */
         },
         choices: {
             label: {
@@ -292,6 +301,9 @@ export default {
                     },
                 ],
                 tooltip: 'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...]`',
+            },
+            propertyHelp: {
+                tooltip: 'The list of options to display in the dropdown. Can be a collection or array of objects.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -403,6 +415,9 @@ export default {
                 ],
                 tooltip: 'A string value: \n\n`"myValue"`, or an array of values: \n\n`["myValue1", "myValue2"]`',
             },
+            propertyHelp: {
+                tooltip: 'The initial selected value for single select mode.',
+            },
             /* wwEditor:end */
             section: 'settings',
             hidden: content => content.selectType !== 'single',
@@ -429,6 +444,9 @@ export default {
                 ],
                 tooltip: 'An array of values: \n\n`["myValue1", "myValue2"]`',
             },
+            propertyHelp: {
+                tooltip: 'The initial selected values for multiple select mode.',
+            },
             /* wwEditor:end */
             hidden: content => content.selectType !== 'multiple',
         },
@@ -453,8 +471,10 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
-                enum: ['single', 'multiple'],
                 tooltip: 'A string value, either "single" or "multiple"',
+            },
+            propertyHelp: {
+                tooltip: 'Define whether users can select one or multiple options.\nPossible values: single, multiple',
             },
             /* wwEditor:end */
         },
@@ -467,6 +487,9 @@ export default {
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Disable the select component, preventing user interaction.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -481,6 +504,9 @@ export default {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
+            propertyHelp: {
+                tooltip: 'Make the select field required for form validation.',
+            },
             /* wwEditor:end */
             section: 'settings',
         },
@@ -494,6 +520,9 @@ export default {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
+            propertyHelp: {
+                tooltip: 'Make the select read-only, showing the value but preventing changes.',
+            },
             /* wwEditor:end */
             section: 'settings',
         },
@@ -503,6 +532,11 @@ export default {
             defaultValue: false,
             editorOnly: true,
             section: 'settings',
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'Force the dropdown to stay open in the editor for easier design and configuration.',
+            },
+            /* wwEditor:end */
         },
         initialState: {
             label: { en: 'Initial state' },
@@ -518,6 +552,16 @@ export default {
             states: true,
             defaultValue: 'closed',
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "closed" or "open"',
+            },
+            propertyHelp: {
+                tooltip:
+                    'Determines whether the dropdown starts in an open or closed state.\nPossible values: closed, open',
+            },
+            /* wwEditor:end */
         },
         closeOnSelect: {
             label: { en: 'Close on select' },
@@ -599,6 +643,10 @@ export default {
             responsive: true,
             multiLang: true,
             /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "Select a value"',
+            },
             propertyHelp: {
                 tooltip:
                     'The placeholder text for the select. Available in the formula explorer in the Trigger element.',
@@ -621,6 +669,10 @@ export default {
             responsive: true,
             multiLang: true,
             /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "No results found"',
+            },
             propertyHelp: {
                 tooltip:
                     'The text to display when there are no results. Available in the formula explorer in the Trigger element.',
@@ -643,6 +695,10 @@ export default {
             responsive: true,
             multiLang: true,
             /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "Search"',
+            },
             propertyHelp: {
                 tooltip:
                     'The placeholder text for the search input. Available in the formula explorer in the Trigger element.',
@@ -867,6 +923,11 @@ export default {
             defaultValue: false,
             editorOnly: true,
             section: 'settings',
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'Display the empty state message in the editor when no options are available.',
+            },
+            /* wwEditor:end */
         },
         allowScrollingWhenOpen: {
             label: { en: 'Allow scrolling when open' },
@@ -922,6 +983,9 @@ export default {
                 type: 'boolean',
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',
             },
+            propertyHelp: {
+                tooltip: 'Whether the option should be automatically unselected when clicked if already selected.',
+            },
             /* wwEditor:end */
         },
 
@@ -946,6 +1010,9 @@ export default {
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Enable search functionality to filter options.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -993,7 +1060,11 @@ export default {
             responsive: true,
             /* wwEditor:start */
             bindingValidation: {
-                validations: [{ type: 'boolean' }],
+                type: 'boolean',
+                tooltip:
+                    'Whether the search input should be focused when the dropdown is opened. A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
                 tooltip: 'Whether the search input should be focused when the dropdown is opened.',
             },
             /* wwEditor:end */
@@ -1028,6 +1099,15 @@ export default {
             states: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value representing the field name for form submission.',
+            },
+            propertyHelp: {
+                tooltip: 'The name of the field when used in a form submission.',
+            },
+            /* wwEditor:end */
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         customValidation: {
@@ -1038,6 +1118,15 @@ export default {
             states: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Enable custom validation rules for this form field.',
+            },
+            /* wwEditor:end */
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         validation: {
@@ -1069,6 +1158,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value representing the font family: "Arial", "Helvetica", etc.',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedFontSize: {
@@ -1086,6 +1181,12 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A length value: "14px", "1rem", "100%", etc.',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedFontWeight: {
@@ -1113,6 +1214,12 @@ export default {
                 ],
             },
             defaultValue: null,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number value representing font weight: 100, 200, 300, 400, 500, 600, 700, 800, 900',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedFontColor: {
@@ -1125,6 +1232,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A color value: "#333", "rgb(255, 0, 0)", "red", etc.',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedTextAlign: {
@@ -1142,6 +1255,12 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: 'left',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "left", "center", or "right"',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
 
@@ -1162,6 +1281,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value representing the font family: "Arial", "Helvetica", etc.',
+            },
+            /* wwEditor:end */
         },
         placeholderFontSize: {
             type: 'Length',
@@ -1178,6 +1303,12 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A length value: "14px", "1rem", "100%", etc.',
+            },
+            /* wwEditor:end */
         },
         placeholderFontWeight: {
             label: {
@@ -1215,6 +1346,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A color value: "#333", "rgb(255, 0, 0)", "red", etc.',
+            },
+            /* wwEditor:end */
         },
         placeholderTextAlign: {
             label: { en: 'Text align' },
@@ -1467,7 +1604,7 @@ export default {
                 tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
             },
             /* wwEditor:end */
-            hidden: content => content.selectType == 'single',
+            hidden: content => content.selectType == 'single' || content.optionType !== 'iconText',
         },
         chipIconColor: {
             label: { en: 'Icon color' },
@@ -1477,7 +1614,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            hidden: content => content.selectType == 'single',
+            hidden: content => content.selectType == 'single' || content.optionType !== 'iconText',
         },
         chipIconSize: {
             type: 'Length',
@@ -1500,7 +1637,7 @@ export default {
                 tooltip: 'A number that defines the icon size: `12`',
             },
             /* wwEditor:end */
-            hidden: content => content.selectType == 'single',
+            hidden: content => content.selectType == 'single' || content.optionType !== 'iconText',
         },
         chipImageSize: {
             type: 'Length',
@@ -1523,7 +1660,7 @@ export default {
                 tooltip: 'A number that defines the image size in chips: `14`',
             },
             /* wwEditor:end */
-            hidden: content => content.selectType == 'single',
+            hidden: content => content.selectType == 'single' || content.optionType !== 'imageText',
         },
         chipImageRadius: {
             type: 'Spacing',
@@ -1544,7 +1681,7 @@ export default {
             states: true,
             classes: true,
             defaultValue: '4px',
-            hidden: content => content.selectType == 'single',
+            hidden: content => content.selectType == 'single' || content.optionType !== 'imageText',
         },
 
         /* ------------------------------------
@@ -2261,6 +2398,7 @@ export default {
                 tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
             },
             /* wwEditor:end */
+            hidden: content => content.optionType !== 'iconText',
         },
         optionIconColor: {
             label: { en: 'Icon color' },
@@ -2270,6 +2408,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            hidden: content => content.optionType !== 'iconText',
         },
         optionIconSize: {
             type: 'Length',
@@ -2292,6 +2431,7 @@ export default {
                 tooltip: 'A number that defines the icon size: `12`',
             },
             /* wwEditor:end */
+            hidden: content => content.optionType !== 'iconText',
         },
         optionImageSize: {
             type: 'Length',
@@ -2314,6 +2454,7 @@ export default {
                 tooltip: 'A number that defines the image size in options: `16`',
             },
             /* wwEditor:end */
+            hidden: content => content.optionType !== 'imageText',
         },
         optionImageRadius: {
             type: 'Spacing',
@@ -2334,6 +2475,7 @@ export default {
             states: true,
             classes: true,
             defaultValue: '4px',
+            hidden: content => content.optionType !== 'imageText',
         },
 
         /* ------------------------------------
