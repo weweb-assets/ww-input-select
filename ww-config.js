@@ -1957,7 +1957,7 @@ export default {
                 tooltip: 'A number that defines the image size in trigger: `16`',
             },
             /* wwEditor:end */
-            hidden: content => content.optionType !== 'imageText' || content.selectType !== 'single',
+            hidden: content => content.selectType === 'multiple' || content.optionType !== 'imageText',
         },
         triggerImageRadius: {
             type: 'Spacing',
@@ -1978,7 +1978,7 @@ export default {
             states: true,
             classes: true,
             defaultValue: '4px',
-            hidden: content => content.optionType !== 'imageText' || content.selectType !== 'single',
+            hidden: content => content.selectType === 'multiple' || content.optionType !== 'imageText',
         },
 
         /* ------------------------------------
