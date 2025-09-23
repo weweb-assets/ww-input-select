@@ -150,7 +150,10 @@ export default {
         const isReallyFocused = ref(false);
         const isSearchBarFocused = ref(false);
         const isMouseDownOnOption = ref(false);
-        const rawData = computed(() => props.content.choices || []);
+        const rawData = computed(() => {
+            const choices = props.content.choices;
+            return Array.isArray(choices) ? choices : [];
+        });
 
         const isFocused = computed(() => {
             /* wwEditor:start */
@@ -519,8 +522,9 @@ export default {
         };
 
         const selectionDetails = computed(() => {
+            const dataArray = Array.isArray(rawData.value) ? rawData.value : [];
             const _optionsMap = new Map(
-                rawData.value.map(option => {
+                dataArray.map(option => {
                     // Handle primitive values (strings, numbers) vs objects
                     const isPrimitive = typeof option !== 'object' || option === null;
 
