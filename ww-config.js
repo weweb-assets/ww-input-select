@@ -1604,7 +1604,7 @@ export default {
                 tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
             },
             /* wwEditor:end */
-            hidden: content => content.selectType == 'single' || content.optionType !== 'iconText',
+            hidden: content => content.selectType == 'single',
         },
         chipIconColor: {
             label: { en: 'Icon color' },
@@ -1614,7 +1614,7 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            hidden: content => content.selectType == 'single' || content.optionType !== 'iconText',
+            hidden: content => content.selectType == 'single',
         },
         chipIconSize: {
             type: 'Length',
@@ -1637,7 +1637,7 @@ export default {
                 tooltip: 'A number that defines the icon size: `12`',
             },
             /* wwEditor:end */
-            hidden: content => content.selectType == 'single' || content.optionType !== 'iconText',
+            hidden: content => content.selectType == 'single',
         },
         chipImageSize: {
             type: 'Length',
@@ -2400,7 +2400,6 @@ export default {
                 tooltip: 'A string that defines the icon code: `"fas fa-check" | "wwi wwi-cross" | "icon-music-note"`',
             },
             /* wwEditor:end */
-            hidden: content => content.optionType !== 'iconText',
         },
         optionIconColor: {
             label: { en: 'Icon color' },
@@ -2410,7 +2409,6 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
-            hidden: content => content.optionType !== 'iconText',
         },
         optionIconSize: {
             type: 'Length',
@@ -2433,7 +2431,6 @@ export default {
                 tooltip: 'A number that defines the icon size: `12`',
             },
             /* wwEditor:end */
-            hidden: content => content.optionType !== 'iconText',
         },
         optionImageSize: {
             type: 'Length',
