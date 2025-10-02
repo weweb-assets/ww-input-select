@@ -192,7 +192,10 @@ export default {
         const mappingValue = computed(() => props.content.mappingValue);
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
-        const allowScrollingWhenOpen = computed(() => props.content.allowScrollingWhenOpen);
+        const allowScrollingWhenOpen = computed(() => {
+            const value = props.content.allowScrollingWhenOpen;
+            return value === true || value === 'true';
+        });
 
         // Styles
         const isTriggerVisible = ref(true);
