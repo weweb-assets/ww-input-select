@@ -24,14 +24,15 @@
             <SelectTriger :content="content" @remove-multiselect-value="removeSpecificValue" />
         </div>
         <teleport v-if="isOpen" :to="appDivRef">
-            <div
-                class="ww-select__dropdown__wrapper"
-                :style="{ pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' }"
-            >
+            <div class="ww-select__dropdown__wrapper">
                 <div
                     class="ww-select__dropdown"
                     ref="dropdownElement"
-                    :style="[floatingStyles || {}]"
+                    :style="[
+                        floatingStyles || {},
+                        { pointerEvents: isEditing && forceOpenInEditor ? 'none' : 'auto' },
+                        dropdownVisibilityStyle,
+                    ]"
                     :id="dropdownId"
                     :role="selectType === 'single' ? 'listbox' : 'group'"
                     :aria-multiselectable="selectType === 'multiple'"
@@ -194,6 +195,51 @@ export default {
         const allowScrollingWhenOpen = computed(() => props.content.allowScrollingWhenOpen);
 
         // Styles
+        const isTriggerVisible = ref(true);
+
+        /**
+         * Checks if the trigger element is visible within all its scrollable parent containers.
+         * This ensures the dropdown hides when the trigger scrolls out of view in modals or overflow containers.
+         */
+        const checkTriggerVisibility = element => {
+            if (!element) return true;
+
+            const triggerRect = element.getBoundingClientRect();
+            let parent = element.parentElement;
+
+            // Walk up the DOM tree checking each scrollable parent
+            while (parent) {
+                const parentStyle = window.getComputedStyle(parent);
+                const isScrollable =
+                    parentStyle.overflow === 'auto' ||
+                    parentStyle.overflow === 'scroll' ||
+                    parentStyle.overflowY === 'auto' ||
+                    parentStyle.overflowY === 'scroll';
+
+                if (isScrollable && parent.clientHeight > 0) {
+                    const parentRect = parent.getBoundingClientRect();
+
+                    // Check if trigger is clipped by this scrollable container
+                    const isClippedTop = triggerRect.bottom < parentRect.top;
+                    const isClippedBottom = triggerRect.top > parentRect.bottom;
+                    const isClippedLeft = triggerRect.right < parentRect.left;
+                    const isClippedRight = triggerRect.left > parentRect.right;
+
+                    if (isClippedTop || isClippedBottom || isClippedLeft || isClippedRight) {
+                        return false;
+                    }
+                }
+
+                parent = parent.parentElement;
+            }
+
+            return true;
+        };
+
+        /**
+         * Synchronizes the dropdown position with the trigger element.
+         * Also checks if trigger is visible and updates dropdown visibility accordingly.
+         */
         const syncFloating = () => {
             if (!triggerElement?.value) return;
             const triggerElementBounding = triggerElement.value.getBoundingClientRect();
@@ -204,8 +250,22 @@ export default {
                 }px`,
                 left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
             };
+
+            // Check if trigger is visible and update dropdown visibility
+            isTriggerVisible.value = checkTriggerVisibility(triggerElement.value);
         };
         let floatingStyles = ref({});
+
+        /**
+         * Computed style to control dropdown visibility based on trigger visibility.
+         * Hides dropdown when trigger scrolls out of view in scrollable containers.
+         */
+        const dropdownVisibilityStyle = computed(() => {
+            return {
+                visibility: isTriggerVisible.value ? 'visible' : 'hidden',
+                opacity: isTriggerVisible.value ? 1 : 0,
+            };
+        });
 
         const selectStyles = computed(() => {
             if (isOpen.value && props.content.zIndexOpen) {
@@ -634,6 +694,22 @@ export default {
             utils: { type: selectType, isOpen, triggerWidth, triggerHeight },
         });
 
+        /*
+         * =============================================================================
+         * SCROLL BLOCKING SYSTEM
+         * =============================================================================
+         *
+         * This system manages scroll blocking when the dropdown is open and
+         * allowScrollingWhenOpen is set to false. It prevents body/document scrolling
+         * while still allowing scrolling within:
+         * - The dropdown itself
+         * - Modals containing the select
+         * - Any other scrollable containers
+         *
+         * This solves the modal scroll issue (WW-4062) where the old implementation
+         * blocked ALL scrolling indiscriminately.
+         */
+
         let initialOverflow = null;
         let initialBodyStyle = null;
         let initialTouchAction = null;
@@ -658,52 +734,92 @@ export default {
         wheelOpt = supportsPassive ? { passive: false } : false;
         wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
+        /**
+         * Checks if the event target is inside a scrollable container.
+         * This ensures that scrolling within modals, dropdowns, or other overflow containers is allowed
+         * when allowScrollingWhenOpen is false, while still blocking body/document scroll.
+         */
+        const isTargetInsideScrollableContainer = target => {
+            while (target && target !== document.body) {
+                const hasOverflow =
+                    target.scrollHeight > target.clientHeight || target.scrollWidth > target.clientWidth;
+                const computedStyle = window.getComputedStyle(target);
+                const isScrollable =
+                    hasOverflow && computedStyle.overflow !== 'hidden' && computedStyle.overflowY !== 'hidden';
+
+                if (isScrollable) return true;
+                target = target.parentElement;
+            }
+            return false;
+        };
+
+        /**
+         * Prevents default scroll behavior unless the target is inside a scrollable container.
+         * Allows scrolling in modals/containers while blocking body scroll.
+         */
         const preventDefault = e => {
+            if (isTargetInsideScrollableContainer(e.target)) return;
             e.preventDefault();
         };
 
+        /**
+         * Prevents scroll-related keyboard events (arrows, space, page up/down, etc.)
+         * unless the target is inside a scrollable container.
+         */
         const preventDefaultForScrollKeys = e => {
-            const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+            const keys = { 37: 1, 38: 1, 39: 1, 40: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1 }; // Arrow keys, Space, PageUp, PageDown, End, Home
             if (keys[e.keyCode]) {
-                preventDefault(e);
+                if (isTargetInsideScrollableContainer(e.target)) return;
+                e.preventDefault();
                 return false;
             }
         };
 
+        /**
+         * Blocks scrolling on the document body when dropdown is open (if allowScrollingWhenOpen is false).
+         * Saves the initial body styles and attaches event listeners to prevent scroll events.
+         * Scrolling within scrollable containers (modals, dropdown itself) is still allowed.
+         */
         const blockScrolling = () => {
             const _w = wwLib.getFrontWindow();
             const _d = wwLib.getFrontDocument();
 
             if (!_w || !_d) return;
 
+            // Save initial styles for restoration
             initialOverflow = { ..._d.documentElement.style };
             initialBodyStyle = { ..._d.body.style };
+            initialTouchAction = _d.body.style.touchAction;
             _d.body.style.touchAction = 'none';
 
-            // Add event listeners to prevent scrolling
+            // Attach scroll prevention event listeners
             _w.addEventListener('DOMMouseScroll', preventDefault, false);
             _w.addEventListener(wheelEvent, preventDefault, wheelOpt);
             _w.addEventListener('touchmove', preventDefault, wheelOpt);
             _w.addEventListener('keydown', preventDefaultForScrollKeys, false);
         };
 
+        /**
+         * Reverts scroll blocking by removing event listeners and restoring body styles.
+         * Always removes listeners to ensure cleanup, even if styles weren't saved.
+         */
         const revertBlockScrolling = () => {
             const _d = wwLib.getFrontDocument();
             const _w = wwLib.getFrontWindow();
 
             if (!_d || !_w) return;
 
-            if (initialOverflow === null) return;
-            if (initialBodyStyle === null) return;
-
-            _d.body.style.touchAction = initialTouchAction || '';
-            _d.body.style['touch-action'] = initialTouchAction || '';
-
-            // Remove event listeners
+            // Always remove event listeners to ensure cleanup
             _w.removeEventListener('DOMMouseScroll', preventDefault, false);
             _w.removeEventListener(wheelEvent, preventDefault, wheelOpt);
             _w.removeEventListener('touchmove', preventDefault, wheelOpt);
             _w.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+
+            // Restore body styles if they were previously saved
+            if (initialOverflow !== null && initialBodyStyle !== null) {
+                _d.body.style.touchAction = initialTouchAction || '';
+                _d.body.style['touch-action'] = initialTouchAction || '';
+            }
 
             initialOverflow = null;
             initialBodyStyle = null;
@@ -753,13 +869,33 @@ export default {
             { immediate: true }
         );
 
+        // Watch dropdown open/close state to manage scroll blocking
         watch(isOpen, () => {
             nextTick(syncFloating);
             handleInitialFocus();
             if (isOpen.value) {
-                if (!allowScrollingWhenOpen.value) blockScrolling();
+                if (!allowScrollingWhenOpen.value) {
+                    blockScrolling();
+                } else {
+                    // Ensure no blocking is active when scrolling is allowed
+                    revertBlockScrolling();
+                }
             } else {
-                if (!allowScrollingWhenOpen.value) revertBlockScrolling();
+                // Always revert blocking when closing to ensure cleanup
+                revertBlockScrolling();
+            }
+        });
+
+        // Watch for allowScrollingWhenOpen changes while dropdown is open
+        watch(allowScrollingWhenOpen, (newValue, oldValue) => {
+            if (!isOpen.value) return;
+
+            if (!newValue && oldValue) {
+                // Changed from true to false: enable blocking
+                blockScrolling();
+            } else if (newValue && !oldValue) {
+                // Changed from false to true: disable blocking
+                revertBlockScrolling();
             }
         });
 
@@ -952,12 +1088,18 @@ export default {
         updateAutoFocusSearch(autoFocus);
 
         onMounted(() => {
+            // Ensure no lingering scroll blocking from previous instances
+            revertBlockScrolling();
+
             nextTick(() => {
                 debounce(syncFloating, 300);
                 observeTriggerSize();
             });
+
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
+            // Listen to window scroll and all container scrolls (capture phase for modals, etc.)
             wwLib.getFrontWindow().addEventListener('scroll', syncFloating);
+            wwLib.getFrontDocument().addEventListener('scroll', syncFloating, true);
         });
 
         onBeforeUnmount(() => {
@@ -967,6 +1109,8 @@ export default {
             }
             revertBlockScrolling();
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
+            wwLib.getFrontWindow().removeEventListener('scroll', syncFloating);
+            wwLib.getFrontDocument().removeEventListener('scroll', syncFloating, true);
         });
 
         watch(
@@ -992,6 +1136,7 @@ export default {
             dropdownElement,
             floatingStyles,
             dropdownStyles,
+            dropdownVisibilityStyle,
             dropdownId,
             activeDescendant,
             isDisabled,
@@ -1094,6 +1239,12 @@ export default {
     height: 100%;
     background-color: transparent;
     z-index: 9999;
+    /* 
+     * Critical: pointer-events: none allows scroll events to pass through to containers beneath.
+     * The dropdown itself has pointer-events: auto applied via inline styles.
+     * This fixes the modal scroll issue where the full-screen wrapper was blocking all events.
+     */
+    pointer-events: none;
 }
 
 .fake-input {
