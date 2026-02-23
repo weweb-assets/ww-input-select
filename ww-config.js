@@ -238,6 +238,7 @@ export default {
     states: ['focus', 'readonly'],
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },
+        { name: 'changeOneItem', label: { en: 'On change 1 item' }, event: { value: '' } },
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
         { name: 'focus', label: { en: 'On focus' }, event: { value: '' } },
         { name: 'blur', label: { en: 'On blur' }, event: { value: '' } },

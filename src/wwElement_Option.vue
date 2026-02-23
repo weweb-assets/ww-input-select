@@ -315,7 +315,7 @@ export default {
         const unselect = () => {
             if (canInteract.value) {
                 if (selectType.value === 'single') {
-                    updateValue(null);
+                    updateValue(null, value.value);
                 } else {
                     removeSpecificValue(value.value);
                 }

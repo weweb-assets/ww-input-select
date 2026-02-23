@@ -188,6 +188,7 @@ Note: chip properties for multiselect, and selected properties for single select
 **_Events:_**
 
 -   change: Triggered when selection changes. Payload: { value: any }
+-   changeOneItem: Triggered when a single item is changed/clicked. Payload: { value: any }
 -   initValueChange: Triggered when initial value changes. Payload: { value: any }
 
 **_Context:_**
