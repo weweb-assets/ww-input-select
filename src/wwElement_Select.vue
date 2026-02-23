@@ -184,6 +184,7 @@ export default {
         const triggerWidth = ref(0);
         const triggerHeight = ref(0);
         const shouldCloseDropdown = ref(true);
+        const isSorting = ref(false);
         const optionType = computed(() => props.content.optionType || 'text');
         const mappingLabel = computed(() => props.content.mappingLabel);
         const mappingIcon = computed(() => props.content.mappingIcon);
@@ -277,7 +278,7 @@ export default {
             searchState.value = filter;
         };
 
-        const updateValue = value => {
+        const updateValue = (value, oneItemValue) => {
             if (selectType.value === 'single') {
                 // Check if value is an array
                 if (Array.isArray(value)) {
@@ -285,15 +286,13 @@ export default {
                     value = value[0];
                 }
                 setValue(value);
-                emit('trigger-event', { name: 'change', event: { value } });
+                emitChangeEvents(value, { emitOneItem: true, oneItemValue: oneItemValue ?? value });
             } else {
                 // Check if value is an array
-                if (!Array.isArray(value)) {
-                    value = [value];
-                }
+                const valuesToApply = Array.isArray(value) ? value : [value];
 
                 const currentValue = Array.isArray(variableValue.value) ? [...variableValue.value] : [];
-                for (let iValue of value) {
+                for (let iValue of valuesToApply) {
                     // Find index using the utility function
                     const valueIndex = findValueIndex(currentValue, iValue);
 
@@ -307,7 +306,10 @@ export default {
                 }
 
                 setValue(currentValue);
-                emit('trigger-event', { name: 'change', event: { value: currentValue } });
+                emitChangeEvents(currentValue, {
+                    emitOneItem: valuesToApply.length === 1,
+                    oneItemValue: valuesToApply[0],
+                });
             }
 
             if (props.content.closeOnSelect) closeDropdown();
@@ -383,7 +385,7 @@ export default {
 
             // Only emit change event if the value actually changed
             if (valueChanged) {
-                emit('trigger-event', { name: 'change', event: { value: eventValue } });
+                emitChangeEvents(eventValue, { emitOneItem: true, oneItemValue: value });
             }
         };
 
@@ -411,7 +413,7 @@ export default {
                 setValue(currentValue);
             }
 
-            emit('trigger-event', { name: 'change', event: { value: currentValue } });
+            emitChangeEvents(currentValue, { emitOneItem: true, oneItemValue: valueToRemove });
 
             // Close dropdown if closeOnSelect is enabled, just like regular selection
             if (props.content.closeOnSelect) {
@@ -480,18 +482,19 @@ export default {
 
         function resetValue() {
             setValue(initValue.value || null);
-            emit('trigger-event', { name: 'change', event: { value: initValue.value || null } });
+            emitChangeEvents(initValue.value || null);
         }
 
         function handleClickOutside(event) {
-            if (
-                closeOnClickOutside.value &&
+            const shouldClose = closeOnClickOutside.value &&
                 isOpen.value &&
                 !triggerElement.value.contains(event.target) &&
-                !dropdownElement.value.contains(event.target) &&
+                !dropdownElement.value?.contains(event.target) &&
                 !isEditing.value &&
-                Date.now() > lastTriggeredComponentAction.value + 400
-            ) {
+                !isSorting.value &&
+                Date.now() > lastTriggeredComponentAction.value + 400;
+            
+            if (shouldClose) {
                 closeDropdown();
             }
         }
@@ -655,6 +658,13 @@ export default {
                 });
             }
         });
+
+        function emitChangeEvents(value, { emitOneItem = false, oneItemValue } = {}) {
+            emit('trigger-event', { name: 'change', event: { value } });
+            if (emitOneItem) {
+                emit('trigger-event', { name: 'changeOneItem', event: { value: oneItemValue } });
+            }
+        }
 
         const _options = computed(() => options.value?.map(({ optionId, ...option }) => option) || ref([])); // Hide optionId
 
@@ -935,6 +945,7 @@ export default {
         provide('_wwSelect:isDisabled', isDisabled);
         provide('_wwSelect:isReadonly', isReadonly);
         provide('_wwSelect:canUnselect', canUnselect);
+        provide('_wwSelect:isSorting', isSorting);
         provide('_wwSelect:searchState', searchState);
         provide('_wwSelect:optionProperties', optionProperties);
         provide('_wwSelect:updateValue', updateValue);

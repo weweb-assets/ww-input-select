@@ -52,9 +52,10 @@
 
 <script>
 import InputSelectOption from './wwElement_Option.vue';
-import { ref, inject, computed, watch } from 'vue';
+import { ref, inject, computed, watch, toValue } from 'vue';
 import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
 import { useMemoize } from '@vueuse/core';
+import { areValuesEqual } from './utils';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
@@ -99,6 +100,9 @@ export default {
         const searchState = inject('_wwSelect:searchState', ref(null));
         const { updateSearch } = inject('_wwSelect:useSearch', {});
         const registerOptionProperties = inject('_wwSelect:registerOptionProperties', () => {});
+        const selectedValue = inject('_wwSelect:value', ref(null));
+        const mappingValue = inject('_wwSelect:mappingValue', ref(null));
+        const isSorting = inject('_wwSelect:isSorting', ref(false));
         const virtualScrollMinItemSize = computed(() => props.content.virtualScrollMinItemSize);
         const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer);
         const heavyMode = computed(() => props.content.heavyMode);
@@ -155,9 +159,66 @@ export default {
             });
         });
 
+        const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
+
         const filteredOptions = computed(() => {
-            if (!searchState.value || !searchState.value.value) return options.value;
-            let filtered = memoizedFilter(options.value, searchState.value.value);
+            let filtered = options.value;
+            
+            // Apply search filter if active
+            if (searchState.value && searchState.value.value) {
+                filtered = memoizedFilter(options.value, searchState.value.value);
+            }
+            
+            // Apply sorting if sortSelectedToTop is enabled
+            if (props.content.sortSelectedToTop && selectedValue.value != null) {
+                try {
+                    isSorting.value = true;
+                    
+                    // Create a map of option values to avoid recalculating during sort
+                    const optionValueMap = new Map();
+                    filtered.forEach((option) => {
+                        const isPrimitive = typeof option !== 'object' || option === null;
+                        const value = isPrimitive 
+                            ? option 
+                            : resolveMappingFormula(toValue(mappingValue.value), option) ?? option;
+                        optionValueMap.set(option, value);
+                    });
+                    
+                    filtered = [...filtered].sort((a, b) => {
+                        const aValue = optionValueMap.get(a);
+                        const bValue = optionValueMap.get(b);
+                        
+                        // Check if each option is selected
+                        let aIsSelected, bIsSelected;
+                        
+                        if (Array.isArray(selectedValue.value)) {
+                            // Multiple selection mode
+                            aIsSelected = selectedValue.value.some(v => areValuesEqual(v, aValue));
+                            bIsSelected = selectedValue.value.some(v => areValuesEqual(v, bValue));
+                        } else {
+                            // Single selection mode
+                            aIsSelected = areValuesEqual(selectedValue.value, aValue);
+                            bIsSelected = areValuesEqual(selectedValue.value, bValue);
+                        }
+                        
+                        // Sort selected items to top
+                        if (aIsSelected && !bIsSelected) return -1;
+                        if (!aIsSelected && bIsSelected) return 1;
+                        return 0; // Keep original order for items with same selection status
+                    });
+                    
+                    // Reset the flag after a brief delay to allow DOM to update
+                    setTimeout(() => {
+                        isSorting.value = false;
+                    }, 100);
+                } catch (error) {
+                    console.error('[OptionsList] Error during sorting:', error);
+                    isSorting.value = false;
+                    // Return unsorted on error
+                    filtered = [...filtered];
+                }
+            }
+            
             return filtered;
         });
 
@@ -166,21 +227,29 @@ export default {
                 // Handle primitive values properly - don't spread them as they become indexed objects
                 const isPrimitive = typeof item !== 'object' || item === null;
                 if (isPrimitive) {
-                    // For primitives, create a simple object wrapper
-                    return { value: item, id: `id_${index}` };
+                    // For primitives, create a simple object wrapper with stable ID based on value
+                    const stableId = `primitive_${JSON.stringify(item)}`;
+                    return { value: item, id: stableId };
                 } else {
-                    // For objects, use the existing spread logic
-                    return { ...item, id: item.id ?? `id_${index}` };
+                    // For objects, use existing id or create stable ID based on the object's value
+                    const existingId = item.id;
+                    if (existingId != null) {
+                        return { ...item, id: existingId };
+                    }
+                    // Create stable ID based on object content to survive re-sorting
+                    try {
+                        const stableId = `obj_${JSON.stringify(item)}`;
+                        return { ...item, id: stableId };
+                    } catch {
+                        // Fallback to index-based if JSON.stringify fails (circular refs, etc.)
+                        return { ...item, id: `id_${index}` };
+                    }
                 }
             });
         });
 
-        watch(filteredOptions, () => {
-            if (updateSearch) {
-                const searchMatches = searchState.value && searchState.value.value ? filteredOptions.value : [];
-                updateSearch({ ...searchState.value, searchMatches });
-            }
-        });
+        // searchFilteredCount is NOT used anymore - removed to prevent infinite loop
+        // The Search component handles updating searchMatches directly
 
         // Styles
         const scrollerStyle = computed(() => {

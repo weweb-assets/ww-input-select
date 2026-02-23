@@ -194,6 +194,8 @@ export default {
                     'searchPlaceholder',
                     'initialState',
                     'selectType',
+                    'displayMode',
+                    'displayText',
                     'selectTypeWarning',
                 ],
             },
@@ -210,6 +212,7 @@ export default {
                     'closeOnClickOutside',
                     'manualTrigger',
                     'selectOnClick',
+                    'sortSelectedToTop',
                     'virtualScroll',
                     'virtualScrollBuffer',
                     'virtualScrollMinItemSize',
@@ -235,6 +238,7 @@ export default {
     states: ['focus', 'readonly'],
     triggerEvents: [
         { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },
+        { name: 'changeOneItem', label: { en: 'On change 1 item' }, event: { value: '' } },
         { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
         { name: 'focus', label: { en: 'On focus' }, event: { value: '' } },
         { name: 'blur', label: { en: 'On blur' }, event: { value: '' } },
@@ -520,6 +524,55 @@ export default {
                 tooltip: 'Define whether users can select one or multiple options.\nPossible values: single, multiple',
             },
             /* wwEditor:end */
+        },
+        displayMode: {
+            label: 'Display mode',
+            type: 'TextSelect',
+            options: {
+                options: [
+                    {
+                        value: 'chips',
+                        label: 'Display chips',
+                    },
+                    {
+                        value: 'count',
+                        label: 'Display count',
+                    },
+                ],
+            },
+            bindable: true,
+            defaultValue: 'chips',
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value, either "chips" or "count"',
+            },
+            propertyHelp: {
+                tooltip: 'Choose how to display selected items in multi-select mode.\nPossible values: chips, count',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType !== 'multiple',
+        },
+        displayText: {
+            label: 'Display text',
+            type: 'Text',
+            defaultValue: { en: 'Selected: {count}' },
+            section: 'settings',
+            states: true,
+            bindable: true,
+            responsive: true,
+            multiLang: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value with {count} placeholder: "Selected: {count}"',
+            },
+            propertyHelp: {
+                tooltip: 'The text to display when using count mode. Use {count} as a placeholder for the number of selected items.',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType !== 'multiple' || content.displayMode !== 'count',
         },
         disabled: {
             label: { en: 'Disabled' },
@@ -1024,6 +1077,24 @@ export default {
                 tooltip: 'Whether the option should be automatically selected when clicked.',
             },
             /* wwEditor:end */
+        },
+        sortSelectedToTop: {
+            label: { en: 'Sort selected to top' },
+            type: 'OnOff',
+            states: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: false,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'Whether selected items should appear at the top of the options list: `true | false`',
+            },
+            propertyHelp: {
+                tooltip: 'When enabled, selected options will be sorted to the top of the list.',
+            },
+            /* wwEditor:end .*/
         },
         unselectOnClick: {
             label: { en: 'Unselect on click' },

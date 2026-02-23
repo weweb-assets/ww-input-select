@@ -17,7 +17,8 @@
         </div>
         <!-- MULTI SELECT -->
         <div v-else :style="triggerStyle">
-            <div v-if="isOptionSelected" class="ww-input-select__chip_container">
+            <!-- Display Chips Mode -->
+            <div v-if="isOptionSelected && content.displayMode === 'chips'" class="ww-input-select__chip_container">
                 <div
                     class="ww-input-select__chip"
                     v-for="option in selectedChips"
@@ -35,6 +36,10 @@
                     <span>{{ option.label }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
+            </div>
+            <!-- Display Count Mode -->
+            <div v-else-if="isOptionSelected && content.displayMode === 'count'" class="ww-input-select__selected">
+                <span :style="selectedValueStyle">{{ displayCountText }}</span>
             </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
@@ -325,6 +330,12 @@ export default {
             emit('remove-multiselect-value', value);
         };
 
+        const displayCountText = computed(() => {
+            const count = selectedDetails.value?.length || 0;
+            const template = wwLib.wwLang.getText(props.content.displayText) || 'Selected: {count}';
+            return template.replace('{count}', count.toString());
+        });
+
         return {
             isSingleSelect,
             data,
@@ -349,6 +360,7 @@ export default {
             chipIconFromOption,
             isOpen,
             handleChipClick,
+            displayCountText,
         };
     },
 };

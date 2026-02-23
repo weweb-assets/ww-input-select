@@ -275,10 +275,19 @@ export default {
         );
 
         const handleClick = () => {
-            if (isSelected.value && canInteract.value && props.content.unselectOnClick) {
+            const unselectOnClick = props.content.unselectOnClick ?? false;
+            const selectOnClick = props.content.selectOnClick ?? true;
+            const sortSelectedToTop = props.content.sortSelectedToTop ?? false;
+            
+            // Allow unselecting if either:
+            // 1. unselectOnClick is explicitly enabled, OR
+            // 2. sortSelectedToTop is enabled (natural UX for sorted items)
+            const canUnselect = unselectOnClick || sortSelectedToTop;
+            
+            if (isSelected.value && canInteract.value && canUnselect) {
                 unselect();
                 focusFromOptionId(null);
-            } else if (!isSelected.value && canInteract.value && props.content.selectOnClick) {
+            } else if (!isSelected.value && canInteract.value && selectOnClick) {
                 updateValue(value.value);
                 focusFromOptionId(optionId);
                 focusSelectElement();
@@ -306,7 +315,7 @@ export default {
         const unselect = () => {
             if (canInteract.value) {
                 if (selectType.value === 'single') {
-                    updateValue(null);
+                    updateValue(null, value.value);
                 } else {
                     removeSpecificValue(value.value);
                 }
