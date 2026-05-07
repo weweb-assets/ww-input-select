@@ -1,0 +1,1016 @@
+{
+  "metadata": {
+    "name": "ww-input-select",
+    "description": "A customizable dropdown select component supporting single and multiple selection, search, virtual scrolling, and extensive styling options.",
+    "keywords": [
+      "select",
+      "dropdown",
+      "picker",
+      "combobox"
+    ],
+    "features": [
+      "Single and multiple selection modes",
+      "Search/filter functionality",
+      "Virtual scrolling for large datasets",
+      "Heavy mode for 1000+ items",
+      "Custom mapping formulas for label, value, icon, image",
+      "Chip display for multi-select",
+      "Extensive trigger, dropdown, option, and chip styling",
+      "Disabled item support",
+      "Form integration with validation"
+    ]
+  },
+  "properties": [
+    {
+      "name": "optionType",
+      "description": "Defines how each option is displayed. Possible values: text, iconText, imageText.",
+      "type": "string",
+      "options": [
+        "text",
+        "iconText",
+        "imageText"
+      ],
+      "defaultValue": "text",
+      "responsive": true
+    },
+    {
+      "name": "choices",
+      "description": "The list of options to display in the dropdown. Can be a collection or array of objects.",
+      "type": "array",
+      "defaultValue": {
+        "__wwtype": "f",
+        "code": "[{\"label\":\"Option 1\",\"value\":\"option1\"},{\"label\":\"Option 2\",\"value\":\"option2\"}]"
+      }
+    },
+    {
+      "name": "mappingLabel",
+      "description": "Formula to extract the label from each option item. For primitive values use context.mapping directly. For objects use context.mapping?.['label']. Always use 'context.mapping...'.",
+      "type": "formula",
+      "defaultValue": {
+        "type": "f",
+        "code": "context.mapping?.['label'] || context.mapping"
+      }
+    },
+    {
+      "name": "mappingIcon",
+      "description": "Formula to extract the icon (system icon code) from each option item. Used in Icon + Text mode. Always use 'context.mapping...'.",
+      "type": "formula",
+      "defaultValue": {
+        "type": "f",
+        "code": "context.mapping?.['icon'] || null"
+      }
+    },
+    {
+      "name": "mappingImage",
+      "description": "Formula to extract the image URL from each option item. Used in Image + Text mode. Always use 'context.mapping...'.",
+      "type": "formula",
+      "defaultValue": {
+        "type": "f",
+        "code": "context.mapping?.['image'] || null"
+      }
+    },
+    {
+      "name": "mappingValue",
+      "description": "Formula to extract the value from each option item. For primitive values use context.mapping directly. For objects use context.mapping?.['value']. Always use 'context.mapping...'.",
+      "type": "formula",
+      "defaultValue": {
+        "type": "f",
+        "code": "context.mapping?.['value'] || context.mapping"
+      }
+    },
+    {
+      "name": "mappingDisabled",
+      "description": "Formula that returns a boolean to determine if each option is disabled. Always use 'context.mapping...'.",
+      "type": "formula",
+      "defaultValue": {
+        "type": "f",
+        "code": "false"
+      }
+    },
+    {
+      "name": "initValueSingle",
+      "description": "The initial selected value for single select mode. A string or array of values.",
+      "type": "string",
+      "defaultValue": null
+    },
+    {
+      "name": "initValueMulti",
+      "description": "The initial selected values for multiple select mode. An array of values.",
+      "type": "array",
+      "defaultValue": []
+    },
+    {
+      "name": "selectType",
+      "description": "Defines whether users can select one or multiple options. Possible values: single, multiple.",
+      "type": "string",
+      "options": [
+        "single",
+        "multiple"
+      ],
+      "defaultValue": "single"
+    },
+    {
+      "name": "disabled",
+      "description": "Disable the select component, preventing user interaction.",
+      "type": "string",
+      "defaultValue": false
+    },
+    {
+      "name": "required",
+      "description": "Make the select field required for form validation.",
+      "type": "string",
+      "defaultValue": false
+    },
+    {
+      "name": "readonly",
+      "description": "Make the select read-only, showing the value but preventing changes.",
+      "type": "string",
+      "defaultValue": false
+    },
+    {
+      "name": "initialState",
+      "description": "Determines whether the dropdown starts in an open or closed state. Possible values: closed, open.",
+      "type": "string",
+      "options": [
+        "closed",
+        "open"
+      ],
+      "defaultValue": "closed",
+      "responsive": true
+    },
+    {
+      "name": "closeOnSelect",
+      "description": "Whether the select dropdown closes when an option is selected.",
+      "type": "string",
+      "defaultValue": true
+    },
+    {
+      "name": "manualTrigger",
+      "description": "If true, the select will not be opened by clicking on the trigger. Use the Toggle action to open and close the select.",
+      "type": "string",
+      "defaultValue": false,
+      "responsive": true
+    },
+    {
+      "name": "closeOnClickOutside",
+      "description": "Whether the select dropdown closes when clicking outside the dropdown.",
+      "type": "string",
+      "defaultValue": true,
+      "responsive": true
+    },
+    {
+      "name": "placeholder",
+      "description": "The placeholder text displayed when no option is selected.",
+      "type": "string",
+      "defaultValue": "Select a value",
+      "responsive": true
+    },
+    {
+      "name": "emptyStateText",
+      "description": "The text to display when there are no results (after search or no options).",
+      "type": "string",
+      "defaultValue": "No results found",
+      "responsive": true
+    },
+    {
+      "name": "searchPlaceholder",
+      "description": "The placeholder text for the search input in the dropdown.",
+      "type": "string",
+      "defaultValue": "Search",
+      "responsive": true
+    },
+    {
+      "name": "side",
+      "description": "The side of the dropdown relative to the trigger. Possible values: bottom, left, top, right.",
+      "type": "string",
+      "options": [
+        "bottom",
+        "left",
+        "top",
+        "right"
+      ],
+      "defaultValue": "bottom",
+      "responsive": true
+    },
+    {
+      "name": "align",
+      "description": "The alignment of the dropdown relative to the trigger. Possible values: start, center, end.",
+      "type": "string",
+      "options": [
+        "start",
+        "center",
+        "end"
+      ],
+      "defaultValue": "start",
+      "responsive": true
+    },
+    {
+      "name": "offsetX",
+      "description": "The horizontal offset of the dropdown relative to the trigger. A length value like '4px' or '10%'.",
+      "type": "string",
+      "defaultValue": "0px",
+      "responsive": true
+    },
+    {
+      "name": "offsetY",
+      "description": "The vertical offset of the dropdown relative to the trigger. A length value like '8px' or '10%'.",
+      "type": "string",
+      "defaultValue": "8px",
+      "responsive": true
+    },
+    {
+      "name": "zIndexOpen",
+      "description": "The z-index of the dropdown when it is open.",
+      "type": "number",
+      "defaultValue": 2,
+      "responsive": true
+    },
+    {
+      "name": "boundOffset",
+      "description": "Offset to the edge of the screen when the dropdown should flip to the opposite side when there is no space.",
+      "type": "string",
+      "defaultValue": "0px",
+      "responsive": true
+    },
+    {
+      "name": "virtualScrollBuffer",
+      "description": "The buffer in pixels to add to edges of the scrolling visible area to start rendering items further away.",
+      "type": "number",
+      "defaultValue": 200,
+      "responsive": true
+    },
+    {
+      "name": "virtualScrollMinItemSize",
+      "description": "The minimum height of an item in pixels. Used by the dynamic scroller to estimate sizes before items are rendered.",
+      "type": "number",
+      "defaultValue": 40,
+      "responsive": true
+    },
+    {
+      "name": "heavyMode",
+      "description": "Enable heavy mode (RecycleScroller) for better performance with large lists (1000+ items). When enabled, you must specify the exact item size. When disabled, DynamicScroller is used.",
+      "type": "string",
+      "defaultValue": false,
+      "responsive": true
+    },
+    {
+      "name": "itemSize",
+      "description": "The exact height (in pixels) of each option item. All items must have the same height when using heavy mode.",
+      "type": "number",
+      "defaultValue": 40,
+      "responsive": true
+    },
+    {
+      "name": "allowScrollingWhenOpen",
+      "description": "Allow page scrolling when the dropdown is open. Should be disabled in some edge cases like in popups or datagrids.",
+      "type": "string",
+      "defaultValue": false
+    },
+    {
+      "name": "selectOnClick",
+      "description": "Whether the option should be automatically selected when clicked.",
+      "type": "string",
+      "defaultValue": true,
+      "responsive": true
+    },
+    {
+      "name": "unselectOnClick",
+      "description": "Whether the option should be automatically unselected when clicked if already selected.",
+      "type": "string",
+      "defaultValue": false,
+      "responsive": true
+    },
+    {
+      "name": "showSearch",
+      "description": "Enable search functionality to filter options in the dropdown.",
+      "type": "string",
+      "defaultValue": false,
+      "responsive": true
+    },
+    {
+      "name": "searchBy",
+      "description": "Which properties of the choices are searchable. An array of objects with filter keys, e.g. [{filter: \"['key1','key2']\"}].",
+      "type": "array",
+      "responsive": true
+    },
+    {
+      "name": "autoFocus",
+      "description": "Whether the search input should be focused when the dropdown is opened.",
+      "type": "string",
+      "defaultValue": true,
+      "responsive": true
+    },
+    {
+      "name": "fieldName",
+      "description": "The name of the field when used in a form submission.",
+      "type": "string",
+      "defaultValue": "",
+      "responsive": true
+    },
+    {
+      "name": "customValidation",
+      "description": "Enable custom validation rules for this form field.",
+      "type": "string",
+      "defaultValue": false,
+      "responsive": true
+    },
+    {
+      "name": "validation",
+      "description": "Custom validation formula for this form field. Only used when customValidation is true.",
+      "type": "formula",
+      "defaultValue": "",
+      "responsive": true
+    },
+    {
+      "name": "selectedFontFamily",
+      "description": "Font family for the selected value text (single select mode only).",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "selectedFontSize",
+      "description": "Font size for the selected value text (single select mode only).",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "selectedFontWeight",
+      "description": "Font weight for the selected value text (single select mode only). Values: 100-900.",
+      "type": "number",
+      "options": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ],
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "selectedFontColor",
+      "description": "Font color for the selected value text (single select mode only).",
+      "type": "string",
+      "defaultValue": "#333",
+      "responsive": true
+    },
+    {
+      "name": "selectedPadding",
+      "description": "Padding for the selected value text (single select mode only).",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "selectedTextAlign",
+      "description": "Text alignment for the selected value text (single select mode only). Possible values: left, center, right.",
+      "type": "string",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ],
+      "defaultValue": "left",
+      "responsive": true
+    },
+    {
+      "name": "placeholderFontFamily",
+      "description": "Font family for the placeholder text.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "placeholderFontSize",
+      "description": "Font size for the placeholder text.",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "placeholderFontWeight",
+      "description": "Font weight for the placeholder text. Values: 100-900.",
+      "type": "number",
+      "options": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ],
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "placeholderFontColor",
+      "description": "Font color for the placeholder text.",
+      "type": "string",
+      "defaultValue": "#333",
+      "responsive": true
+    },
+    {
+      "name": "placeholderTextAlign",
+      "description": "Text alignment for the placeholder text (single select mode only). Possible values: left, center, right.",
+      "type": "string",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ],
+      "defaultValue": "left",
+      "responsive": true
+    },
+    {
+      "name": "chipFontFamily",
+      "description": "Font family for chip text (multiple select mode only).",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "chipFontSize",
+      "description": "Font size for chip text (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "chipFontWeight",
+      "description": "Font weight for chip text (multiple select mode only). Values: 100-900.",
+      "type": "number",
+      "options": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ],
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "chipFontColor",
+      "description": "Font color for chip text (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "white",
+      "responsive": true
+    },
+    {
+      "name": "chipPadding",
+      "description": "Padding for chips (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "2px 8px",
+      "responsive": true
+    },
+    {
+      "name": "chipBgColor",
+      "description": "Background color for chips (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "#363636",
+      "responsive": true
+    },
+    {
+      "name": "chipBorderRadius",
+      "description": "Border radius for chips (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "chipIconUnselect",
+      "description": "System icon code for the unselect icon on chips (multiple select mode only).",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "chipIconColor",
+      "description": "Color of the unselect icon on chips (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "white",
+      "responsive": true
+    },
+    {
+      "name": "chipIconSize",
+      "description": "Size of the unselect icon on chips (multiple select mode only).",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "chipImageSize",
+      "description": "Size of the image in chips (multiple select + Image+Text mode only).",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "chipImageRadius",
+      "description": "Border radius of the image in chips (multiple select + Image+Text mode only).",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "triggerHeight",
+      "description": "Height of the trigger element. For multiple select, set to 'unset' to allow height to adjust based on chip count.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "triggerBorderRadius",
+      "description": "Border radius of the trigger element.",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "triggerBgColor",
+      "description": "Background color of the trigger element.",
+      "type": "string",
+      "defaultValue": "white",
+      "responsive": true
+    },
+    {
+      "name": "triggerBorderAll",
+      "description": "Border style for the trigger element (when not using split borders).",
+      "type": "string",
+      "defaultValue": "1px solid #B0B0B0",
+      "responsive": true
+    },
+    {
+      "name": "triggerShadows",
+      "description": "Box shadow for the trigger element.",
+      "type": "string",
+      "defaultValue": "",
+      "responsive": true
+    },
+    {
+      "name": "triggerPadding",
+      "description": "Padding for the trigger element.",
+      "type": "string",
+      "defaultValue": "8px 16px",
+      "responsive": true
+    },
+    {
+      "name": "triggerMargin",
+      "description": "Margin for the trigger element.",
+      "type": "string",
+      "defaultValue": "0px",
+      "responsive": true
+    },
+    {
+      "name": "triggerIconOpen",
+      "description": "System icon code displayed when the dropdown is open.",
+      "type": "string",
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "triggerIconClose",
+      "description": "System icon code displayed when the dropdown is closed.",
+      "type": "string",
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "triggerIconColor",
+      "description": "Color of the trigger icon.",
+      "type": "string",
+      "defaultValue": "black",
+      "responsive": true
+    },
+    {
+      "name": "triggerIconSize",
+      "description": "Size of the trigger icon.",
+      "type": "string",
+      "defaultValue": "16px",
+      "responsive": true
+    },
+    {
+      "name": "triggerImageSize",
+      "description": "Size of the image in the trigger (single select + Image+Text mode only).",
+      "type": "string",
+      "defaultValue": "16px",
+      "responsive": true
+    },
+    {
+      "name": "triggerImageRadius",
+      "description": "Border radius of the image in the trigger (single select + Image+Text mode only).",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "dropdownWidth",
+      "description": "Width of the dropdown. By default matches the trigger width.",
+      "type": "string",
+      "defaultValue": {
+        "__wwtype": "f",
+        "code": "context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'"
+      },
+      "responsive": true
+    },
+    {
+      "name": "dropdownMaxHeight",
+      "description": "Maximum height of the dropdown. Required for heavy mode. A default of 500px is applied when there are many options and no max-height is set.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "dropdownBorderRadius",
+      "description": "Border radius of the dropdown.",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "dropdownBgColor",
+      "description": "Background color of the dropdown.",
+      "type": "string",
+      "defaultValue": "#FFFFFF",
+      "responsive": true
+    },
+    {
+      "name": "dropdownBorderAll",
+      "description": "Border style for the dropdown (when not using split borders).",
+      "type": "string",
+      "defaultValue": "1px solid #B0B0B0",
+      "responsive": true
+    },
+    {
+      "name": "dropdownShadows",
+      "description": "Box shadow for the dropdown.",
+      "type": "string",
+      "defaultValue": "",
+      "responsive": true
+    },
+    {
+      "name": "dropdownPadding",
+      "description": "Padding for the dropdown.",
+      "type": "string",
+      "defaultValue": "8px",
+      "responsive": true
+    },
+    {
+      "name": "optionFontFamily",
+      "description": "Font family for option text in the dropdown.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "optionFontSize",
+      "description": "Font size for option text in the dropdown.",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "optionFontWeight",
+      "description": "Font weight for option text in the dropdown. Values: 100-900.",
+      "type": "number",
+      "options": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ],
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "optionFontColor",
+      "description": "Text color for options in the dropdown.",
+      "type": "string",
+      "defaultValue": "black",
+      "responsive": true
+    },
+    {
+      "name": "optionSpacing",
+      "description": "Spacing between options in the dropdown.",
+      "type": "string",
+      "defaultValue": "0px",
+      "responsive": true
+    },
+    {
+      "name": "optionPadding",
+      "description": "Padding for each option in the dropdown.",
+      "type": "string",
+      "defaultValue": "8px",
+      "responsive": true
+    },
+    {
+      "name": "optionBorder",
+      "description": "Border style for each option in the dropdown.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "optionBorderRadius",
+      "description": "Border radius for each option in the dropdown.",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "optionBgColor",
+      "description": "Background color for options in the dropdown.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "optionBgColorFocused",
+      "description": "Background color for the focused option in the dropdown.",
+      "type": "string",
+      "defaultValue": "#f5f5f5",
+      "responsive": true
+    },
+    {
+      "name": "optionBgColorHover",
+      "description": "Background color when hovering over an option in the dropdown.",
+      "type": "string",
+      "defaultValue": "#f5f5f5",
+      "responsive": true
+    },
+    {
+      "name": "optionCursor",
+      "description": "Cursor style when hovering over options.",
+      "type": "string",
+      "defaultValue": "pointer",
+      "responsive": true
+    },
+    {
+      "name": "optionIcon",
+      "description": "System icon code for the checked/selected icon on options.",
+      "type": "string",
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "optionIconColor",
+      "description": "Color of the checked/selected icon on options.",
+      "type": "string",
+      "defaultValue": "black",
+      "responsive": true
+    },
+    {
+      "name": "optionIconSize",
+      "description": "Size of the checked/selected icon on options.",
+      "type": "string",
+      "defaultValue": "12px",
+      "responsive": true
+    },
+    {
+      "name": "optionImageSize",
+      "description": "Size of the image in options (Image+Text mode only).",
+      "type": "string",
+      "defaultValue": "16px",
+      "responsive": true
+    },
+    {
+      "name": "optionImageRadius",
+      "description": "Border radius of the image in options (Image+Text mode only).",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "emptyStateFontFamily",
+      "description": "Font family for the empty state text.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "emptyStateFontSize",
+      "description": "Font size for the empty state text.",
+      "type": "string",
+      "defaultValue": "14px",
+      "responsive": true
+    },
+    {
+      "name": "emptyStateFontWeight",
+      "description": "Font weight for the empty state text. Values: 100-900.",
+      "type": "number",
+      "options": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ],
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "emptyStateFontColor",
+      "description": "Text color for the empty state text.",
+      "type": "string",
+      "defaultValue": "black",
+      "responsive": true
+    },
+    {
+      "name": "emptyStatePadding",
+      "description": "Padding for the empty state text.",
+      "type": "string",
+      "defaultValue": "0px",
+      "responsive": true
+    },
+    {
+      "name": "emptyStateTextAlign",
+      "description": "Text alignment for the empty state. Possible values: left, center, right.",
+      "type": "string",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ],
+      "defaultValue": "center",
+      "responsive": true
+    },
+    {
+      "name": "searchWidth",
+      "description": "Width of the search input.",
+      "type": "string",
+      "defaultValue": "100%",
+      "responsive": true
+    },
+    {
+      "name": "searchHeight",
+      "description": "Height of the search input.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "searchBorderRadius",
+      "description": "Border radius of the search input.",
+      "type": "string",
+      "defaultValue": "4px",
+      "responsive": true
+    },
+    {
+      "name": "searchBorderAll",
+      "description": "Border style for the search input (when not using split borders).",
+      "type": "string",
+      "defaultValue": "1px solid #A3A3A3",
+      "responsive": true
+    },
+    {
+      "name": "searchPadding",
+      "description": "Padding for the search input.",
+      "type": "string",
+      "defaultValue": "8px 12px",
+      "responsive": true
+    },
+    {
+      "name": "searchMargin",
+      "description": "Margin for the search input.",
+      "type": "string",
+      "defaultValue": "0px 0px 8px 0px",
+      "responsive": true
+    },
+    {
+      "name": "searchOutline",
+      "description": "Outline style for the search input.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "searchOutlineOffset",
+      "description": "Outline offset for the search input.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "searchBgColor",
+      "description": "Background color of the search input.",
+      "type": "string",
+      "defaultValue": "#FAFAFA",
+      "responsive": true
+    },
+    {
+      "name": "searchFontFamily",
+      "description": "Font family for the search input text.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "searchFontSize",
+      "description": "Font size for the search input text.",
+      "type": "string",
+      "responsive": true
+    },
+    {
+      "name": "searchFontWeight",
+      "description": "Font weight for the search input text. Values: 100-900.",
+      "type": "number",
+      "options": [
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900
+      ],
+      "defaultValue": null,
+      "responsive": true
+    },
+    {
+      "name": "searchFontColor",
+      "description": "Font color for the search input text.",
+      "type": "string",
+      "defaultValue": "black",
+      "responsive": true
+    },
+    {
+      "name": "searchPlaceholderColor",
+      "description": "Color of the search input placeholder text.",
+      "type": "string",
+      "defaultValue": "#737373",
+      "responsive": true
+    }
+  ],
+  "states": [],
+  "events": [
+    {
+      "name": "change",
+      "description": "Triggered when the selection changes",
+      "payload": {
+        "value": "any"
+      }
+    },
+    {
+      "name": "initValueChange",
+      "description": "Triggered when the initial value changes",
+      "payload": {
+        "value": "any"
+      }
+    }
+  ],
+  "actions": [],
+  "slots": [
+    {
+      "name": "trigger",
+      "description": "Custom trigger element for the select dropdown",
+      "type": "object"
+    },
+    {
+      "name": "optionElement",
+      "description": "Custom element for each option in the dropdown",
+      "type": "object"
+    },
+    {
+      "name": "selectedElement",
+      "description": "Custom element for selected value display",
+      "type": "object"
+    },
+    {
+      "name": "chipElement",
+      "description": "Custom element for chips in multi-select mode",
+      "type": "object"
+    },
+    {
+      "name": "noResultElement",
+      "description": "Custom element displayed when no search results found",
+      "type": "object"
+    }
+  ],
+  "variables": [
+    {
+      "name": "value",
+      "description": "Current selected value(s)",
+      "type": "any",
+      "readonly": true
+    }
+  ],
+  "specifications": [
+    "Use specific fields for mapping formulas (e.g. context.mapping?.['id'])",
+    "Labels are text-only - never return HTML in mappingLabel",
+    "For multiselect, set triggerHeight to 'unset' for dynamic height",
+    "Virtual scrolling is always enabled",
+    "Use heavyMode for optimal performance with 1000+ items",
+    "Match styling to page design",
+    "To customize the style of the select trigger (that should looks like a button, or input when the dropdown is closed), use all the properties starting with 'trigger'."
+  ],
+  "examples": []
+}
