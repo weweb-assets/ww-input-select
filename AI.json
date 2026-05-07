@@ -18,7 +18,8 @@
       "Extensive trigger, dropdown, option, and chip styling",
       "Disabled item support",
       "Form integration with validation"
-    ]
+    ],
+    "advanced": true
   },
   "properties": [
     {
