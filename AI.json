@@ -1284,77 +1284,92 @@
     {
       "path": "select.select.options",
       "description": "Array of all available options after mapping. Each entry is `{ value, label, disabled, isSelected, data }`.",
-      "type": "array"
+      "type": "array",
+      "content": "Array of objects equivalent to the choices property"
     },
     {
       "path": "select.select.active.value",
       "description": "Current selected value (single) or array of values (multiple).",
-      "type": "any"
+      "type": "any",
+      "content": "The current selected value (single) or array of values (multiple)."
     },
     {
       "path": "select.select.active.details",
       "description": "Full option object(s) corresponding to the current selection — useful to read other fields than the value.",
-      "type": "any"
+      "type": "any",
+      "content": "The full option object(s) corresponding to the current selection — useful to read other fields than the value."
     },
     {
       "path": "select.select.utils.type",
       "description": "Either 'single' or 'multiple', mirrors selectType.",
-      "type": "string"
+      "type": "string",
+      "content": "The type of the select (single or multiple)."
     },
     {
       "path": "select.select.utils.isOpen",
       "description": "Whether the dropdown is currently open.",
-      "type": "boolean"
+      "type": "boolean",
+      "content": "Whether the dropdown is currently open."
     },
     {
       "path": "select.select.utils.triggerWidth",
       "description": "Pixel width of the trigger element — useful to size the dropdown.",
-      "type": "number"
+      "type": "number",
+      "content": "The pixel width of the trigger element."
     },
     {
       "path": "select.select.utils.triggerHeight",
       "description": "Pixel height of the trigger element.",
-      "type": "number"
+      "type": "number",
+      "content": "The pixel height of the trigger element."
     },
     {
       "path": "select.select.search.value",
       "description": "Current search input text. Only present when showSearch is true.",
-      "type": "string"
+      "type": "string",
+      "content": "The current search input text."
     },
     {
       "path": "select.select.search.searchBy",
       "description": "Resolved searchBy field list. Only present when showSearch is true.",
-      "type": "array"
+      "type": "array",
+      "content": "The resolved searchBy field list."
     },
     {
       "path": "select.select.search.searchMatches",
       "description": "Subset of options matching the current search query. Only present when showSearch is true.",
-      "type": "array"
+      "type": "array",
+      "content": "The subset of options matching the current search query."
     },
     {
       "path": "select.selectTrigger.placeholder",
       "description": "Placeholder text for the select trigger.",
-      "type": "string"
+      "type": "string",
+      "content": "The placeholder text for the select trigger."
     }
   ],
   "actions": [
     {
-      "name": "actionOpenDropdown",
+      "label": "Open dropdown",
+      "actionName": "actionOpenDropdown",
       "description": "Open the dropdown.",
       "args": []
     },
     {
-      "name": "actionCloseDropdown",
+      "label": "Close dropdown",
+      "actionName": "actionCloseDropdown",
       "description": "Close the dropdown.",
       "args": []
     },
     {
-      "name": "actionToggleDropdown",
+      "label": "Toggle dropdown",
+      "actionName": "actionToggleDropdown",
       "description": "Toggle the dropdown open/closed.",
       "args": []
     },
     {
-      "name": "actionUpdateValue",
+      "label": "Update value",
+      "actionName": "actionUpdateValue",
       "description": "Set the selected value(s). For single, pass a single value; for multiple, pass an array.",
       "args": [
         {
@@ -1365,12 +1380,14 @@
       ]
     },
     {
-      "name": "actionResetValue",
+      "label": "Reset value",
+      "actionName": "actionResetValue",
       "description": "Reset the selection back to the configured initial value.",
       "args": []
     },
     {
-      "name": "actionRemoveSpecificValue",
+      "label": "Remove specific value",
+      "actionName": "actionRemoveSpecificValue",
       "description": "Remove a single value from the current selection. Multi-select only.",
       "args": [
         {
@@ -1381,12 +1398,14 @@
       ]
     },
     {
-      "name": "actionResetSearch",
+      "label": "Reset search",
+      "actionName": "actionResetSearch",
       "description": "Clear the in-dropdown search input.",
       "args": []
     },
     {
-      "name": "actionFocusInput",
+      "label": "Focus input",
+      "actionName": "actionFocusInput",
       "description": "Move focus to the trigger element.",
       "args": []
     }
