@@ -211,6 +211,38 @@
             "responsive": true
         },
         {
+            "name": "side",
+            "description": "Which side of the trigger the dropdown panel opens on.",
+            "type": "string",
+            "options": [
+                "bottom",
+                "left",
+                "top",
+                "right"
+            ],
+            "defaultValue": "bottom",
+            "responsive": true
+        },
+        {
+            "name": "align",
+            "description": "How the dropdown panel is aligned relative to the trigger on the chosen side.",
+            "type": "string",
+            "options": [
+                "start",
+                "center",
+                "end"
+            ],
+            "defaultValue": "start",
+            "responsive": true
+        },
+        {
+            "name": "boundOffset",
+            "description": "Minimum distance kept between the dropdown panel and the viewport edges when it is automatically repositioned (CSS length, e.g. 0px, 8px).",
+            "type": "string",
+            "defaultValue": "0px",
+            "responsive": true
+        },
+        {
             "name": "zIndexOpen",
             "description": "The z-index of the dropdown when it is open.",
             "type": "number",
