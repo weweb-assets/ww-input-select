@@ -431,6 +431,9 @@ export default {
     padding: 0px !important;
     width: 100%;
 }
+.ww-input-select:deep(.multiselect-option:not(.is-pointed):not(.is-selected):not(.is-disabled)) {
+    color: var(--ms-option-color, #000000);
+}
 .ww-input-select:deep(.multiselect-placeholder-el) {
     flex-grow: 1;
     width: 100%;
