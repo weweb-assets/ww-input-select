@@ -340,7 +340,7 @@ export default {
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
                           backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
-                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || '#000000',
+                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || 'inherit',
                       },
                       data: option,
                   }
