@@ -418,7 +418,7 @@ export default {
     padding: 0px !important;
     overflow: hidden;
     color: var(--ww-input-select-option-color, inherit);
-    background-color: var(--ww-input-select-option-background-color, transparent);
+    background-color: var(--ww-input-select-option-background-color, #ffffff00);
 }
 .multiselect-single-label-readonly {
     position: relative;
