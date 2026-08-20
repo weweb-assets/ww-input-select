@@ -165,8 +165,8 @@ export default {
         },
         defaultOptionStyle() {
             return {
-                backgroundColor: this.content.optionsDefaultBgColor,
-                color: this.content.optionsDefaultTextColor,
+                '--ww-input-select-option-background-color': this.content.optionsDefaultBgColor,
+                '--ww-input-select-option-color': this.content.optionsDefaultTextColor,
             };
         },
         cssVariables() {
@@ -339,8 +339,11 @@ export default {
                       value,
                       image: wwLib.resolveObjectPropertyPath(option, 'image'),
                       style: {
-                          backgroundColor: wwLib.resolveObjectPropertyPath(option, 'bgColor') || '#FFFFFF00',
-                          color: wwLib.resolveObjectPropertyPath(option, 'textColor') || 'inherit',
+                          '--ww-input-select-option-background-color': wwLib.resolveObjectPropertyPath(
+                              option,
+                              'bgColor'
+                          ),
+                          '--ww-input-select-option-color': wwLib.resolveObjectPropertyPath(option, 'textColor'),
                       },
                       data: option,
                   }
@@ -414,6 +417,8 @@ export default {
     width: inherit;
     padding: 0px !important;
     overflow: hidden;
+    color: var(--ww-input-select-option-color, inherit);
+    background-color: var(--ww-input-select-option-background-color, transparent);
 }
 .multiselect-single-label-readonly {
     position: relative;
