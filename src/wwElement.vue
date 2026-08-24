@@ -7,7 +7,6 @@
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
-        :style="textStyle"
         @change="handleManualInput($event)"
     >
         <option value selected disabled>
@@ -78,9 +77,6 @@ export default {
         selectedOption() {
             return this.options.find(({ value }) => value === this.internalValue);
         },
-        textStyle() {
-            return wwLib.getTextStyleFromContent(this.content);
-        },
         isReadonly() {
             /* wwEditor:start */
             if (this.wwEditorState.isSelected) {
@@ -132,7 +128,8 @@ export default {
     width: 100%;
     height: auto;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: var(--ww-text-text-overflow, initial);
+    white-space: var(--ww-text-white-space, initial);
     cursor: pointer;
     background-color: transparent;
     border: none;
