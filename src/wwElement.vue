@@ -162,9 +162,6 @@ export default {
         currentSelection(value) {
             this.$emit('trigger-event', { name: 'change', event: { domEvent: {}, value } });
         },
-        textStyle() {
-            return wwLib.getTextStyleFromContent(this.content);
-        },
         async 'content.initialValue'() {
             this.init();
 
