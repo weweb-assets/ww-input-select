@@ -207,9 +207,6 @@ export default {
             this.handleOpening(!this.isEditing ? false : this.wwEditorState.sidepanelContent.openInEditor);
         },
         /* wwEditor:end */
-        textStyle() {
-            return wwLib.getTextStyleFromContent(this.content);
-        },
         async 'content.initialValue'(value) {
             this.init();
 
