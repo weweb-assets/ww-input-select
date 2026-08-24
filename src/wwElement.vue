@@ -2,12 +2,12 @@
     <select
         v-if="!isReadonly"
         ref="input"
+        v-bind="$attrs"
         v-model="internalValue"
         class="ww-form-dropdown"
         :class="{ editing: isEditing }"
         :name="wwElementState.name"
         :required="content.required"
-        :style="textStyle"
         @change="handleManualInput($event)"
     >
         <option value selected disabled>
@@ -17,11 +17,16 @@
             {{ option.name }}
         </option>
     </select>
-    <wwText v-else :text="selectedOption ? selectedOption.name : `${variableValue}`"></wwText>
+    <wwText
+        v-else
+        v-bind="$attrs"
+        :text="selectedOption ? selectedOption.name : `${variableValue}`"
+    ></wwText>
 </template>
 
 <script>
 export default {
+    inheritAttrs: false,
     props: {
         content: { type: Object, required: true },
         /* wwEditor:start */
@@ -78,9 +83,6 @@ export default {
         selectedOption() {
             return this.options.find(({ value }) => value === this.internalValue);
         },
-        textStyle() {
-            return wwLib.getTextStyleFromContent(this.content);
-        },
         isReadonly() {
             /* wwEditor:start */
             if (this.wwEditorState.isSelected) {
@@ -132,7 +134,9 @@ export default {
     width: 100%;
     height: auto;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: var(--ww-text-text-overflow, initial);
+    white-space: var(--ww-text-white-space, initial);
+    white-space-collapse: preserve;
     cursor: pointer;
     background-color: transparent;
     border: none;
