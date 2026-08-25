@@ -558,6 +558,7 @@ export default {
             type: 'OnOff',
             defaultValue: false,
             bindable: true,
+            hidden: (content, sidePanelContent, boundProps, wwProps) => !!(wwProps && wwProps.readonly !== undefined),
             /* wwEditor:start */
             bindingValidation: {
                 type: 'boolean',
