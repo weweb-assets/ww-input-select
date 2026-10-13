@@ -832,7 +832,13 @@ export default {
             // Repeats reuse the component at each position when rows are removed or reordered.
             // Restore the new row's initial value even if it is the same as the previous row's.
             watch(
-                () => bindingContext.data,
+                () => {
+                    const rows = [];
+                    for (let context = bindingContext; context; context = context.parent) {
+                        rows.push(context.data);
+                    }
+                    return rows;
+                },
                 () => {
                     closeDropdown();
                     setValue(initValue.value);
