@@ -286,8 +286,9 @@ export default {
             searchState.value = filter;
         };
 
+        // No disabled/readonly guard here nor in resetValue: options already check it (canInteract),
+        // and the Set value / Reset value workflow actions must still apply on a locked select.
         const updateValue = value => {
-            if (isDisabled.value || isReadonly.value) return;
             if (selectType.value === 'single') {
                 // Check if value is an array
                 if (Array.isArray(value)) {
@@ -490,7 +491,6 @@ export default {
         }
 
         function resetValue() {
-            if (isDisabled.value || isReadonly.value) return;
             setValue(initValue.value || null);
             emit('trigger-event', { name: 'change', event: { value: initValue.value || null } });
         }
