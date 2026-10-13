@@ -140,7 +140,7 @@
     },
     {
       "name": "readonly",
-      "description": "When true, the current value is shown but cannot be changed; activates the 'readonly' state.",
+      "description": "When true, the select is read-only: the dropdown cannot open and the selection cannot change, but the value stays visible and still submits with forms; activates the 'readonly' state.",
       "type": "boolean",
       "defaultValue": false
     },

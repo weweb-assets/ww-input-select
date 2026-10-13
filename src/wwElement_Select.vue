@@ -173,7 +173,16 @@ export default {
             return isReallyFocused.value || isSearchBarFocused.value;
         });
         const isDisabled = computed(() => props.content.disabled || false);
-        const isReadonly = computed(() => props.content.readonly || false);
+        const isReadonly = computed(() => {
+            /* wwEditor:start */
+            if (props.wwEditorState?.isSelected) {
+                return props.wwElementState.states.includes('readonly');
+            }
+            /* wwEditor:end */
+            return props.wwElementState.props.readonly === undefined
+                ? props.content.readonly || false
+                : props.wwElementState.props.readonly;
+        });
         const canUnselect = computed(() => props.content.unselectOnClick || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
@@ -277,6 +286,8 @@ export default {
             searchState.value = filter;
         };
 
+        // No disabled/readonly guard here nor in resetValue: options already check it (canInteract),
+        // and the Set value / Reset value workflow actions must still apply on a locked select.
         const updateValue = value => {
             if (selectType.value === 'single') {
                 // Check if value is an array
@@ -314,6 +325,7 @@ export default {
         };
 
         const toggleValueAccessibility = value => {
+            if (isDisabled.value || isReadonly.value) return;
             // Don't process empty values
             if (value === '' || value == null || value === undefined) {
                 return;
@@ -786,6 +798,19 @@ export default {
                     emit('add-state', 'focus');
                 } else {
                     emit('remove-state', 'focus');
+                }
+            },
+            { immediate: true }
+        );
+
+        watch(
+            isReadonly,
+            value => {
+                if (value) {
+                    emit('add-state', 'readonly');
+                    if (isOpen.value) closeDropdown();
+                } else {
+                    emit('remove-state', 'readonly');
                 }
             },
             { immediate: true }
