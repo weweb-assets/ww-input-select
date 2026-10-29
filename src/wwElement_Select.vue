@@ -1064,6 +1064,15 @@ export default {
         };
     },
     methods: {
+        /* wwEditor:start */
+        toggleForceOpenInEditor() {
+            if (!this.isEditing) return;
+            this.$emit('update:sidepanel-content', {
+                path: 'forceOpenInEditor',
+                value: !this.forceOpenInEditor,
+            });
+        },
+        /* wwEditor:end */
         resetLastTriggerComponentAction() {
             this.lastTriggeredComponentAction = Date.now();
         },

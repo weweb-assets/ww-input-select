@@ -570,8 +570,11 @@ export default {
             section: 'settings',
         },
         forceOpenInEditor: {
-            label: { en: 'Force open in editor' },
-            type: 'OnOff',
+            type: 'Button',
+            options: (_, sidepanelContent) => ({
+                text: { en: sidepanelContent.forceOpenInEditor ? 'Close in editor' : 'Open in editor' },
+                action: 'toggleForceOpenInEditor',
+            }),
             defaultValue: false,
             editorOnly: true,
             section: 'settings',
