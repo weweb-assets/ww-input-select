@@ -127,6 +127,7 @@ export default {
             type: selectType.value === 'single' ? 'any' : 'array',
             defaultValue: initValue,
         });
+        const bindingContext = inject('bindingContext', null);
 
         const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
 
@@ -540,11 +541,10 @@ export default {
 
             resizeObserver.value = new ResizeObserver(
                 debounce(entries => {
-                    if (entries[0]) {
-                        const rect = triggerElement.value.getBoundingClientRect();
-                        triggerWidth.value = rect.width;
-                        triggerHeight.value = rect.height;
-                    }
+                    if (!entries[0] || !triggerElement.value) return;
+                    const rect = triggerElement.value.getBoundingClientRect();
+                    triggerWidth.value = rect.width;
+                    triggerHeight.value = rect.height;
                 }, 16)
             );
 
@@ -827,6 +827,24 @@ export default {
             { immediate: true },
             { deep: true }
         );
+
+        if (bindingContext) {
+            // Repeats reuse the component at each position when rows are removed or reordered.
+            // Restore the new row's initial value even if it is the same as the previous row's.
+            watch(
+                () => {
+                    const rows = [];
+                    for (let context = bindingContext; context; context = context.parent) {
+                        rows.push(context.data);
+                    }
+                    return rows;
+                },
+                () => {
+                    closeDropdown();
+                    setValue(initValue.value);
+                }
+            );
+        }
 
         watch(
             initialState,
