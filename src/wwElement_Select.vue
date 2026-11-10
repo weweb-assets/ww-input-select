@@ -14,6 +14,7 @@
             @focus="handleFocus"
             @blur="handleBlur"
             role="combobox"
+            v-bind="accessibleNameAttributes"
             :aria-haspopup="selectType === 'single' ? 'listbox' : 'true'"
             :aria-expanded="isOpen"
             :aria-controls="dropdownId"
@@ -71,6 +72,8 @@ import useAccessibility from './select/useAccessibility';
 import useSearch from './select/useSearch';
 import { debounce, findValueIndex, areValuesEqual } from './utils';
 
+const optionalText = value => (typeof value === 'string' ? value.trim() || undefined : undefined);
+
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
@@ -118,6 +121,10 @@ export default {
         const appDivRef = shallowRef(wwLib.getFrontDocument().querySelector('#app'));
 
         const selectType = computed(() => props.content.selectType);
+        const accessibleNameAttributes = computed(() => ({
+            'aria-label': optionalText(props.content.ariaLabel),
+            'aria-labelledby': optionalText(props.content.ariaLabelledBy),
+        }));
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
         );
@@ -1021,6 +1028,7 @@ export default {
 
         return {
             appDivRef,
+            accessibleNameAttributes,
             showSearch,
             componentKey,
             isEditing,

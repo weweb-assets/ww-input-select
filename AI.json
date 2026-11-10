@@ -293,6 +293,18 @@
       "responsive": true
     },
     {
+      "name": "ariaLabel",
+      "description": "Accessible name of the focusable combobox. Set a short label when there is no visible label. Empty leaves the attribute unset.",
+      "type": "string",
+      "defaultValue": ""
+    },
+    {
+      "name": "ariaLabelledBy",
+      "description": "HTML ID of the visible label that names the focusable combobox. The referenced label takes precedence over ariaLabel.",
+      "type": "string",
+      "defaultValue": ""
+    },
+    {
       "name": "fieldName",
       "description": "Field name used to identify this select in the parent ww-form-container submission payload.",
       "type": "string",
