@@ -121,10 +121,14 @@ export default {
         const appDivRef = shallowRef(wwLib.getFrontDocument().querySelector('#app'));
 
         const selectType = computed(() => props.content.selectType);
-        const accessibleNameAttributes = computed(() => ({
-            'aria-label': optionalText(props.content.ariaLabel),
-            'aria-labelledby': optionalText(props.content.ariaLabelledBy),
-        }));
+        const accessibleNameAttributes = computed(() => {
+            const label = props.content.ariaLabel;
+            const localizedLabel = label && typeof label === 'object' ? wwLib.wwLang.getText(label) : label;
+            return {
+                'aria-label': optionalText(localizedLabel),
+                'aria-labelledby': optionalText(props.content.ariaLabelledBy),
+            };
+        });
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
         );

@@ -1148,6 +1148,7 @@ export default {
             type: 'Text',
             defaultValue: '',
             bindable: true,
+            multiLang: true,
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',

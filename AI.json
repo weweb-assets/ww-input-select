@@ -294,7 +294,7 @@
     },
     {
       "name": "ariaLabel",
-      "description": "Accessible name of the focusable combobox. Set a short label when there is no visible label. Empty leaves the attribute unset.",
+      "description": "Accessible name of the focusable combobox in the current page language. Set a short label when there is no visible label. Empty leaves the attribute unset.",
       "type": "string",
       "defaultValue": ""
     },
