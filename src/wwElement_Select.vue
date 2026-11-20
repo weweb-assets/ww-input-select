@@ -886,7 +886,7 @@ export default {
                 });
 
                 wwLib.wwNotification.open({
-                    text: `Force open in editor has been disabled because the select is readonly.`,
+                    text: `The select has been closed in the editor because it's readonly.`,
                     duration: 3000,
                 });
             }
