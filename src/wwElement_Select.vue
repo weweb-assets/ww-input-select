@@ -862,7 +862,7 @@ export default {
 
                 if (isReadonly.value) {
                     wwLib.wwNotification.open({
-                        text: `The select can't be forced open because it's readonly.`,
+                        text: `The select can't be opened in the editor because it's readonly.`,
                         duration: 3000,
                     });
 
