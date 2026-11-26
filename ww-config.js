@@ -223,6 +223,11 @@ export default {
                 isCollapsible: true,
                 properties: ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
             },        
+            {
+                label: 'Accessibility',
+                isCollapsible: true,
+                properties: ['ariaLabel', 'ariaLabelledBy'],
+            },
             'formInfobox',
             ['fieldName', 'customValidation', 'validation'],
         ],
@@ -1137,6 +1142,39 @@ export default {
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         /* wwEditor:end */
+        ariaLabel: {
+            label: 'Accessible label',
+            section: 'settings',
+            type: 'Text',
+            defaultValue: '',
+            bindable: true,
+            multiLang: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'Text that names the select for assistive technology.',
+            },
+            propertyHelp: {
+                tooltip: 'Use a short name such as Country when there is no visible label.',
+            },
+            /* wwEditor:end */
+        },
+        ariaLabelledBy: {
+            label: 'Label element ID',
+            section: 'settings',
+            type: 'Text',
+            defaultValue: '',
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'The ID of the visible label element.',
+            },
+            propertyHelp: {
+                tooltip: 'Use the HTML ID of a visible label. The referenced label takes precedence over the accessible label.',
+            },
+            /* wwEditor:end */
+        },
         fieldName: {
             label: 'Field name',
             section: 'settings',
