@@ -14,6 +14,7 @@
             @focus="handleFocus"
             @blur="handleBlur"
             role="combobox"
+            v-bind="accessibleNameAttributes"
             :aria-haspopup="selectType === 'single' ? 'listbox' : 'true'"
             :aria-expanded="isOpen"
             :aria-controls="dropdownId"
@@ -72,6 +73,8 @@ import useSearch from './select/useSearch';
 import { getRepeatSnapshot, repeatSlotChanged } from './select/repeatSlots';
 import { debounce, findValueIndex, areValuesEqual } from './utils';
 
+const optionalText = value => (typeof value === 'string' ? value.trim() || undefined : undefined);
+
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
@@ -119,6 +122,14 @@ export default {
         const appDivRef = shallowRef(wwLib.getFrontDocument().querySelector('#app'));
 
         const selectType = computed(() => props.content.selectType);
+        const accessibleNameAttributes = computed(() => {
+            const label = props.content.ariaLabel;
+            const localizedLabel = label && typeof label === 'object' ? wwLib.wwLang.getText(label) : label;
+            return {
+                'aria-label': optionalText(localizedLabel),
+                'aria-labelledby': optionalText(props.content.ariaLabelledBy),
+            };
+        });
         const initValue = computed(() =>
             selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
         );
@@ -207,7 +218,7 @@ export default {
 
             const actualDropdownHeight = dropdownElement.value?.getBoundingClientRect().height || 0;
             const estimatedDropdownHeight = parseInt(props.content.dropdownMaxHeight) || 300;
-            const dropdownHeight = actualDropdownHeight > 50 ? actualDropdownHeight : estimatedDropdownHeight;
+            const dropdownHeight = actualDropdownHeight > 0 ? actualDropdownHeight : estimatedDropdownHeight;
 
             const spaceBelow = viewportHeight - triggerRect.bottom;
             const spaceAbove = triggerRect.top;
@@ -1050,6 +1061,7 @@ export default {
 
         return {
             appDivRef,
+            accessibleNameAttributes,
             showSearch,
             componentKey,
             isEditing,
