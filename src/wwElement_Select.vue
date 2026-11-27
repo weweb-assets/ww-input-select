@@ -70,6 +70,7 @@ import InputSelectSearch from './wwElement_Search.vue';
 import { ref, computed, provide, watch, inject, nextTick, toValue, onMounted, onBeforeUnmount, shallowRef } from 'vue';
 import useAccessibility from './select/useAccessibility';
 import useSearch from './select/useSearch';
+import { getRepeatSnapshot, repeatSlotChanged } from './select/repeatSlots';
 import { debounce, findValueIndex, areValuesEqual } from './utils';
 
 const optionalText = value => (typeof value === 'string' ? value.trim() || undefined : undefined);
@@ -138,6 +139,7 @@ export default {
             type: selectType.value === 'single' ? 'any' : 'array',
             defaultValue: initValue,
         });
+        const bindingContext = inject('bindingContext', null);
 
         const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
 
@@ -551,11 +553,10 @@ export default {
 
             resizeObserver.value = new ResizeObserver(
                 debounce(entries => {
-                    if (entries[0]) {
-                        const rect = triggerElement.value.getBoundingClientRect();
-                        triggerWidth.value = rect.width;
-                        triggerHeight.value = rect.height;
-                    }
+                    if (!entries[0] || !triggerElement.value) return;
+                    const rect = triggerElement.value.getBoundingClientRect();
+                    triggerWidth.value = rect.width;
+                    triggerHeight.value = rect.height;
                 }, 16)
             );
 
@@ -838,6 +839,34 @@ export default {
             { immediate: true },
             { deep: true }
         );
+
+        if (bindingContext) {
+            // Repeats reuse the component at each position when rows are removed or reordered.
+            // Restore the new row's initial value even if it is the same as the previous row's.
+            watch(
+                () => {
+                    const rows = [];
+                    for (let context = bindingContext; context; context = context.parent) {
+                        rows.push({
+                            data: context.data,
+                            items: getRepeatSnapshot(context.repeatedItems),
+                            position: context.index,
+                        });
+                    }
+                    return rows;
+                },
+                (rows, previousRows) => {
+                    if (
+                        rows.length === previousRows.length &&
+                        !rows.some((row, index) => repeatSlotChanged(row, previousRows[index]))
+                    ) {
+                        return;
+                    }
+                    closeDropdown();
+                    setValue(initValue.value);
+                }
+            );
+        }
 
         watch(
             initialState,
