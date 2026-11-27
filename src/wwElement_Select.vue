@@ -69,25 +69,12 @@ import InputSelectSearch from './wwElement_Search.vue';
 import { ref, computed, provide, watch, inject, nextTick, toValue, onMounted, onBeforeUnmount, shallowRef } from 'vue';
 import useAccessibility from './select/useAccessibility';
 import useSearch from './select/useSearch';
+import { getRepeatSnapshot, repeatSlotChanged } from './select/repeatSlots';
 import { debounce, findValueIndex, areValuesEqual } from './utils';
 
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
 /* wwEditor:end */
-
-const repeatItemSets = new WeakMap();
-
-function containsRepeatItem(items, item) {
-    if (!items || !item || typeof item !== 'object') return false;
-    let entries = repeatItemSets.get(items);
-    if (!entries) {
-        entries = new Set(items);
-        repeatItemSets.set(items, entries);
-        // Share one lookup across the Selects reacting to this change.
-        queueMicrotask(() => repeatItemSets.delete(items));
-    }
-    return entries.has(item);
-}
 
 export default {
     components: {
@@ -849,32 +836,21 @@ export default {
                 () => {
                     const rows = [];
                     for (let context = bindingContext; context; context = context.parent) {
-                        const items = context.repeatedItems;
-                        rows.push({ data: context.data, items, length: items?.length });
+                        rows.push({
+                            data: context.data,
+                            items: getRepeatSnapshot(context.repeatedItems),
+                            position: context.index,
+                        });
                     }
                     return rows;
                 },
                 (rows, previousRows) => {
-                    const sameRows =
+                    if (
                         rows.length === previousRows.length &&
-                        rows.every(({ data, items, length }, index) => {
-                            const previous = previousRows[index];
-                            if (Object.is(data, previous.data)) return true;
-                            // A splice can reuse a slot for a distinct row with identical data.
-                            if (items === previous.items) {
-                                if (length < previous.length || containsRepeatItem(items, previous.data)) return false;
-                            } else if (containsRepeatItem(previous.items, data)) {
-                                return false;
-                            }
-                            if (globalThis._?.isEqual) return globalThis._.isEqual(data, previous.data);
-                            try {
-                                return areValuesEqual(data, previous.data);
-                            } catch {
-                                // Non-serializable data can only be matched by reference.
-                                return false;
-                            }
-                        });
-                    if (sameRows) return;
+                        !rows.some((row, index) => repeatSlotChanged(row, previousRows[index]))
+                    ) {
+                        return;
+                    }
                     closeDropdown();
                     setValue(initValue.value);
                 }
